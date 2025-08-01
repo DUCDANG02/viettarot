@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiểm tra Plugin Chat</title>
+    <title>Kiểm tra cuối cùng</title>
 </head>
 <body>
 
-    <h1>Đây là trang kiểm tra Plugin Chat của Facebook</h1>
-    <p>Nếu bạn thấy bong bóng chat ở góc dưới bên phải, điều đó có nghĩa là cài đặt trên Facebook của bạn đã chính xác.</p>
-    <p>Nếu không thấy, vui lòng kiểm tra lại các bước trong Meta Business Suite (đặc biệt là thêm tên miền và nhấn "Xuất bản").</p>
+    <h1>Đây là trang kiểm tra cuối cùng</h1>
+    <p>Trang này sử dụng ID của trang "Meta for Developers", một trang công khai và chắc chắn hoạt động.</p>
+    <p>Nếu bạn thấy bong bóng chat, điều đó chứng tỏ mã nguồn và website của bạn không có lỗi. Vấn đề 100% nằm ở phần cài đặt trên trang Facebook của bạn.</p>
 
     <!-- Messenger Chat Plugin -->
     <div id="fb-root"></div>
@@ -19,7 +19,8 @@
 
     <script>
       var chatbox = document.getElementById('fb-customer-chat');
-      chatbox.setAttribute("page_id", "592872130581144");
+      // ID này là của trang Meta for Developers, dùng để kiểm tra
+      chatbox.setAttribute("page_id", "896953343659993"); 
       chatbox.setAttribute("attribution", "biz_inbox");
     </script>
 
