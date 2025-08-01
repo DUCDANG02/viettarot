@@ -1,0 +1,2434 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài Liệu - VietTarot</title>
+
+    <link rel="icon" type="image/png" href="image/logotab.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* Chú thích: Khai báo các biến màu và font chữ toàn cục cho website */
+        /* Việc này giúp dễ dàng thay đổi giao diện toàn trang chỉ bằng cách sửa ở một nơi */
+        :root {
+            --primary-blue: #4A6CF3;
+            /* Màu xanh dương chính */
+            --primary-purple: #9B49F2;
+            /* Màu tím chính */
+            --text-primary: #1A1229;
+            /* Màu chữ chính (đen đậm) */
+            --text-secondary: #5A6474;
+            /* Màu chữ phụ (xám) */
+            --bg-white: #FFFFFF;
+            /* Màu nền trắng */
+            --bg-off-white: #F8F7FA;
+            /* Màu nền trắng ngà */
+            --border-color: #E5E7EB;
+            /* Màu đường viền */
+            --danger-color: #dc3545;
+            /* Màu cho thông báo lỗi */
+            --warning-color: #FFC107;
+            /* Màu cho sao đánh giá */
+            --success-color: #198754;
+            /* Màu cho thông báo thành công */
+            /* Màu gradient kết hợp từ xanh và tím */
+            --gradient-primary: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
+        }
+
+        /* ================== THAY ĐỔI FONT CHỮ TẠI ĐÂY ================== -->
+        /* Chú thích: Áp dụng font chữ và màu nền mặc định cho toàn bộ trang */
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Sử dụng font Poppins đã import */
+            background-color: var(--bg-off-white);
+            /* Nền trắng ngà cho trang tài liệu */
+            color: var(--text-primary);
+            /* Màu chữ đen đậm */
+        }
+
+        /* ============================================================= */
+
+        /* ======================= CSS CHO MÀN HÌNH CHỜ (PRELOADER) ======================= */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-white);
+            /* Nền trắng đồng bộ với trang web */
+            z-index: 9999;
+            /* Luôn nằm trên cùng */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.75s ease, visibility 0.75s ease;
+            /* Hiệu ứng mờ dần khi ẩn */
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #preloader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .preloader-content {
+            text-align: center;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--primary-blue);
+            /* Sử dụng màu xanh của trang web */
+            border-top-color: var(--primary-purple);
+            /* Điểm nhấn màu tím để tạo hiệu ứng xoay */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            /* Animation xoay tròn vô hạn */
+            margin: 0 auto;
+            /* Căn giữa vòng tròn */
+        }
+
+        .loading-text {
+            margin-top: 1rem;
+            /* Khoảng cách giữa vòng tròn và chữ */
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            /* Sử dụng màu chữ phụ */
+            letter-spacing: 1px;
+            /* Tăng khoảng cách ký tự cho dễ đọc */
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ======================= HẾT CSS CHO PRELOADER ======================= */
+
+
+        /* ======================= CSS CHO HEADER DÍNH VÀ CÓ BÓNG MỜ ======================= */
+        header {
+            /* --- Các thuộc tính giúp header dính lại khi cuộn --- */
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+
+            /* --- Tạo hiệu ứng đổ bóng gradient --- */
+            /* Chúng ta lấy màu nền trắng từ navbar cũ gán cho header */
+            background-color: var(--bg-white);
+
+            /* Dùng box-shadow với màu của theme để tạo hiệu ứng bóng mờ lan tỏa, mềm mại */
+            /* Đây là một kỹ thuật tạo bóng trông giống gradient và hiện đại hơn */
+            box-shadow: 0 10px 40px -15px rgba(74, 108, 243, 0.25);
+            transition: all 0.3s ease-in-out;
+            /* Hiệu ứng chuyển động mượt mà */
+        }
+
+        /* --- Tinh chỉnh lại Navbar bên trong Header --- */
+        .navbar {
+            /* Bỏ màu nền và bóng của navbar để nó trong suốt trên header */
+            background-color: transparent !important;
+            box-shadow: none !important;
+            padding: 15px 0px;
+        }
+
+        /* Chú thích: Tùy chỉnh logo thương hiệu */
+        .navbar-brand {
+            font-weight: 700;
+            /* Chữ đậm */
+            font-size: 1.75rem;
+            /* Cỡ chữ lớn hơn */
+        }
+
+        /* Chú thích: Lớp để tạo hiệu ứng gradient cho chữ "Viet" */
+        .gradient-text {
+            background: var(--gradient-primary);
+            /* Áp dụng nền gradient */
+            -webkit-background-clip: text;
+            /* Cắt nền theo hình dạng của chữ (cho trình duyệt Safari/Chrome) */
+            background-clip: text;
+            /* Cắt nền theo hình dạng của chữ */
+            -webkit-text-fill-color: transparent;
+            /* Làm cho màu chữ trong suốt để nền hiện ra */
+            color: var(--primary-blue);
+            /* Màu dự phòng nếu trình duyệt không hỗ trợ */
+        }
+
+        /* Chú thích: Tùy chỉnh các mục menu (nav-link) */
+        .navbar-nav .nav-link {
+            color: var(--text-secondary);
+            /* Màu chữ xám */
+            font-weight: 500;
+            /* Chữ hơi đậm */
+            padding: 0.4rem 1.7rem;
+            /* Đệm trong (trên-dưới, trái-phải) */
+            margin: 0 0.6rem;
+            /* Khoảng cách ngoài giữa các mục */
+            border-radius: 20px;
+            /* Bo tròn góc */
+            display: flex;
+            /* Sử dụng flexbox để căn chỉnh icon và chữ */
+            align-items: center;
+            /* Căn giữa theo chiều dọc */
+            position: relative;
+            /* Cần cho hiệu ứng hover */
+            z-index: 1;
+            /* Đảm bảo nội dung nổi lên trên hiệu ứng */
+            overflow: hidden;
+            /* Ẩn phần nền gradient tràn ra ngoài */
+            transition: color 0.4s ease-in-out;
+            /* Hiệu ứng chuyển màu chữ mượt mà */
+            background-color: transparent;
+            /* Nền trong suốt mặc định */
+        }
+
+        /* Chú thích: Lớp giả ::before để tạo nền gradient động khi di chuột (hover) */
+        .navbar-nav .nav-link::before {
+            content: '';
+            /* Bắt buộc phải có cho pseudo-element */
+            position: absolute;
+            /* Vị trí tuyệt đối so với nav-link */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* Phủ kín toàn bộ nav-link */
+            background-image: var(--gradient-primary);
+            /* Nền gradient */
+            z-index: -1;
+            /* Nằm dưới nội dung của nav-link */
+            transform: scaleX(0);
+            /* Ban đầu co lại theo chiều ngang (ẩn đi) */
+            transform-origin: left;
+            /* Hiệu ứng bắt đầu từ bên trái */
+            transition: transform 0.4s ease-in-out;
+            /* Hiệu ứng phóng to mượt mà */
+        }
+
+        /* Chú thích: Khi di chuột vào nav-link */
+        .navbar-nav .nav-link:hover {
+            color: var(--bg-white);
+            /* Đổi màu chữ thành trắng */
+        }
+
+        .navbar-nav .nav-link:hover::before {
+            transform: scaleX(1);
+            /* Phóng to nền gradient ra để hiển thị */
+        }
+
+        /* Chú thích: Tùy chỉnh cho mục menu đang được chọn (active) thành dạng viên thuốc */
+        .navbar-nav .nav-link.active {
+            color: var(--bg-white);
+            /* Đổi màu chữ thành trắng */
+            font-weight: 600;
+        }
+
+        /* Chú thích: Luôn hiển thị nền gradient cho mục active */
+        .navbar-nav .nav-link.active::before {
+            transform: scaleX(1);
+            /* Phóng to nền gradient ra để hiển thị */
+        }
+
+        /* Chú thích: Khi hover vào mục đang active thì chữ vẫn là màu trắng */
+        .navbar-nav .nav-link.active:hover {
+            color: var(--bg-white);
+        }
+
+        /* Chú thích: Tùy chỉnh navbar trên màn hình nhỏ (khi đã thu gọn) */
+        @media (max-width: 991.98px) {
+            .navbar-nav {
+                padding-top: 1rem;
+                /* Thêm khoảng đệm phía trên menu khi mở ra */
+            }
+
+            .navbar-nav .nav-item {
+                margin-bottom: 0.5rem;
+                /* Tăng khoảng cách giữa các mục menu */
+            }
+
+            .navbar-nav .nav-item:last-child {
+                margin-bottom: 0;
+            }
+
+            .navbar-nav .nav-link {
+                margin: 0;
+                /* Reset horizontal margin */
+                padding: 0.75rem 1rem;
+                /* Tăng vùng đệm cho dễ bấm */
+                justify-content: center;
+                /* Căn giữa nội dung link trên mobile */
+            }
+        }
+
+        /* Chú thích: Tùy chỉnh menu thả xuống (dropdown) */
+        .dropdown-menu {
+            border-radius: 0.75rem;
+            /* Bo góc */
+            border: 1px solid var(--border-color);
+            /* Đường viền */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            /* Đổ bóng */
+            padding: 0.5rem 0;
+            /* Đệm trong */
+            margin-top: 0.5rem !important;
+            /* Khoảng cách với mục cha */
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1.2rem;
+            /* Đệm trong */
+            font-weight: 500;
+            /* Chữ vừa */
+            color: var(--text-secondary);
+            /* Màu chữ xám */
+            display: flex;
+            /* Dùng flexbox để căn icon */
+            align-items: center;
+            /* Căn giữa theo chiều dọc */
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item:focus {
+            background-color: var(--bg-off-white);
+            /* Đổi nền khi hover */
+            color: var(--text-primary);
+            /* Đổi màu chữ khi hover */
+        }
+
+        .dropdown-item .fa-fw {
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
+        }
+
+        /* Chú thích: Tùy chỉnh nút bấm có nền gradient */
+        .btn-gradient {
+            background: var(--gradient-primary);
+            /* Nền gradient */
+            border: none;
+            /* Không có đường viền */
+            color: white;
+            /* Chữ trắng */
+            font-weight: 600;
+            /* Chữ hơi đậm */
+            padding: 0.75rem 1.5rem;
+            /* Đệm trong */
+            border-radius: 50px;
+            /* Bo tròn thành hình viên thuốc */
+            transition: all 0.4s ease;
+            /* Hiệu ứng chuyển động mượt mà */
+            box-shadow: 0 4px 15px rgba(120, 73, 242, 0.4);
+            /* Đổ bóng màu tím mờ */
+            display: inline-flex;
+            /* Hiển thị như inline-block và dùng flex */
+            align-items: center;
+            /* Căn giữa icon và chữ theo chiều dọc */
+            justify-content: center;
+            /* Căn giữa nội dung theo chiều ngang */
+            text-decoration: none;
+            background-size: 200% auto;
+            /* Kích thước nền lớn hơn để có không gian di chuyển */
+        }
+
+        .btn-gradient:hover {
+            color: white;
+            /* Giữ màu chữ trắng khi hover */
+            transform: translateY(-2px);
+            /* Di chuyển nút lên trên một chút */
+            box-shadow: 0 6px 20px rgba(120, 73, 242, 0.5);
+            /* Tăng độ đậm của bóng */
+            background-position: right center;
+            /* Di chuyển nền gradient khi hover */
+        }
+
+        .fa-user {
+            margin-right: 10px;
+        }
+
+        /* === CSS THIẾT KẾ LẠI MODAL ĐĂNG NHẬP / ĐĂNG KÝ === */
+        .modal.fade .modal-dialog {
+            transform: translate(0, -25px);
+            transition: transform 0.4s ease-out;
+        }
+
+        .modal.show .modal-dialog {
+            transform: translate(0, 0);
+        }
+
+        .modal-content {
+            border-radius: 1rem;
+            /* Bo tròn góc modal */
+            border: none;
+            /* Bỏ viền mặc định */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            /* Đổ bóng đẹp hơn */
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+            /* Viền dưới cho header */
+            padding: 1.5rem;
+            /* Tăng đệm */
+            position: relative;
+            /* Cần cho nút close */
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            /* Tăng đệm */
+        }
+
+        .modal-title {
+            font-weight: 700;
+            /* Chữ tiêu đề đậm */
+            color: var(--text-primary);
+        }
+
+        .modal-subtitle {
+            font-size: 0.95rem;
+            /* Cỡ chữ phụ đề */
+            color: var(--text-secondary);
+        }
+
+        .btn-close {
+            /* Nút đóng modal (dấu X) */
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+
+        .form-group-icon {
+            position: relative;
+        }
+
+        .form-group-icon .form-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            /* Căn icon chính giữa ô input theo chiều dọc */
+            color: var(--text-secondary);
+            pointer-events: none;
+            /* Icon không thể được click */
+        }
+
+        .form-control {
+            /* Tùy chỉnh chung cho các ô input */
+            background-color: var(--bg-off-white);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control-icon {
+            /* Ô input có icon bên trái cần thêm đệm trái */
+            padding-left: 2.8rem !important;
+        }
+
+        .form-control:focus {
+            /* Khi người dùng click vào ô input */
+            background-color: var(--bg-white);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(74, 108, 243, 0.2);
+            /* Tạo viền sáng màu xanh */
+        }
+
+        .form-text a {
+            /* Link "Quên mật khẩu?" */
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .social-login-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .social-login-divider::before,
+        .social-login-divider::after {
+            content: '';
+            flex: 1;
+            /* Hai đường kẻ sẽ tự động co giãn lấp đầy không gian */
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .social-login-divider:not(:empty)::before {
+            margin-right: .5em;
+        }
+
+        /* Khoảng cách giữa kẻ và chữ */
+        .social-login-divider:not(:empty)::after {
+            margin-left: .5em;
+        }
+
+        .btn-social {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            /* Xếp icon và chữ theo chiều dọc */
+            justify-content: center;
+            align-items: center;
+            gap: 0.3rem;
+            /* Khoảng cách giữa icon và chữ */
+            text-decoration: none;
+        }
+
+        .btn-social:hover {
+            background-color: var(--bg-off-white);
+            border-color: #d1d5db;
+        }
+
+        .btn-social img {
+            width: 22px;
+            height: 22px;
+        }
+
+        .btn-social-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .invalid-feedback {
+            display: none;
+            /* Ẩn mặc định, chỉ hiện khi có lỗi bằng JS */
+            width: 100%;
+            margin-top: .25rem;
+            font-size: .875em;
+            color: var(--danger-color);
+        }
+
+        .form-control.is-invalid {
+            /* Khi ô input có lỗi */
+            border-color: var(--danger-color);
+            /* Viền màu đỏ */
+        }
+
+        .form-control.is-invalid:focus {
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+            /* Viền sáng màu đỏ khi focus */
+        }
+
+        .form-control.is-valid {
+            /* Khi ô input hợp lệ */
+            border-color: #198754;
+            /* Viền màu xanh lá */
+        }
+
+        .form-control.is-valid:focus {
+            box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+            /* Viền sáng màu xanh lá khi focus */
+        }
+
+        .password-toggle-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            /* Biến con trỏ thành hình bàn tay */
+            color: var(--text-secondary);
+        }
+
+        .auth-alert {
+            font-size: 0.9rem;
+            padding: 0.75rem 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            background-color: var(--border-color);
+            /* Màu nền dự phòng */
+            border: 2px solid var(--primary-purple);
+            /* Thêm viền màu tím */
+            box-shadow: 0 2px 8px rgba(155, 73, 242, 0.4);
+            /* Thêm hiệu ứng toả sáng */
+        }
+
+        /* CSS cho thông báo khớp mật khẩu */
+        #password-match-feedback {
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+            width: 100%;
+        }
+
+        .password-match {
+            color: var(--success-color);
+        }
+
+        .password-mismatch {
+            color: var(--danger-color);
+        }
+
+        /* ======================= CSS CHUNG CHO CÁC SECTION ======================= */
+        .section-title {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+        }
+
+        /* ======================= CSS CHO FOOTER ======================= */
+        .site-footer {
+            background: var(--gradient-primary);
+            /* Nền gradient */
+            color: rgba(255, 255, 255, 0.8);
+            /* Chữ trắng mờ */
+            font-size: 0.95rem;
+            padding-top: 4rem;
+            background-size: 200% 200%;
+            /* Kích thước nền lớn để animation */
+            animation: gradient-animation 10s ease infinite;
+            /* Áp dụng animation */
+        }
+
+        /* Keyframe cho animation của footer */
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+
+        .footer-widget h5 {
+            color: var(--bg-white);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo {
+            font-weight: 700;
+            font-size: 1.75rem;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo .gradient-text {
+            background: var(--bg-white);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .footer-logo span:last-child {
+            color: var(--bg-white);
+            /* Chữ "Tarot" cũng màu trắng */
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--bg-white);
+            padding-left: 5px;
+            /* Hiệu ứng thụt vào khi hover */
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            /* Nền trắng mờ */
+            color: var(--bg-white);
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+
+        .social-icons a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            background-color: rgba(0, 0, 0, 0.1);
+            /* Nền tối hơn một chút cho phần copyright */
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-bottom p {
+            color: var(--bg-white);
+        }
+
+        /* ======================= CSS CHO LOGO HÌNH ẢNH ======================= */
+        #header-logo {
+            max-height: 40px;
+            width: auto;
+        }
+
+        #footer-logo {
+            max-height: 50px;
+            width: auto;
+        }
+
+        /* CSS CHO THÔNG BÁO THÀNH CÔNG */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 18, 41, 0.7);
+            z-index: 1060;
+            /* Phải cao hơn z-index của modal (1055) */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .fullscreen-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .success-notification {
+            background-color: var(--bg-white);
+            padding: 2.5rem 3rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            /* Hiệu ứng nảy lên */
+        }
+
+        .fullscreen-overlay.show .success-notification {
+            transform: scale(1);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .success-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .success-message {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+        
+        /* START: CSS MỚI CHO POPUP "ĐANG CẬP NHẬT" */
+        .updating-icon {
+            font-size: 4rem;
+            color: var(--primary-blue); /* Sử dụng màu xanh dương */
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+        /* END: CSS MỚI CHO POPUP "ĐANG CẬP NHẬT" */
+
+        /* ============================ START: CSS ĐÃ CẬP NHẬT CHO TRANG TÀI LIỆU ============================ */
+        
+        /* --- CSS cho Header với nền gradient --- */
+        .page-header {
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            background: var(--gradient-primary); 
+            margin-bottom: 100px;
+            border-radius: 0 0 1.5rem 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+        }
+
+        .page-header .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header h1 {
+            font-weight: 700;
+            color: var(--bg-white);
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.3); 
+        }
+        .page-header .lead {
+            color: rgba(255, 255, 255, 0.9); 
+            margin-bottom: 2rem; 
+        }
+
+        /* --- CSS cho thanh tìm kiếm mới trong header --- */
+        .header-search-form {
+            position: relative; /* Container cho input và button */
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .header-search-form .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .header-search-form #document-search {
+            width: 100%; /* Chiếm toàn bộ chiều rộng của container */
+            padding: 1rem 8.5rem 1rem 3.5rem; /* Thay đổi: Tăng padding-right để chừa chỗ cho nút */
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-white);
+            box-shadow: none;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            height: 56px; /* Đặt chiều cao cố định để căn chỉnh nút dễ hơn */
+        }
+                
+        .header-search-form #document-search::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* Nút tìm kiếm mới */
+        .header-search-form .btn-gradient {
+            position: absolute; /* Thay đổi: Định vị tuyệt đối */
+            right: 12px; /* Thay đổi: Căn phải bên trong input */
+            top: 50%; /* Thay đổi: Căn giữa theo chiều dọc */
+            transform: translateY(-50%); /* Thay đổi: Căn giữa theo chiều dọc */
+            border-radius: 50px; /* Hình viên thuốc */
+            padding: 0.5rem 1.2rem; /* Thay đổi: Giảm padding để nút nhỏ hơn */
+            white-space: nowrap;
+            z-index: 2;
+            font-size: 0.9rem; /* Giảm cỡ chữ một chút */
+            box-shadow: none; /* Bỏ box-shadow mặc định của btn-gradient */
+        }
+
+        .header-search-form .btn-gradient:hover {
+            transform: translateY(-50%) scale(1.05); /* Điều chỉnh lại hiệu ứng hover */
+            box-shadow: 0 4px 15px rgba(120, 73, 242, 0.4);
+        }
+        
+        /* --- CSS cho phần nội dung chính --- */
+        .document-container-wrapper {
+            background-color: var(--bg-white);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+            margin-top: -80px; /* Kéo khối nội dung lên trên, đè lên phần dưới của header */
+            position: relative; /* Cần để hoạt động đúng */
+            z-index: 5; /* Nằm trên header */
+        }
+        
+        .document-card {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .document-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .document-card-thumbnail {
+            display: block;
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4 / 3;
+            /* START: THAY ĐỔI THEO YÊU CẦU */
+            background-color: var(--bg-off-white); /* Thêm màu nền nhạt cho vùng ảnh */
+            /* END: THAY ĐỔI THEO YÊU CẦU */
+        }
+
+        .document-card-thumbnail img {
+            width: 100%;
+            height: 100%;
+            /* START: THAY ĐỔI THEO YÊU CẦU */
+            object-fit: contain; /* Thay đổi từ 'cover' thành 'contain' để ảnh luôn hiển thị hết */
+            /* END: THAY ĐỔI THEO YÊU CẦU */
+            transition: transform 0.3s ease;
+        }
+
+        .document-card:hover .document-card-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .document-card-category {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--gradient-primary);
+            color: var(--bg-white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .document-card-body {
+            padding: 1.25rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .document-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.4; 
+            margin-bottom: 0.65rem;
+            min-height: 3.1em; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical;
+            color: var(--text-primary);
+        }
+
+        .document-card-price {
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            flex-wrap: nowrap;
+        }
+
+        .price-sale {
+            font-size: 1.2rem; 
+            font-weight: 700;
+            color: var(--danger-color); 
+        }
+
+        .price-original {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-decoration: line-through; 
+        }
+
+        .price-free {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--success-color);
+        }
+
+        .document-card-footer {
+            margin-top: auto; /* Đẩy footer xuống dưới cùng của card-body */
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+            gap: 0.2rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+
+        .sidebar-widget {
+            background-color: var(--bg-off-white); 
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid #EDF2F7;
+        }
+
+        .sidebar-widget-title {
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-widget-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 50px;
+            height: 2px;
+            background: var(--gradient-primary);
+        }
+
+        .sidebar-widget-title i {
+            font-size: 1.1rem;
+            margin-right: 0.6rem;
+        }
+
+        .sidebar-widget-title .icon-popular {
+            color: #FF6B6B; /* Màu đỏ san hô cho icon phổ biến */
+        }
+
+        .sidebar-widget-title .icon-latest {
+            color: var(--primary-blue); /* Màu xanh dương cho icon mới nhất */
+        }
+
+        .widget-post-list .widget-post-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .widget-post-list .widget-post-item:not(:last-child) {
+            margin-bottom: 1rem;
+        }
+
+        .widget-post-thumbnail {
+            flex-shrink: 0;
+            width: 70px;
+            height: 70px;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .widget-post-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .widget-post-content h6 {
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            /* START: Thêm CSS để giới hạn tiêu đề 2 dòng */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Số dòng muốn hiển thị */
+            -webkit-box-orient: vertical;
+            /* END: Thêm CSS để giới hạn tiêu đề 2 dòng */
+        }
+
+        .widget-post-content h6 a {
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
+        }
+
+        .widget-post-content h6 a:hover {
+            color: var(--primary-blue);
+        }
+
+        .widget-post-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .no-results-message {
+            background-color: var(--bg-white);
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        /* START: CSS MỚI CHO BỘ LỌC */
+        .filter-btn {
+            background-color: var(--bg-off-white);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-radius: 50px;
+            padding: 0.5rem 1.2rem;
+        }
+        
+        .filter-dropdown {
+            background-color: var(--bg-white) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+            font-weight: 500 !important;
+            border-radius: 50px !important;
+        }
+        .filter-dropdown:focus {
+            box-shadow: 0 0 0 0.25rem rgba(74, 108, 243, 0.25) !important;
+        }
+        /* END: CSS MỚI CHO BỘ LỌC */
+
+
+        /* START: CSS MỚI CHO PHÂN TRANG */
+        .pagination-container {
+            margin-top: 2.5rem;
+        }
+        .pagination .page-link {
+            border-radius: 50% !important; /* Make it circle */
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px; /* Add space between buttons */
+            border: 1px solid var(--border-color);
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+         .pagination .page-link:hover {
+            background-color: var(--bg-off-white);
+            color: var(--primary-blue);
+            border-color: var(--primary-blue);
+        }
+        .pagination .page-item.disabled .page-link {
+            background-color: transparent;
+            color: #ced4da;
+            border-color: var(--border-color);
+        }
+        .pagination .page-item.active .page-link {
+             background: var(--gradient-primary);
+             border-color: transparent;
+             color: white;
+             box-shadow: 0 4px 15px rgba(120, 73, 242, 0.3);
+        }
+        /* END: CSS MỚI CHO PHÂN TRANG */
+
+        /* START: CSS MỚI CHO MODAL CHI TIẾT TÀI LIỆU */
+        #documentDetailModal .modal-body {
+            display: flex;
+            gap: 1.5rem;
+        }
+        #documentDetailModal .modal-body img {
+            max-width: 250px;
+            height: auto;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            align-self: flex-start;
+        }
+        #documentDetailInfo h3 {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        #documentDetailInfo .price-section {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--danger-color);
+            margin: 1rem 0;
+        }
+        #documentDetailInfo .price-section .price-free {
+            color: var(--success-color);
+        }
+        #documentDetailInfo .meta-info {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+         #documentDetailInfo .meta-info .fas {
+            width: 20px;
+            text-align: center;
+            margin-right: 0.5rem;
+            color: var(--primary-blue);
+         }
+        #documentDetailInfo .description {
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        #documentDetailModal .modal-footer {
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* START: CSS MỚI CHO MODAL XEM PDF VÀ THANH TIẾN TRÌNH (ĐÃ CẬP NHẬT) */
+        #pdfViewerModal .modal-body {
+            position: relative; /* Cần thiết để định vị lớp phủ */
+        }
+
+        #pdf-loader-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-off-white);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 2rem;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #pdf-loader-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        #pdf-loader-overlay .pdf-loader-content {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        #pdf-loader-overlay .progress-bar {
+            background: var(--gradient-primary);
+            transition: width 0.1s linear; /* Animation mượt cho thanh tiến trình */
+        }
+
+        #pdf-iframe {
+            border: none; /* Bỏ viền của iframe */
+            opacity: 0; /* Ẩn iframe ban đầu */
+            transition: opacity 0.5s ease; /* Hiệu ứng mờ dần khi hiện ra */
+        }
+
+        #pdf-iframe.loaded {
+            opacity: 1; /* Hiện iframe khi đã tải xong */
+        }
+        
+        /* START: CSS MỚI CHO HEADER TÙY CHỈNH CỦA TRÌNH XEM PDF */
+        #pdf-viewer-custom-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 48px; /* Chiều cao tương đương header của Google Drive */
+            background-color: var(--bg-white);
+            z-index: 5; /* Nằm dưới loader (10), nhưng trên iframe */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem 0 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            
+            /* Ẩn ban đầu, sẽ hiện ra cùng iframe */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #pdf-viewer-title-placeholder {
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 60%; /* Ngăn tiêu đề quá dài */
+        }
+
+        .rounded-pill{
+            height: 30px;
+        }
+        /* END: CSS MỚI CHO HEADER TÙY CHỈNH CỦA TRÌNH XEM PDF */
+        /* END: CSS MỚI CHO MODAL XEM PDF VÀ THANH TIẾN TRÌNH */
+        
+        /* ============================ START: CSS CHO HIỆU ỨNG & ANIMATION MỚI ============================ */
+
+        /* --- Hiệu ứng cho phần tử xuất hiện khi cuộn --- */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Thêm hiệu ứng hover cho bài viết ở sidebar --- */
+        .widget-post-item {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            margin: 0 -0.5rem; /* Bù lại padding để không làm thay đổi layout */
+        }
+        .widget-post-item:hover {
+            background-color: var(--bg-white);
+            transform: translateX(5px);
+        }
+
+        /* --- Cải thiện hiệu ứng modal --- */
+        #documentDetailModal.fade .modal-dialog {
+            transform: scale(0.9);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.3s ease;
+        }
+
+        #documentDetailModal.show .modal-dialog {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* --- Hiệu ứng cho thanh tìm kiếm khi focus --- */
+        .header-search-form #document-search:focus {
+            box-shadow: 0 0 0 4px rgba(74, 108, 243, 0.2), 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* --- Hiệu ứng cho các nút filter --- */
+        .filter-btn {
+            transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+        .filter-btn:hover:not(.active) {
+            transform: translateY(-2px);
+            background-color: #e9e7ec;
+            border-color: #d1d5db;
+        }
+        .filter-btn.active {
+            background: var(--gradient-primary);
+            color: var(--bg-white);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(120, 73, 242, 0.3);
+        }
+
+        /* ============================ END: CSS CHO HIỆU ỨNG & ANIMATION MỚI ============================ */
+        
+        /* ============================ START: CSS RESPONSIVE CHO MOBILE & TABLET ============================ */
+        
+        /* --- Dành cho Tablet (<= 991.98px) --- */
+        @media (max-width: 991.98px) {
+            .document-container-wrapper {
+                margin-top: -70px;
+                padding: 2rem;
+            }
+            
+            /* START: Cập nhật cho nút đóng trình xem PDF */
+            #pdf-viewer-custom-header .btn {
+                padding: 0.35rem 0.8rem; /* Giảm padding */
+                font-size: 0.8rem; /* Giảm cỡ chữ */
+            }
+            /* END: Cập nhật cho nút đóng trình xem PDF */
+        }
+
+        /* --- Dành cho Mobile lớn (<= 767.98px) --- */
+        @media (max-width: 767.98px) {
+            .page-header {
+                padding: 2.5rem 0;
+                margin-bottom: 80px;
+            }
+            .page-header h1 {
+                font-size: 2.25rem;
+            }
+            .page-header .lead {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            .document-container-wrapper {
+                padding: 1.5rem;
+                margin-top: -60px;
+            }
+             #document-filters {
+                justify-content: center; /* Căn giữa các nút filter */
+            }
+            #document-filters .dropdown {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            #document-filters .dropdown .btn {
+                width: 100%;
+            }
+            #documentDetailModal .modal-body {
+                flex-direction: column;
+            }
+            #documentDetailModal .modal-body img {
+                max-width: 100%;
+                margin-bottom: 1rem;
+            }
+            #documentDetailInfo h3 {
+                font-size: 1.3rem;
+            }
+        }
+        
+        /* --- Dành cho Mobile nhỏ (<= 575.98px) --- */
+        @media (max-width: 575.98px) {
+            .header-search-form #document-search {
+                padding: 0.8rem 6.5rem 0.8rem 3rem;
+                height: 48px;
+                font-size: 0.9rem;
+            }
+            .header-search-form .btn-gradient {
+                padding: 0.4rem 1rem;
+                font-size: 0.85rem;
+                right: 8px;
+            }
+            .header-search-form .search-icon {
+                left: 1.1rem;
+            }
+            .document-card-title {
+                font-size: 1rem;
+            }
+        }
+        /* ============================ END: CSS RESPONSIVE ============================ */
+        
+        /* ============================ END: CSS ĐÃ CẬP NHẬT CHO TRANG TÀI LIỆU ============================ */
+    </style>
+</head>
+
+<body>
+    <!-- Màn hình chờ -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="loader"></div>
+            <div class="loading-text">Đang tải...</div>
+        </div>
+    </div>
+
+    <!-- Header (Giữ nguyên) -->
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="https://placehold.co/150x40/E5E7EB/1A1229?text=Loading..." alt="VietTarot Logo" id="header-logo">
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="fas fa-home me-2"></i>
+                                Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fas fa-graduation-cap me-2"></i>
+                                Khoá học
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="document.html">
+                                <i class="fas fa-book me-2"></i>
+                                Tài liệu
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="blog.html">
+                                <i class="fas fa-scroll me-2"></i>
+                                Bài Viết
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fas fa-users me-2"></i>
+                                Về chúng tôi
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div id="auth-container" class="d-flex justify-content-center mt-3 mt-lg-0">
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Nội dung chính của trang Tài liệu -->
+    <main>
+        <!-- ============================ START: HTML ĐÃ CẬP NHẬT ============================ -->
+        <section class="page-header">
+            <div class="container">
+                <h1>Kho Tàng Tri Thức</h1>
+                <p class="lead">Khám phá bộ sưu tập tài liệu Tarot và Huyền học độc quyền của VietTarot.</p>
+                
+                <!-- Thanh tìm kiếm mới -->
+                <form class="header-search-form" onsubmit="event.preventDefault();">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="document-search" class="form-control" placeholder="Tìm kiếm tài liệu theo tiêu đề...">
+                    <button type="submit" class="btn btn-gradient">Tìm kiếm</button>
+                </form>
+
+            </div>
+        </section>
+
+        <section class="documents-section py-5">
+            <div class="container">
+                 <div class="document-container-wrapper">
+                     <div class="row">
+                         <!-- Cột chính: Danh sách tài liệu -->
+                         <div class="col-lg-8">
+                             <!-- START: HTML MỚI CHO BỘ LỌC -->
+                             <div class="row">
+                                <div class="col-12 mb-4">
+                                    <div class="d-flex flex-wrap align-items-center gap-2" id="document-filters">
+                                        <button class="btn filter-btn active" data-filter-type="all">Tất cả</button>
+                                        <button class="btn filter-btn" data-filter-type="free">Miễn phí</button>
+                                        <div class="dropdown ms-md-auto">
+                                            <button class="btn filter-dropdown dropdown-toggle" type="button" id="category-filter-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Tất cả danh mục
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="category-filter-dropdown" id="category-filter-list">
+                                                <!-- Categories will be populated by JS -->
+                                                <li><p class="text-center my-2 text-secondary small">Đang tải...</p></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                             <!-- END: HTML MỚI CHO BỘ LỌC -->
+
+                             <!-- CẬP NHẬT: Giảm khoảng cách cột (gutter) từ g-4 thành g-3 -->
+                             <div class="row g-3" id="documents-list">
+                                 <!-- Spinner loading -->
+                                 <div class="col-12 text-center" id="documents-loader">
+                                     <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                                         <span class="visually-hidden">Loading...</span>
+                                     </div>
+                                     <p class="mt-3 text-secondary">Đang tải danh sách tài liệu...</p>
+                                 </div>
+                                 <!-- Nội dung tài liệu sẽ được JS chèn vào đây -->
+                             </div>
+
+                             <!-- START: HTML MỚI CHO PHÂN TRANG -->
+                             <nav class="pagination-container d-flex justify-content-center">
+                                <ul class="pagination" id="pagination-controls">
+                                  <!-- Các nút phân trang sẽ được JS chèn vào đây -->
+                                </ul>
+                              </nav>
+                             <!-- END: HTML MỚI CHO PHÂN TRANG -->
+                         </div>
+
+                         <!-- Cột phụ: Sidebar -->
+                         <div class="col-lg-4 mt-5 mt-lg-0">
+                             <!-- Widget Tài liệu phổ biến -->
+                             <aside class="sidebar-widget">
+                                 <h4 class="sidebar-widget-title">
+                                     <i class="fas fa-fire icon-popular"></i>
+                                     <span>Tài Liệu Phổ Biến</span>
+                                 </h4>
+                                 <div class="widget-post-list" id="popular-documents-list">
+                                     <!-- Dữ liệu được chèn bằng JS -->
+                                     <p class="text-secondary small">Đang tải...</p>
+                                 </div>
+                             </aside>
+
+                             <!-- Widget Tài liệu mới nhất -->
+                             <aside class="sidebar-widget">
+                                 <h4 class="sidebar-widget-title">
+                                     <i class="fas fa-clock icon-latest"></i>
+                                     <span>Tài Liệu Mới Nhất</span>
+                                 </h4>
+                                 <div class="widget-post-list" id="latest-documents-list">
+                                     <!-- Dữ liệu được chèn bằng JS -->
+                                     <p class="text-secondary small">Đang tải...</p>
+                                 </div>
+                             </aside>
+                         </div>
+                     </div>
+                 </div>
+            </div>
+        </section>
+        <!-- ============================ END: HTML ĐÃ CẬP NHẬT ============================ -->
+    </main>
+
+    <!-- Footer (Giữ nguyên) -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                    <div class="footer-widget">
+                        <a class="footer-logo" href="#">
+                            <img src="https://placehold.co/180x50/E5E7EB/1A1229?text=Loading..." alt="VietTarot Logo" id="footer-logo">
+                        </a>
+                        <p class="mt-3">Nền tảng học Tarot và Huyền học trực tuyến hàng đầu Việt Nam. Khai phá tiềm năng, thấu hiểu bản thân và định hướng tương lai.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                    <div class="footer-widget">
+                        <h5>Khám Phá</h5>
+                        <ul class="list-unstyled footer-links">
+                            <li><a href="#">Trang chủ</a></li>
+                            <li><a href="#">Khoá học</a></li>
+                            <li><a href="#">Bí kíp võ công</a></li>
+                            <li><a href="#">Về chúng tôi</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <div class="footer-widget">
+                        <h5>Tài Liệu</h5>
+                        <ul class="list-unstyled footer-links">
+                            <li><a href="#">Ý nghĩa 78 lá bài Tarot</a></li>
+                            <li><a href="#">Các trải bài thông dụng</a></li>
+                            <li><a href="#">Kiến thức Chiêm tinh</a></li>
+                            <li><a href="#">Kiến thức Thần số học</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h5>Kết Nối Với Chúng Tôi</h5>
+                        <p>Theo dõi VietTarot trên các nền tảng mạng xã hội để không bỏ lỡ kiến thức hữu ích!</p>
+                        <div class="social-icons mt-3">
+                            <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" title="Youtube"><i class="fab fa-youtube"></i></a>
+                            <a href="#" title="Tiktok"><i class="fab fa-tiktok"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container text-center">
+                <p class="mb-0">&copy; 2025 VietTarot. Mọi quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Các Modal (Auth) -->
+    <div id="fullscreen-success-overlay" class="fullscreen-overlay">
+        <div class="success-notification">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h4 class="success-title">Thành Công!</h4>
+            <p class="success-message">Bạn đã tạo tài khoản thành công.</p>
+        </div>
+    </div>
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title" id="loginModalLabel">Đăng nhập</h5>
+                        <p class="mb-0 modal-subtitle">Chào mừng bạn trở lại VietTarot!</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="login-form">
+                        <div id="login-alert"></div>
+                        <div class="mb-3 form-group-icon">
+                            <i class="fas fa-envelope form-icon"></i>
+                            <input type="email" class="form-control form-control-icon" id="loginEmail" placeholder="Email" required>
+                        </div>
+                        <div class="mb-3 form-group-icon">
+                            <i class="fas fa-lock form-icon"></i>
+                            <input type="password" class="form-control form-control-icon" id="loginPassword" placeholder="Mật khẩu" required>
+                            <i class="fas fa-eye password-toggle-icon" id="toggleLoginPassword"></i>
+                        </div>
+                        <div class="mb-4 text-end">
+                            <div id="passwordHelp" class="form-text">
+                                <a href="#">Quên mật khẩu?</a>
+                            </div>
+                        </div>
+                        <button type="submit" id="login-submit-btn" class="btn btn-gradient w-100 py-2">Đăng nhập</button>
+                    </form>
+
+                    <div class="social-login-divider my-4">Hoặc tiếp tục với</div>
+
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button class="btn btn-social" title="Đăng nhập với Google">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google logo">
+                                <span class="btn-social-text">Google</span>
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-social" title="Đăng nhập với Facebook" id="facebook-login-btn">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook logo">
+                                <span class="btn-social-text">Facebook</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <p class="mb-0 text-secondary">Chưa có tài khoản?
+                            <a href="#" class="fw-bold text-decoration-none" data-bs-toggle="modal" data-bs-target="#registerModal" style="color: var(--primary-blue);">Đăng ký ngay</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title" id="registerModalLabel">Tạo tài khoản</h5>
+                        <p class="mb-0 modal-subtitle">Bắt đầu hành trình khám phá Tarot của bạn!</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm" novalidate>
+                        <div id="register-alert"></div>
+                        <div class="mb-3">
+                            <div class="form-group-icon">
+                                <i class="fas fa-user form-icon"></i>
+                                <input type="text" class="form-control form-control-icon" id="registerName" placeholder="Họ và tên" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group-icon">
+                                <i class="fas fa-envelope form-icon"></i>
+                                <input type="email" class="form-control form-control-icon" id="registerEmail" placeholder="Email" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group-icon">
+                                <i class="fas fa-phone form-icon"></i>
+                                <input type="tel" class="form-control form-control-icon" id="registerPhone" placeholder="Số điện thoại" required>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-group-icon">
+                            <i class="fas fa-lock form-icon"></i>
+                            <input type="password" class="form-control form-control-icon" id="registerPassword" placeholder="Mật khẩu" required>
+                            <i class="fas fa-eye password-toggle-icon" id="toggleRegisterPassword"></i>
+                        </div>
+                        <div class="mb-4 form-group-icon">
+                            <i class="fas fa-check-circle form-icon"></i>
+                            <input type="password" class="form-control form-control-icon" id="confirmPassword" placeholder="Xác nhận mật khẩu" required>
+                            <i class="fas fa-eye password-toggle-icon" id="toggleConfirmPassword"></i>
+                            <div id="password-match-feedback" class="mt-1"></div>
+                        </div>
+                        <button type="submit" id="register-submit-btn" class="btn btn-gradient w-100 py-2" disabled>Tạo tài khoản</button>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <p class="mb-0 text-secondary">Đã có tài khoản?
+                            <a href="#" class="fw-bold text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginModal" style="color: var(--primary-blue);">Đăng nhập ngay</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================ START: HTML ĐÃ CẬP NHẬT ============================ -->
+    <!-- Modal Chi tiết Tài liệu -->
+    <div class="modal fade" id="documentDetailModal" tabindex="-1" aria-labelledby="documentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="documentDetailModalLabel">Chi Tiết Tài Liệu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="documentDetailBody">
+                    <!-- Nội dung chi tiết sẽ được JS điền vào đây -->
+                    <div class="text-center w-100">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <!-- Cập nhật: Nút này sẽ được điều khiển bằng JS, không tự mở modal nữa -->
+                    <button type="button" id="modal-view-button" class="btn btn-gradient">
+                        <i class="fas fa-file-pdf me-2"></i>Xem Ngay
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Trình xem PDF -->
+    <div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <!-- START: HTML MỚI CHO THANH TIẾN TRÌNH -->
+                    <div id="pdf-loader-overlay">
+                        <div class="pdf-loader-content">
+                            <div class="progress mb-3" style="height: 10px;">
+                                <div id="pdf-progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <p class="mb-0 fw-bold"><span id="pdf-progress-text">Đang tải tài liệu: 0%</span></p>
+                        </div>
+                    </div>
+                    <!-- END: HTML MỚI CHO THANH TIẾN TRÌNH -->
+                    
+                    <!-- START: HTML MỚI CHO HEADER TÙY CHỈNH -->
+                    <div id="pdf-viewer-custom-header">
+                        <span id="pdf-viewer-title-placeholder" class="gradient-text">Tên tài liệu...</span>
+                        <a href="#" class="btn btn-sm btn-gradient rounded-pill" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times me-sm-1"></i>
+                            <span class="d-none d-sm-inline">Đóng trình xem</span>
+                        </a>
+                    </div>
+                    <!-- END: HTML MỚI CHO HEADER TÙY CHỈNH -->
+
+                    <iframe id="pdf-iframe" src="" width="100%" height="100%"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- START: HTML MỚI CHO POPUP "ĐANG CẬP NHẬT" -->
+    <div id="updating-document-overlay" class="fullscreen-overlay">
+        <div class="success-notification">
+            <div class="updating-icon">
+                <i class="fas fa-sync-alt fa-spin"></i>
+            </div>
+            <h4 class="success-title">Tài liệu đang cập nhật</h4>
+            <p class="success-message">Nội dung này đang được chúng tôi hoàn thiện. Vui lòng quay lại sau!</p>
+        </div>
+    </div>
+    <!-- END: HTML MỚI CHO POPUP "ĐANG CẬP NHẬT" -->
+    <!-- ============================ END: HTML ĐÃ CẬP NHẬT ============================ -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // ======================= SUPABASE CLIENT INITIALIZATION (GIỮ NGUYÊN) =======================
+            const SUPABASE_URL = 'https://lkznteubcwladqkxyaqo.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrem50ZXViY3dsYWRxa3h5YXFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjcwODksImV4cCI6MjA2NzgwMzA4OX0.7P4-H_ujbLG2KLEFiVtlGIs8o515OkqNw9MVPDF7sCY';
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            // ======================= AUTHENTICATION LOGIC (GIỮ NGUYÊN) =======================
+            // ... (Toàn bộ code xử lý đăng nhập, đăng ký, đăng xuất được giữ nguyên)
+            const authContainer = document.getElementById('auth-container');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('registerForm');
+            const facebookLoginBtn = document.getElementById('facebook-login-btn');
+            const defaultAvatarIcon = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='50' fill='%23E5E7EB'/%3E%3Cpath d='M66.95 66.78a25.02 25.02 0 00-33.9 0C24.4 71.3 20 79.95 20 90h60c0-10.05-4.4-18.7-13.05-23.22zM50 55c-10.33 0-18.7-8.37-18.7-18.7S39.67 17.6 50 17.6s18.7 8.37 18.7 18.7-8.37 18.7-18.7 18.7z' fill='%23A0AEC0'/%3E%3C/svg%3E";
+            function translateSupabaseError(errorMessage){if(!errorMessage)return"Đã có lỗi xảy ra. Vui lòng thử lại.";if(errorMessage.includes("User already registered")){return"Email này đã được đăng ký. Vui lòng sử dụng email khác."}if(errorMessage.includes("Password should be at least 6 characters")){return"Mật khẩu phải có ít nhất 6 ký tự."}if(errorMessage.includes("Invalid login credentials")){return"Email hoặc mật khẩu không chính xác."}if(errorMessage.includes("Unable to validate email address: invalid format")){return"Địa chỉ email không hợp lệ."}return`Đã xảy ra lỗi: ${errorMessage}`}
+            function showAlert(containerId,message,type='danger'){const alertContainer=document.getElementById(containerId);if(alertContainer){alertContainer.innerHTML=`
+                                 <div class="alert alert-${type} alert-dismissible fade show auth-alert" role="alert">
+                                     ${message}
+                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                 </div>
+                             `}}
+            function updateUI(user){if(!authContainer)return;if(user){const fullName=user.user_metadata?.full_name||user.email;const avatarUrl=user.user_metadata?.avatar_url||defaultAvatarIcon;authContainer.innerHTML=`
+                                 <div class="nav-item dropdown">
+                                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                                        style="background-color: transparent; padding: 0.1rem 0.5rem; margin:0; border-radius: 50px;">
+                                         <img src="${avatarUrl}" alt="${fullName}" class="user-avatar">
+                                         <span class="gradient-text fw-bold">${fullName}</span>
+                                     </a>
+                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                         <li><a class="dropdown-item" href="#"><i class="fas fa-user-circle fa-fw"></i> Hồ sơ của tôi</a></li>
+                                         <li><a class="dropdown-item" href="#"><i class="fas fa-cog fa-fw"></i> Cài đặt</a></li>
+                                         <li><hr class="dropdown-divider"></li>
+                                         <li><a class="dropdown-item" href="#" id="logout-button"><i class="fas fa-sign-out-alt fa-fw"></i> Đăng xuất</a></li>
+                                     </ul>
+                                 </div>
+                             `;document.getElementById('logout-button').addEventListener('click',handleLogout)}else{authContainer.innerHTML=`
+                                 <a href="#" class="btn-gradient" data-bs-toggle="modal" data-bs-target="#loginModal">
+                                     <i class="fa-solid fa-user me-2"></i>
+                                     <span>Đăng ký / Đăng nhập</span>
+                                 </a>
+                             `}}
+            async function handleRegister(event){event.preventDefault();const name=document.getElementById('registerName').value;const email=document.getElementById('registerEmail').value;const phone=document.getElementById('registerPhone').value;const password=document.getElementById('registerPassword').value;const registerButton=document.getElementById('register-submit-btn');document.getElementById('register-alert').innerHTML='';registerButton.disabled=true;registerButton.innerHTML=`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xử lý...`;const{data,error}=await supabase.auth.signUp({email:email,password:password,phone:phone,options:{data:{full_name:name}}});if(error){showAlert('register-alert',translateSupabaseError(error.message));registerButton.disabled=false;registerButton.innerHTML='Tạo tài khoản'}else{const registerModalInstance=bootstrap.Modal.getInstance(document.getElementById('registerModal'));const successOverlay=document.getElementById('fullscreen-success-overlay');if(registerModalInstance){registerModalInstance.hide()}if(successOverlay){successOverlay.classList.add('show')}
+            setTimeout(()=>{if(successOverlay){successOverlay.classList.remove('show')}
+            registerForm.reset();registerButton.disabled=true;registerButton.innerHTML='Tạo tài khoản'},2500)}}
+            async function handleLogin(event){event.preventDefault();const email=document.getElementById('loginEmail').value;const password=document.getElementById('loginPassword').value;const loginButton=document.getElementById('login-submit-btn');document.getElementById('login-alert').innerHTML='';loginButton.disabled=true;loginButton.innerHTML=`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang đăng nhập...`;setTimeout(async()=>{const{data,error}=await supabase.auth.signInWithPassword({email:email,password:password,});if(error){showAlert('login-alert',translateSupabaseError(error.message))}else if(data.user){const loginModal=bootstrap.Modal.getInstance(document.getElementById('loginModal'));loginModal.hide();loginForm.reset()}
+            loginButton.disabled=false;loginButton.innerHTML='Đăng nhập'},1500)}
+            async function signInWithFacebook(){const{data,error}=await supabase.auth.signInWithOAuth({provider:'facebook',});if(error){console.error('Lỗi khi đăng nhập Facebook:',error);showAlert('login-alert','Không thể đăng nhập bằng Facebook. Vui lòng thử lại.')}}
+            async function handleLogout(event){event.preventDefault();await supabase.auth.signOut()}
+            supabase.auth.onAuthStateChange((event,session)=>{updateUI(session?session.user:null)});if(registerForm){registerForm.addEventListener('submit',handleRegister)}
+            if(loginForm){loginForm.addEventListener('submit',handleLogin)}
+            if(facebookLoginBtn){facebookLoginBtn.addEventListener('click',signInWithFacebook)}
+            if(registerForm){const inputs=registerForm.querySelectorAll('input');const registerSubmitBtn=document.getElementById('register-submit-btn');const passwordInput=document.getElementById('registerPassword');const confirmPasswordInput=document.getElementById('confirmPassword');const feedbackDiv=document.getElementById('password-match-feedback');function validateRegisterForm(){let allFilled=true;inputs.forEach(input=>{if(input.value.trim()===''){allFilled=false}});const passwordsMatch=passwordInput.value===confirmPasswordInput.value;if(confirmPasswordInput.value!==''){if(passwordsMatch){feedbackDiv.textContent='Mật khẩu đã khớp!';feedbackDiv.className='password-match'}else{feedbackDiv.textContent='Mật khẩu không khớp!';feedbackDiv.className='password-mismatch'}}else{feedbackDiv.textContent=''}
+            if(allFilled&&passwordsMatch){registerSubmitBtn.disabled=false}else{registerSubmitBtn.disabled=true}}
+            inputs.forEach(input=>{input.addEventListener('input',validateRegisterForm)})}
+            function setupPasswordToggle(toggleId,passwordId){const toggleIcon=document.getElementById(toggleId);const passwordInput=document.getElementById(passwordId);if(toggleIcon&&passwordInput){toggleIcon.addEventListener('click',function(){const type=passwordInput.getAttribute('type')==='password'?'text':'password';passwordInput.setAttribute('type',type);this.classList.toggle('fa-eye');this.classList.toggle('fa-eye-slash')})}}
+            setupPasswordToggle('toggleLoginPassword','loginPassword');setupPasswordToggle('toggleRegisterPassword','registerPassword');setupPasswordToggle('toggleConfirmPassword','confirmPassword');
+
+
+            // ======================= LOAD WEBSITE SETTINGS (GIỮ NGUYÊN) =======================
+            async function loadWebsiteSettings() {
+                const {
+                    data,
+                    error
+                } = await supabase.from('website_settings').select('header_logo_url, footer_logo_url').eq('id', 1).single();
+                if (error) {
+                    console.error('Lỗi khi tải cài đặt website:', error.message);
+                    return;
+                }
+                if (data) {
+                    const headerLogo = document.getElementById('header-logo');
+                    const footerLogo = document.getElementById('footer-logo');
+                    if (headerLogo && data.header_logo_url) headerLogo.src = data.header_logo_url;
+                    if (footerLogo && data.footer_logo_url) footerLogo.src = data.footer_logo_url;
+                }
+            }
+            
+            // ======================= START: LOGIC CẬP NHẬT CHO TRANG TÀI LIỆU =======================
+            let allDocuments = [];
+            let currentDocuments = [];
+            let currentPage = 1;
+            const itemsPerPage = 6;
+            let activeFilters = { type: 'all', category: 'all' };
+
+            const documentsListContainer = document.getElementById('documents-list');
+            const searchInput = document.getElementById('document-search');
+            const documentsLoader = document.getElementById('documents-loader');
+            const latestDocumentsContainer = document.getElementById('latest-documents-list');
+            const popularDocumentsContainer = document.getElementById('popular-documents-list');
+            const paginationControls = document.getElementById('pagination-controls');
+            const filtersContainer = document.getElementById('document-filters');
+            const categoryFilterList = document.getElementById('category-filter-list');
+            const categoryFilterDropdown = document.getElementById('category-filter-dropdown');
+            
+            const detailModalEl = document.getElementById('documentDetailModal');
+            const detailModalBody = document.getElementById('documentDetailBody');
+            const modalViewButton = document.getElementById('modal-view-button');
+
+            // START: KHAI BÁO BIẾN CHO MODAL MỚI (ĐÃ CẬP NHẬT)
+            const pdfViewerModalEl = document.getElementById('pdfViewerModal');
+            const pdfIframe = document.getElementById('pdf-iframe');
+            const pdfLoaderOverlay = document.getElementById('pdf-loader-overlay');
+            const pdfProgressBar = document.getElementById('pdf-progress-bar');
+            const pdfProgressText = document.getElementById('pdf-progress-text');
+            const pdfCustomHeader = document.getElementById('pdf-viewer-custom-header');
+            const pdfTitlePlaceholder = document.getElementById('pdf-viewer-title-placeholder');
+            // START: THÊM BIẾN CHO POPUP MỚI
+            const updatingOverlay = document.getElementById('updating-document-overlay');
+            // END: THÊM BIẾN CHO POPUP MỚI
+
+
+            // Hàm định dạng ngày tháng
+            function formatDate(dateString) {
+                if (!dateString) return 'Không rõ ngày';
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString('vi-VN', options);
+            }
+
+            // Hàm định dạng tiền tệ
+            function formatCurrency(number) {
+                if (typeof number !== 'number' || isNaN(number)) {
+                    return 'N/A';
+                }
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
+            }
+
+            // Hàm render danh sách tài liệu chính
+            function renderDocuments(documentsToRender) {
+                if (!documentsListContainer) return;
+                documentsListContainer.innerHTML = ''; 
+
+                if (documentsToRender.length === 0) {
+                        documentsListContainer.innerHTML = `
+                            <div class="col-12">
+                                 <div class="no-results-message reveal-on-scroll">
+                                     <i class="fas fa-folder-open fa-2x mb-3"></i>
+                                     <h4>Không tìm thấy tài liệu nào</h4>
+                                     <p>Vui lòng thử lại với bộ lọc hoặc từ khóa khác.</p>
+                                 </div>
+                            </div>`;
+                        return;
+                }
+
+                documentsToRender.forEach(doc => {
+                    let priceHTML = '';
+                    const isSalePriceNumber = typeof doc.price_sale === 'number';
+                    const isOriginalPriceNumber = typeof doc.price_original === 'number';
+                    
+                    if ((isSalePriceNumber && doc.price_sale === 0) || (isOriginalPriceNumber && doc.price_original === 0 && !isSalePriceNumber)) {
+                        priceHTML = `<span class="price-free">Miễn phí</span>`;
+                    } 
+                    else if (isSalePriceNumber) {
+                        priceHTML = `<span class="price-sale">${formatCurrency(doc.price_sale)}</span>`;
+                        if (isOriginalPriceNumber && doc.price_original > doc.price_sale) {
+                            priceHTML += `<span class="price-original">${formatCurrency(doc.price_original)}</span>`;
+                        }
+                    } 
+                    else if (isOriginalPriceNumber && doc.price_original > 0) {
+                        priceHTML = `<span class="price-sale">${formatCurrency(doc.price_original)}</span>`;
+                    } 
+                    else {
+                        priceHTML = `<span class="price-free">Miễn phí</span>`;
+                    }
+                    
+                    const cardHTML = `
+                        <div class="col-lg-4 col-md-6 col-12 d-flex reveal-on-scroll"> 
+                            <div class="document-card" data-doc-id="${doc.id}" data-bs-toggle="modal" data-bs-target="#documentDetailModal" style="cursor: pointer;">
+                                <div class="document-card-thumbnail">
+                                    <img src="${doc.image_url || 'https://placehold.co/400x300/cccccc/ffffff?text=Document'}" alt="${doc.title || ''}">
+                                    ${doc.category ? `<div class="document-card-category">${doc.category}</div>` : ''}
+                                </div>
+                                <div class="document-card-body">
+                                    <h3 class="document-card-title">
+                                        ${doc.title || 'Tiêu đề tài liệu'}
+                                    </h3>
+                                    <div class="document-card-price">${priceHTML}</div>
+                                    <div class="document-card-footer">
+                                        <span class="info-item"><i class="fas fa-user-edit"></i> ${doc.author_name || 'Tác giả'}</span>
+                                        <span class="info-item"><i class="fas fa-calendar-alt"></i> ${formatDate(doc.published_at)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    documentsListContainer.innerHTML += cardHTML;
+                });
+            }
+
+            // Hàm thiết lập phân trang
+            function setupPagination(items, wrapper, rows_per_page) {
+                if (!wrapper) return;
+                wrapper.innerHTML = "";
+
+                let page_count = Math.ceil(items.length / rows_per_page);
+                if (page_count <= 1) {
+                    wrapper.parentElement.style.display = 'none';
+                    return;
+                } 
+                wrapper.parentElement.style.display = 'flex';
+
+                const createPageItem = (page, isActive = false, isDisabled = false, text = null) => {
+                    const li = document.createElement('li');
+                    li.classList.add('page-item');
+                    if (isActive) li.classList.add('active');
+                    if (isDisabled) li.classList.add('disabled');
+
+                    const a = document.createElement('a');
+                    a.classList.add('page-link');
+                    a.href = '#';
+                    a.innerHTML = text || page;
+                    li.appendChild(a);
+
+                    if (!isDisabled) {
+                        a.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            if (page === '&laquo;') {
+                                if (currentPage > 1) currentPage--;
+                            } else if (page === '&raquo;') {
+                                if (currentPage < page_count) currentPage++;
+                            } else {
+                                currentPage = page;
+                            }
+                            updatePage();
+                        });
+                    }
+                    return li;
+                };
+                
+                wrapper.appendChild(createPageItem('&laquo;', false, currentPage === 1));
+                const delta = 1;
+                let lastPage = 0;
+                for (let i = 1; i <= page_count; i++) {
+                    const isFirstPage = i === 1;
+                    const isLastPage = i === page_count;
+                    const isInRange = i >= currentPage - delta && i <= currentPage + delta;
+                    if (isFirstPage || isLastPage || isInRange) {
+                        if (lastPage && i - lastPage > 1) {
+                            wrapper.appendChild(createPageItem('...', false, true));
+                        }
+                        wrapper.appendChild(createPageItem(i, i === currentPage));
+                        lastPage = i;
+                    }
+                }
+                wrapper.appendChild(createPageItem('&raquo;', false, currentPage === page_count));
+            }
+
+
+            // Hàm hiển thị trang hiện tại
+            function displayPage(items, wrapper, rows_per_page, page) {
+                if (!wrapper) return;
+                page--; 
+                let start = rows_per_page * page;
+                let end = start + rows_per_page;
+                let paginatedItems = items.slice(start, end);
+                renderDocuments(paginatedItems);
+            }
+
+            // Hàm cập nhật hiển thị khi chuyển trang hoặc lọc
+            function updatePage() {
+                displayPage(currentDocuments, documentsListContainer, itemsPerPage, currentPage);
+                setupPagination(currentDocuments, paginationControls, itemsPerPage);
+                setupScrollAnimations();
+            }
+
+            // Hàm áp dụng bộ lọc
+            function applyFilters() {
+                let filtered = allDocuments;
+
+                if (activeFilters.type === 'free') {
+                    filtered = filtered.filter(doc => (typeof doc.price_sale === 'number' && doc.price_sale === 0) || (typeof doc.price_original === 'number' && doc.price_original === 0 && doc.price_sale === null));
+                }
+
+                if (activeFilters.category !== 'all') {
+                    filtered = filtered.filter(doc => doc.category === activeFilters.category);
+                }
+
+                currentDocuments = filtered;
+                currentPage = 1;
+                updatePage();
+            }
+
+            // Tải danh mục cho bộ lọc
+            async function loadCategories() {
+                if(!categoryFilterList) return;
+                const { data, error } = await supabase.from('documents').select('category');
+                if (error) {
+                    console.error('Lỗi tải danh mục:', error);
+                    categoryFilterList.innerHTML = '<li><a class="dropdown-item" href="#">Lỗi tải danh mục</a></li>';
+                    return;
+                }
+                const categories = [...new Set(data.map(item => item.category).filter(Boolean))];
+                
+                categoryFilterList.innerHTML = '<li><a class="dropdown-item" href="#" data-category="all">Tất cả danh mục</a></li>';
+                categories.forEach(cat => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a class="dropdown-item" href="#" data-category="${cat}">${cat}</a>`;
+                    categoryFilterList.appendChild(li);
+                });
+            }
+
+            // Hàm render các tài liệu trong sidebar
+            function renderSidebarDocuments(container, documents) {
+                if (!container) return;
+                container.innerHTML = '';
+                if (documents.length === 0) {
+                        container.innerHTML = '<p class="text-secondary small">Chưa có tài liệu nào.</p>';
+                        return;
+                }
+                documents.forEach(doc => {
+                    const itemHTML = `
+                        <div class="widget-post-item">
+                            <a href="#" data-doc-id="${doc.id}" data-bs-toggle="modal" data-bs-target="#documentDetailModal" class="widget-post-thumbnail">
+                                <img src="${doc.image_url || 'https://placehold.co/100x100/cccccc/ffffff?text=Doc'}" alt="${doc.title || ''}">
+                            </a>
+                            <div class="widget-post-content">
+                                <h6><a href="#" data-doc-id="${doc.id}" data-bs-toggle="modal" data-bs-target="#documentDetailModal">${doc.title || 'Tiêu đề'}</a></h6>
+                                <span class="widget-post-meta">${formatDate(doc.published_at)}</span>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += itemHTML;
+                });
+            }
+
+            // Tải tất cả tài liệu từ Supabase
+            async function loadAllDocuments() {
+                if(documentsLoader) documentsLoader.style.display = 'block';
+                const { data, error } = await supabase
+                    .from('documents')
+                    .select('*')
+                    .order('published_at', { ascending: false });
+
+                if(documentsLoader) documentsLoader.style.display = 'none';
+
+                if (error) {
+                    console.error('Lỗi khi tải tài liệu:', error.message);
+                    if(documentsListContainer) documentsListContainer.innerHTML = '<p class="text-danger">Không thể tải được danh sách tài liệu.</p>';
+                    return;
+                }
+                
+                allDocuments = data || [];
+                currentDocuments = allDocuments;
+                updatePage();
+            }
+
+            // Tải các tài liệu cho sidebar
+            async function loadSidebarDocuments() {
+                const { data: latestData, error: latestError } = await supabase
+                    .from('documents').select('*').order('published_at', { ascending: false }).limit(4);
+                if (latestError) console.error('Lỗi tải tài liệu mới nhất:', latestError.message);
+                else renderSidebarDocuments(latestDocumentsContainer, latestData || []);
+                
+                 const { data: popularData, error: popularError } = await supabase
+                    .from('documents').select('*').order('created_at', { ascending: true }).limit(4);
+                if (popularError) console.error('Lỗi tải tài liệu phổ biến:', popularError.message);
+                else renderSidebarDocuments(popularDocumentsContainer, popularData || []);
+            }
+            
+            // Gán sự kiện cho bộ lọc
+            if (filtersContainer) {
+                filtersContainer.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = e.target;
+
+                    if (target.matches('.filter-btn')) {
+                        filtersContainer.querySelector('.filter-btn.active').classList.remove('active');
+                        target.classList.add('active');
+                        activeFilters.type = target.dataset.filterType;
+                        applyFilters();
+                    }
+
+                    if (target.matches('.dropdown-item')) {
+                        const category = target.dataset.category;
+                        activeFilters.category = category;
+                        categoryFilterDropdown.textContent = category === 'all' ? 'Tất cả danh mục' : target.textContent;
+                        applyFilters();
+                    }
+                });
+            }
+
+            // Xử lý sự kiện tìm kiếm
+            if(searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase().trim();
+                    currentDocuments = allDocuments.filter(doc => 
+                        doc.title.toLowerCase().includes(searchTerm)
+                    );
+                    currentPage = 1;
+                    updatePage();
+                });
+            }
+
+            // Logic cho Modal chi tiết
+            function populateModal(doc) {
+                if (!doc) return;
+
+                let priceHTML = '';
+                const isSalePriceNumber = typeof doc.price_sale === 'number';
+                const isOriginalPriceNumber = typeof doc.price_original === 'number';
+
+                if ((isSalePriceNumber && doc.price_sale === 0) || (isOriginalPriceNumber && doc.price_original === 0 && !isSalePriceNumber)) {
+                    priceHTML = `<span class="price-free">Miễn phí</span>`;
+                }
+                else if (isSalePriceNumber) {
+                    priceHTML = `${formatCurrency(doc.price_sale)}`;
+                    if (isOriginalPriceNumber && doc.price_original > doc.price_sale) {
+                        priceHTML += ` <span class="price-original" style="font-size: 1rem; text-decoration: line-through;">${formatCurrency(doc.price_original)}</span>`;
+                    }
+                }
+                else if (isOriginalPriceNumber && doc.price_original > 0) {
+                    priceHTML = `${formatCurrency(doc.price_original)}`;
+                }
+                else {
+                    priceHTML = `<span class="price-free">Miễn phí</span>`;
+                }
+
+                const modalContentHTML = `
+                    <img src="${doc.image_url || 'https://placehold.co/400x600/cccccc/ffffff?text=Document'}" alt="${doc.title || ''}">
+                    <div id="documentDetailInfo">
+                        <h3>${doc.title || 'Tiêu đề không có sẵn'}</h3>
+                        <div class="meta-info">
+                            <i class="fas fa-user-edit"></i>
+                            <span><strong>Tác giả:</strong> ${doc.author_name || 'Chưa xác định'}</span>
+                        </div>
+                        <div class="meta-info">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span><strong>Ngày xuất bản:</strong> ${formatDate(doc.published_at)}</span>
+                        </div>
+                        <div class="meta-info">
+                            <i class="fas fa-tags"></i>
+                            <span><strong>Danh mục:</strong> ${doc.category || 'Chưa phân loại'}</span>
+                        </div>
+                        <div class="price-section">${priceHTML}</div>
+                        <div class="description"><p>${doc.description || 'Không có mô tả cho tài liệu này.'}</p></div>
+                    </div>
+                `;
+                detailModalBody.innerHTML = modalContentHTML;
+                // Gán URL vào data attribute của nút "Xem Ngay"
+                modalViewButton.dataset.docUrl = doc.document_url || '#';
+                modalViewButton.dataset.docTitle = doc.title || 'Tài liệu';
+            }
+
+            if (detailModalEl) {
+                detailModalEl.addEventListener('show.bs.modal', function (event) {
+                    const card = event.relatedTarget;
+                    const docId = card.getAttribute('data-doc-id');
+                    const documentData = allDocuments.find(d => d.id == docId);
+
+                    if (documentData) {
+                        populateModal(documentData);
+                    } else {
+                        detailModalBody.innerHTML = '<p class="text-danger">Không thể tải thông tin chi tiết của tài liệu. Vui lòng thử lại.</p>';
+                        modalViewButton.dataset.docUrl = '#';
+                        modalViewButton.dataset.docTitle = 'Lỗi';
+                    }
+                });
+            }
+            
+            // START: LOGIC MỚI CHO NÚT "XEM NGAY" VÀ POPUP "ĐANG CẬP NHẬT"
+            if (modalViewButton) {
+                modalViewButton.addEventListener('click', function() {
+                    const docUrl = this.dataset.docUrl;
+
+                    if (docUrl && docUrl !== '#') {
+                        // Nếu có URL, mở modal xem PDF
+                        const pdfModal = bootstrap.Modal.getOrCreateInstance(pdfViewerModalEl);
+                        pdfModal.show();
+                    } else {
+                        // Nếu không có URL, hiển thị popup "Đang cập nhật"
+                        if (updatingOverlay) {
+                            updatingOverlay.classList.add('show');
+                            // Tự động ẩn popup sau 3 giây
+                            setTimeout(() => {
+                                updatingOverlay.classList.remove('show');
+                            }, 3000);
+                        }
+                    }
+                });
+            }
+
+            if (pdfViewerModalEl) {
+                pdfViewerModalEl.addEventListener('show.bs.modal', function() {
+                    // 1. Reset trạng thái khi modal được mở
+                    pdfLoaderOverlay.classList.remove('hidden');
+                    pdfIframe.classList.remove('loaded');
+                    pdfIframe.src = ''; // Đảm bảo iframe trống
+                    pdfCustomHeader.style.opacity = '0';
+                    pdfCustomHeader.style.visibility = 'hidden';
+                    
+                    pdfProgressBar.style.width = '0%';
+                    pdfProgressBar.setAttribute('aria-valuenow', '0');
+                    pdfProgressText.textContent = 'Đang tải tài liệu: 0%';
+
+                    // 2. Lấy URL và tiêu đề tài liệu từ nút đã lưu
+                    const docUrl = modalViewButton.dataset.docUrl;
+                    const docTitle = modalViewButton.dataset.docTitle || 'Tài liệu';
+                    pdfTitlePlaceholder.textContent = docTitle;
+
+                    // 3. Bắt đầu mô phỏng tiến trình tải
+                    let progress = 0;
+                    const interval = setInterval(() => {
+                        progress += Math.floor(Math.random() * 5) + 1;
+                        if (progress > 100) progress = 100;
+                        
+                        pdfProgressBar.style.width = progress + '%';
+                        pdfProgressBar.setAttribute('aria-valuenow', progress);
+                        pdfProgressText.textContent = `Đang tải tài liệu: ${progress}%`;
+
+                        if (progress === 100) {
+                            clearInterval(interval);
+                            // 4. Khi hoàn tất, ẩn lớp phủ và hiển thị iframe
+                            setTimeout(() => {
+                                pdfLoaderOverlay.classList.add('hidden');
+                                pdfIframe.classList.add('loaded');
+                                pdfCustomHeader.style.opacity = '1';
+                                pdfCustomHeader.style.visibility = 'visible';
+                            }, 300);
+                        }
+                    }, 100);
+
+                    // 5. Tải iframe
+                    const embedUrl = docUrl.replace("/view", "/preview");
+                    pdfIframe.src = embedUrl;
+                });
+
+                // Xóa src của iframe khi modal bị đóng
+                pdfViewerModalEl.addEventListener('hidden.bs.modal', function() {
+                    pdfIframe.src = '';
+                    pdfIframe.classList.remove('loaded');
+                    pdfCustomHeader.style.opacity = '0';
+                    pdfCustomHeader.style.visibility = 'hidden';
+                });
+            }
+            // END: LOGIC MỚI
+
+            // Logic cho hiệu ứng cuộn
+            function setupScrollAnimations() {
+                const scrollElements = document.querySelectorAll(".reveal-on-scroll:not(.is-visible)");
+                if (!("IntersectionObserver" in window)) {
+                    scrollElements.forEach(el => el.classList.add("is-visible"));
+                    return;
+                }
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("is-visible");
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+                scrollElements.forEach(el => observer.observe(el));
+            }
+
+            // Khởi tạo trang
+            async function initializePage() {
+                document.querySelectorAll('.sidebar-widget').forEach(el => el.classList.add('reveal-on-scroll'));
+                await Promise.all([
+                    loadWebsiteSettings(),
+                    loadAllDocuments(),
+                    loadSidebarDocuments(),
+                    loadCategories()
+                ]);
+                setupScrollAnimations();
+            }
+
+            initializePage();
+        });
+
+        // PRELOADER LOGIC (GIỮ NGUYÊN)
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                setTimeout(() => {
+                    preloader.classList.add('fade-out');
+                    preloader.addEventListener('transitionend', () => {
+                        preloader.style.display = 'none';
+                    });
+                }, 200);
+            }
+        });
+
+        // File Javascript trong ứng dụng của người dùng
+
+    </script>
+</body>
+
+</html>
