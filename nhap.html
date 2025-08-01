@@ -3,36 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiểm tra cuối cùng</title>
+    <title>Tích hợp Messenger Chat Plugin</title>
+    <!-- Sử dụng Tailwind CSS để trang web trông đẹp hơn -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gray-100">
 
-    <h1>Đây là trang kiểm tra cuối cùng</h1>
-    <p>Trang này sử dụng ID của trang "Meta for Developers", một trang công khai và chắc chắn hoạt động.</p>
-    <p>Nếu bạn thấy bong bóng chat, điều đó chứng tỏ mã nguồn và website của bạn không có lỗi. Vấn đề 100% nằm ở phần cài đặt trên trang Facebook của bạn.</p>
+    <!-- Nội dung trang web của bạn -->
+    <div class="min-h-screen flex flex-col items-center justify-center text-center p-8">
+        <div class="bg-white p-10 rounded-2xl shadow-lg max-w-lg">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Chào mừng đến với Website!</h1>
+            <p class="text-gray-600 text-lg">
+                Plugin chat của Messenger sẽ xuất hiện ở góc dưới bên phải màn hình. <br/>
+                Hãy thử tương tác với nó nhé! 👇
+            </p>
+        </div>
+    </div>
+    <!-- Kết thúc nội dung trang web -->
 
-    <!-- Messenger Chat Plugin -->
+
+    <!-- ==================================================== -->
+    <!-- BẮT ĐẦU MÃ PLUGIN CHAT CỦA FACEBOOK MESSENGER -->
+    <!-- ==================================================== -->
+
+    <!-- Thẻ gốc của Facebook SDK, cần có để plugin hoạt động -->
     <div id="fb-root"></div>
 
-    <div id="fb-customer-chat" class="fb-customerchat">
-    </div>
+    <!-- Thẻ Plugin Chat của bạn -->
+    <div id="fb-customer-chat" class="fb-customerchat"></div>
 
     <script>
+      // Lấy phần tử div của plugin chat
       var chatbox = document.getElementById('fb-customer-chat');
-      // ID này là của trang Meta for Developers, dùng để kiểm tra
-      chatbox.setAttribute("page_id", "896953343659993"); 
+      
+      // --- CẤU HÌNH BẮT BUỘC ---
+      // ID Trang Facebook của bạn đã được cập nhật.
+      chatbox.setAttribute("page_id", "592872130581144"); 
       chatbox.setAttribute("attribution", "biz_inbox");
-    </script>
 
-    <!-- Your SDK code -->
-    <script>
+      // --- TÙY CHỈNH LỜI CHÀO (KHÔNG BẮT BUỘC) ---
+      // Lời chào khi người dùng đã đăng nhập Facebook
+      chatbox.setAttribute("logged_in_greeting", "Chào bạn! Chúng tôi có thể giúp gì cho bạn?");
+      // Lời chào khi người dùng chưa đăng nhập
+      chatbox.setAttribute("logged_out_greeting", "Chào bạn! Vui lòng đăng nhập để chat với chúng tôi.");
+
+      // Khởi tạo Facebook SDK
       window.fbAsyncInit = function() {
         FB.init({
           xfbml            : true,
-          version          : 'v19.0'
+          version          : 'v19.0' // Luôn sử dụng phiên bản mới nhất
         });
       };
 
+      // Tải SDK một cách bất đồng bộ
       (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;
@@ -42,5 +71,11 @@
       }(document, 'script', 'facebook-jssdk'));
     </script>
     
+    <!-- ==================================================== -->
+    <!-- KẾT THÚC MÃ PLUGIN CHAT CỦA FACEBOOK MESSENGER -->
+    <!-- ==================================================== -->
+
 </body>
 </html>
+```
+Mình đã thay thế `YOUR_PAGE_ID` bằng `592872130581144` trong mã. Bạn đừng quên thực hiện bước **thêm tên miền website vào danh sách cho phép (Whitelist)** trong cài đặt trang Facebook để plugin hiển thị nhé! Chúc bạn thành công
