@@ -891,17 +891,13 @@
             position: relative;
             overflow: hidden;
             aspect-ratio: 4 / 3;
-            /* START: THAY ĐỔI THEO YÊU CẦU */
-            background-color: var(--bg-off-white); /* Thêm màu nền nhạt cho vùng ảnh */
-            /* END: THAY ĐỔI THEO YÊU CẦU */
+            background-color: var(--bg-off-white);
         }
 
         .document-card-thumbnail img {
             width: 100%;
             height: 100%;
-            /* START: THAY ĐỔI THEO YÊU CẦU */
-            object-fit: contain; /* Thay đổi từ 'cover' thành 'contain' để ảnh luôn hiển thị hết */
-            /* END: THAY ĐỔI THEO YÊU CẦU */
+            object-fit: contain;
             transition: transform 0.3s ease;
         }
 
@@ -969,24 +965,28 @@
         }
 
         .document-card-footer {
-            margin-top: auto; /* Đẩy footer xuống dưới cùng của card-body */
+            margin-top: auto;
             padding-top: 1rem;
             border-top: 1px solid var(--border-color);
             display: flex;
-            justify-content: flex-start;
-            align-items: center;
+            flex-direction: column; 
+            align-items: flex-start; 
+            gap: 0.4rem; 
             font-size: 0.9rem;
             color: var(--text-secondary);
-            flex-wrap: wrap;
-            gap: 0.2rem;
         }
 
         .info-item {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-right: 10px;
             white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .author-name-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .sidebar-widget {
@@ -1023,11 +1023,11 @@
         }
 
         .sidebar-widget-title .icon-popular {
-            color: #FF6B6B; /* Màu đỏ san hô cho icon phổ biến */
+            color: #FF6B6B;
         }
 
         .sidebar-widget-title .icon-latest {
-            color: var(--primary-blue); /* Màu xanh dương cho icon mới nhất */
+            color: var(--primary-blue);
         }
 
         .widget-post-list .widget-post-item {
@@ -1059,13 +1059,11 @@
             font-weight: 600;
             font-size: 0.95rem;
             line-height: 1.4;
-            /* START: Thêm CSS để giới hạn tiêu đề 2 dòng */
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 2; /* Số dòng muốn hiển thị */
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            /* END: Thêm CSS để giới hạn tiêu đề 2 dòng */
         }
 
         .widget-post-content h6 a {
@@ -1092,7 +1090,6 @@
             border: 1px solid var(--border-color);
         }
 
-        /* START: CSS MỚI CHO BỘ LỌC */
         .filter-btn {
             background-color: var(--bg-off-white);
             border: 1px solid var(--border-color);
@@ -1112,21 +1109,18 @@
         .filter-dropdown:focus {
             box-shadow: 0 0 0 0.25rem rgba(74, 108, 243, 0.25) !important;
         }
-        /* END: CSS MỚI CHO BỘ LỌC */
 
-
-        /* START: CSS MỚI CHO PHÂN TRANG */
         .pagination-container {
             margin-top: 2.5rem;
         }
         .pagination .page-link {
-            border-radius: 50% !important; /* Make it circle */
+            border-radius: 50% !important;
             width: 40px;
             height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 5px; /* Add space between buttons */
+            margin: 0 5px;
             border: 1px solid var(--border-color);
             font-weight: 500;
             color: var(--text-secondary);
@@ -1148,9 +1142,7 @@
              color: white;
              box-shadow: 0 4px 15px rgba(120, 73, 242, 0.3);
         }
-        /* END: CSS MỚI CHO PHÂN TRANG */
 
-        /* START: CSS MỚI CHO MODAL CHI TIẾT TÀI LIỆU */
         #documentDetailModal .modal-body {
             display: flex;
             gap: 1.5rem;
@@ -1202,9 +1194,8 @@
             border-top: 1px solid var(--border-color);
         }
 
-        /* START: CSS MỚI CHO MODAL XEM PDF VÀ THANH TIẾN TRÌNH (ĐÃ CẬP NHẬT) */
         #pdfViewerModal .modal-body {
-            position: relative; /* Cần thiết để định vị lớp phủ */
+            position: relative;
         }
 
         #pdf-loader-overlay {
@@ -1230,43 +1221,34 @@
             visibility: hidden;
         }
 
-        #pdf-loader-overlay .pdf-loader-content {
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
         #pdf-loader-overlay .progress-bar {
             background: var(--gradient-primary);
-            transition: width 0.1s linear; /* Animation mượt cho thanh tiến trình */
+            transition: width 0.1s linear;
         }
 
         #pdf-iframe {
-            border: none; /* Bỏ viền của iframe */
-            opacity: 0; /* Ẩn iframe ban đầu */
-            transition: opacity 0.5s ease; /* Hiệu ứng mờ dần khi hiện ra */
+            border: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
 
         #pdf-iframe.loaded {
-            opacity: 1; /* Hiện iframe khi đã tải xong */
+            opacity: 1;
         }
         
-        /* START: CSS MỚI CHO HEADER TÙY CHỈNH CỦA TRÌNH XEM PDF */
         #pdf-viewer-custom-header {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 48px; /* Chiều cao tương đương header của Google Drive */
+            height: 48px;
             background-color: var(--bg-white);
-            z-index: 5; /* Nằm dưới loader (10), nhưng trên iframe */
+            z-index: 5;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 1rem 0 1.5rem;
             border-bottom: 1px solid var(--border-color);
-            
-            /* Ẩn ban đầu, sẽ hiện ra cùng iframe */
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.5s ease, visibility 0.5s ease;
@@ -1277,18 +1259,13 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            max-width: 60%; /* Ngăn tiêu đề quá dài */
+            max-width: 60%;
         }
 
         .rounded-pill{
             height: 30px;
         }
-        /* END: CSS MỚI CHO HEADER TÙY CHỈNH CỦA TRÌNH XEM PDF */
-        /* END: CSS MỚI CHO MODAL XEM PDF VÀ THANH TIẾN TRÌNH */
         
-        /* ============================ START: CSS CHO HIỆU ỨNG & ANIMATION MỚI ============================ */
-
-        /* --- Hiệu ứng cho phần tử xuất hiện khi cuộn --- */
         .reveal-on-scroll {
             opacity: 0;
             transform: translateY(30px);
@@ -1300,19 +1277,17 @@
             transform: translateY(0);
         }
 
-        /* --- Thêm hiệu ứng hover cho bài viết ở sidebar --- */
         .widget-post-item {
             transition: background-color 0.3s ease, transform 0.3s ease;
             border-radius: 0.5rem;
             padding: 0.5rem;
-            margin: 0 -0.5rem; /* Bù lại padding để không làm thay đổi layout */
+            margin: 0 -0.5rem;
         }
         .widget-post-item:hover {
             background-color: var(--bg-white);
             transform: translateX(5px);
         }
 
-        /* --- Cải thiện hiệu ứng modal --- */
         #documentDetailModal.fade .modal-dialog {
             transform: scale(0.9);
             opacity: 0;
@@ -1324,12 +1299,10 @@
             opacity: 1;
         }
 
-        /* --- Hiệu ứng cho thanh tìm kiếm khi focus --- */
         .header-search-form #document-search:focus {
             box-shadow: 0 0 0 4px rgba(74, 108, 243, 0.2), 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        /* --- Hiệu ứng cho các nút filter --- */
         .filter-btn {
             transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
         }
@@ -1344,27 +1317,19 @@
             border-color: transparent;
             box-shadow: 0 4px 15px rgba(120, 73, 242, 0.3);
         }
-
-        /* ============================ END: CSS CHO HIỆU ỨNG & ANIMATION MỚI ============================ */
         
-        /* ============================ START: CSS RESPONSIVE CHO MOBILE & TABLET ============================ */
-        
-        /* --- Dành cho Tablet (<= 991.98px) --- */
         @media (max-width: 991.98px) {
             .document-container-wrapper {
                 margin-top: -70px;
                 padding: 2rem;
             }
             
-            /* START: Cập nhật cho nút đóng trình xem PDF */
             #pdf-viewer-custom-header .btn {
-                padding: 0.35rem 0.8rem; /* Giảm padding */
-                font-size: 0.8rem; /* Giảm cỡ chữ */
+                padding: 0.35rem 0.8rem;
+                font-size: 0.8rem;
             }
-            /* END: Cập nhật cho nút đóng trình xem PDF */
         }
 
-        /* --- Dành cho Mobile lớn (<= 767.98px) --- */
         @media (max-width: 767.98px) {
             .page-header {
                 padding: 2.5rem 0;
@@ -1382,7 +1347,7 @@
                 margin-top: -60px;
             }
              #document-filters {
-                justify-content: center; /* Căn giữa các nút filter */
+                justify-content: center;
             }
             #document-filters .dropdown {
                 width: 100%;
@@ -1391,19 +1356,61 @@
             #document-filters .dropdown .btn {
                 width: 100%;
             }
+
             #documentDetailModal .modal-body {
                 flex-direction: column;
+                padding: 1rem; 
             }
             #documentDetailModal .modal-body img {
                 max-width: 100%;
-                margin-bottom: 1rem;
+                max-height: 200px; 
+                width: auto;
+                margin: 0 auto 1rem auto; 
+                object-fit: contain;
             }
             #documentDetailInfo h3 {
-                font-size: 1.3rem;
+                font-size: 1.2rem; 
+                margin-bottom: 0.75rem;
+            }
+            #documentDetailInfo .meta-info {
+                font-size: 0.8rem; 
+                margin-bottom: 0.3rem;
+            }
+            #documentDetailInfo .price-section {
+                font-size: 1.2rem; 
+                margin: 0.75rem 0;
+            }
+            #documentDetailInfo .description {
+                max-height: 120px; 
+                font-size: 0.85rem;
+                margin-top: 1rem;
+            }
+
+            .document-card-body {
+                padding: 1rem;
+            }
+            .document-card-title {
+                font-size: 0.9rem;
+                min-height: 2.8em;
+                margin-bottom: 0.5rem;
+            }
+            .document-card-price .price-sale,
+            .document-card-price .price-free {
+                font-size: 1rem;
+            }
+            .document-card-footer {
+                font-size: 0.75rem;
+                padding-top: 0.75rem;
+            }
+            .document-card-footer .info-item {
+                gap: 0.3rem;
+            }
+            .document-card-category {
+                padding: 0.2rem 0.6rem;
+                font-size: 0.7rem;
             }
         }
         
-        /* --- Dành cho Mobile nhỏ (<= 575.98px) --- */
         @media (max-width: 575.98px) {
             .header-search-form #document-search {
                 padding: 0.8rem 6.5rem 0.8rem 3rem;
@@ -1418,13 +1425,154 @@
             .header-search-form .search-icon {
                 left: 1.1rem;
             }
-            .document-card-title {
-                font-size: 1rem;
+        }
+        
+        /* ======================= CSS CHO ICON MESSENGER NỔI (ĐÃ CẬP NHẬT) ======================= */
+        .messenger-widget-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1050;
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            transition: gap 0.3s ease; /* Thêm hiệu ứng chuyển đổi cho khoảng cách */
+        }
+
+        /* Lớp mới để xử lý trạng thái thu gọn */
+        .messenger-widget-container.collapsed .messenger-text-bubble,
+        .messenger-widget-container.collapsed .messenger-close-btn {
+            transform: scale(0);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .messenger-widget-container.collapsed .messenger-text-bubble {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .messenger-widget-container.collapsed {
+            gap: 0; /* Bỏ khoảng cách khi thu gọn */
+        }
+        
+        /* CẬP NHẬT: Thêm quy tắc để thu nhỏ icon chính khi thu gọn */
+        .messenger-widget-container.collapsed .messenger-fab-icon {
+            transform: scale(0.7); /* Thu nhỏ icon còn 70% */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); /* Giảm bóng đổ cho hợp lý */
+            cursor: pointer; /* Biến con trỏ thành hình bàn tay để báo hiệu có thể nhấp */
+        }
+        /* CẬP NHẬT: Thêm hiệu ứng hover cho icon đã thu nhỏ */
+        .messenger-widget-container.collapsed .messenger-fab-icon:hover {
+            transform: scale(0.8); /* Phóng to nhẹ khi di chuột qua */
+        }
+
+
+        .messenger-icon-wrapper {
+            position: relative; /* Làm gốc cho nút close */
+            flex-shrink: 0;
+        }
+
+        .messenger-fab-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .messenger-fab-icon:hover {
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(120, 73, 242, 0.5);
+        }
+
+        .messenger-text-bubble {
+            background-color: var(--bg-white);
+            padding: 12px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            max-width: 220px;
+            margin-bottom: 5px;
+            animation: pop-in 0.5s 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+            transform: scale(0);
+            transform-origin: right bottom;
+            /* Thêm hiệu ứng chuyển đổi khi thu gọn */
+            transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+            white-space: nowrap; /* Ngăn chữ bị ngắt dòng khi thu gọn */
+            overflow: hidden; /* Ẩn nội dung khi thu gọn */
+        }
+
+        .messenger-close-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 26px;
+            height: 26px;
+            background-color: var(--text-primary);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            font-size: 16px;
+            line-height: 22px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 12;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .messenger-close-btn:hover {
+            transform: scale(1.15) rotate(180deg);
+            background-color: var(--danger-color);
+        }
+
+        @keyframes pop-in {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
             }
         }
-        /* ============================ END: CSS RESPONSIVE ============================ */
-        
-        /* ============================ END: CSS ĐÃ CẬP NHẬT CHO TRANG TÀI LIỆU ============================ */
+
+        /* Responsive cho mobile */
+        @media (max-width: 767.98px) {
+            .messenger-widget-container {
+                right: 15px;
+                bottom: 15px;
+                gap: 10px;
+            }
+
+            .messenger-fab-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+            
+            .messenger-close-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 14px;
+                line-height: 20px;
+            }
+        }
+        /* ======================= HẾT CSS CHO ICON MESSENGER NỔI ======================= */
     </style>
 </head>
 
@@ -1493,13 +1641,11 @@
 
     <!-- Nội dung chính của trang Tài liệu -->
     <main>
-        <!-- ============================ START: HTML ĐÃ CẬP NHẬT ============================ -->
         <section class="page-header">
             <div class="container">
                 <h1>Kho Tàng Tri Thức</h1>
                 <p class="lead">Khám phá bộ sưu tập tài liệu Tarot và Huyền học độc quyền của VietTarot.</p>
                 
-                <!-- Thanh tìm kiếm mới -->
                 <form class="header-search-form" onsubmit="event.preventDefault();">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" id="document-search" class="form-control" placeholder="Tìm kiếm tài liệu theo tiêu đề...">
@@ -1515,7 +1661,6 @@
                      <div class="row">
                          <!-- Cột chính: Danh sách tài liệu -->
                          <div class="col-lg-8">
-                             <!-- START: HTML MỚI CHO BỘ LỌC -->
                              <div class="row">
                                 <div class="col-12 mb-4">
                                     <div class="d-flex flex-wrap align-items-center gap-2" id="document-filters">
@@ -1526,58 +1671,46 @@
                                                 Tất cả danh mục
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="category-filter-dropdown" id="category-filter-list">
-                                                <!-- Categories will be populated by JS -->
                                                 <li><p class="text-center my-2 text-secondary small">Đang tải...</p></li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                              </div>
-                             <!-- END: HTML MỚI CHO BỘ LỌC -->
-
-                             <!-- CẬP NHẬT: Giảm khoảng cách cột (gutter) từ g-4 thành g-3 -->
+                             
                              <div class="row g-3" id="documents-list">
-                                 <!-- Spinner loading -->
                                  <div class="col-12 text-center" id="documents-loader">
                                      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
                                          <span class="visually-hidden">Loading...</span>
                                      </div>
                                      <p class="mt-3 text-secondary">Đang tải danh sách tài liệu...</p>
                                  </div>
-                                 <!-- Nội dung tài liệu sẽ được JS chèn vào đây -->
                              </div>
 
-                             <!-- START: HTML MỚI CHO PHÂN TRANG -->
                              <nav class="pagination-container d-flex justify-content-center">
                                 <ul class="pagination" id="pagination-controls">
-                                  <!-- Các nút phân trang sẽ được JS chèn vào đây -->
                                 </ul>
                               </nav>
-                             <!-- END: HTML MỚI CHO PHÂN TRANG -->
                          </div>
 
                          <!-- Cột phụ: Sidebar -->
                          <div class="col-lg-4 mt-5 mt-lg-0">
-                             <!-- Widget Tài liệu phổ biến -->
                              <aside class="sidebar-widget">
                                  <h4 class="sidebar-widget-title">
                                      <i class="fas fa-fire icon-popular"></i>
                                      <span>Tài Liệu Phổ Biến</span>
                                  </h4>
                                  <div class="widget-post-list" id="popular-documents-list">
-                                     <!-- Dữ liệu được chèn bằng JS -->
                                      <p class="text-secondary small">Đang tải...</p>
                                  </div>
                              </aside>
 
-                             <!-- Widget Tài liệu mới nhất -->
                              <aside class="sidebar-widget">
                                  <h4 class="sidebar-widget-title">
                                      <i class="fas fa-clock icon-latest"></i>
                                      <span>Tài Liệu Mới Nhất</span>
                                  </h4>
                                  <div class="widget-post-list" id="latest-documents-list">
-                                     <!-- Dữ liệu được chèn bằng JS -->
                                      <p class="text-secondary small">Đang tải...</p>
                                  </div>
                              </aside>
@@ -1586,7 +1719,6 @@
                  </div>
             </div>
         </section>
-        <!-- ============================ END: HTML ĐÃ CẬP NHẬT ============================ -->
     </main>
 
     <!-- Footer (Giữ nguyên) -->
@@ -1768,7 +1900,6 @@
         </div>
     </div>
 
-    <!-- ============================ START: HTML ĐÃ CẬP NHẬT ============================ -->
     <!-- Modal Chi tiết Tài liệu -->
     <div class="modal fade" id="documentDetailModal" tabindex="-1" aria-labelledby="documentDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -1778,7 +1909,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="documentDetailBody">
-                    <!-- Nội dung chi tiết sẽ được JS điền vào đây -->
                     <div class="text-center w-100">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
@@ -1787,7 +1917,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <!-- Cập nhật: Nút này sẽ được điều khiển bằng JS, không tự mở modal nữa -->
                     <button type="button" id="modal-view-button" class="btn btn-gradient">
                         <i class="fas fa-file-pdf me-2"></i>Xem Ngay
                     </button>
@@ -1801,7 +1930,6 @@
         <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-body p-0">
-                    <!-- START: HTML MỚI CHO THANH TIẾN TRÌNH -->
                     <div id="pdf-loader-overlay">
                         <div class="pdf-loader-content">
                             <div class="progress mb-3" style="height: 10px;">
@@ -1810,9 +1938,7 @@
                             <p class="mb-0 fw-bold"><span id="pdf-progress-text">Đang tải tài liệu: 0%</span></p>
                         </div>
                     </div>
-                    <!-- END: HTML MỚI CHO THANH TIẾN TRÌNH -->
                     
-                    <!-- START: HTML MỚI CHO HEADER TÙY CHỈNH -->
                     <div id="pdf-viewer-custom-header">
                         <span id="pdf-viewer-title-placeholder" class="gradient-text">Tên tài liệu...</span>
                         <a href="#" class="btn btn-sm btn-gradient rounded-pill" data-bs-dismiss="modal" aria-label="Close">
@@ -1820,7 +1946,6 @@
                             <span class="d-none d-sm-inline">Đóng trình xem</span>
                         </a>
                     </div>
-                    <!-- END: HTML MỚI CHO HEADER TÙY CHỈNH -->
 
                     <iframe id="pdf-iframe" src="" width="100%" height="100%"></iframe>
                 </div>
@@ -1828,7 +1953,6 @@
         </div>
     </div>
     
-    <!-- START: HTML MỚI CHO POPUP "ĐANG CẬP NHẬT" -->
     <div id="updating-document-overlay" class="fullscreen-overlay">
         <div class="success-notification">
             <div class="updating-icon">
@@ -1838,8 +1962,20 @@
             <p class="success-message">Nội dung này đang được chúng tôi hoàn thiện. Vui lòng quay lại sau!</p>
         </div>
     </div>
-    <!-- END: HTML MỚI CHO POPUP "ĐANG CẬP NHẬT" -->
-    <!-- ============================ END: HTML ĐÃ CẬP NHẬT ============================ -->
+
+    <!-- ======================= MESSENGER FLOATING WIDGET (MỚI THÊM) ======================= -->
+    <div class="messenger-widget-container" id="messenger-widget-container">
+        <div class="messenger-text-bubble">
+            <p class="mb-0">Tham gia nhóm cộng đồng - Hỗ trợ 24/7</p>
+        </div>
+        <div class="messenger-icon-wrapper">
+            <button class="messenger-close-btn" id="messenger-close-btn" title="Ẩn">&times;</button>
+            <a href="https://m.me/YOUR_PAGE_ID" class="messenger-fab-icon" target="_blank" title="Nhắn tin cho chúng tôi">
+                <i class="fas fa-users"></i>
+            </a>
+        </div>
+    </div>
+    <!-- ======================= END MESSENGER FLOATING WIDGET ======================= -->
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -1853,8 +1989,7 @@
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrem50ZXViY3dsYWRxa3h5YXFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjcwODksImV4cCI6MjA2NzgwMzA4OX0.7P4-H_ujbLG2KLEFiVtlGIs8o515OkqNw9MVPDF7sCY';
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
-            // ======================= AUTHENTICATION LOGIC (GIỮ NGUYÊN) =======================
-            // ... (Toàn bộ code xử lý đăng nhập, đăng ký, đăng xuất được giữ nguyên)
+            // ======================= AUTHENTICATION LOGIC (ĐÃ CẬP NHẬT) =======================
             const authContainer = document.getElementById('auth-container');
             const loginForm = document.getElementById('login-form');
             const registerForm = document.getElementById('registerForm');
@@ -1875,8 +2010,7 @@
                                          <span class="gradient-text fw-bold">${fullName}</span>
                                      </a>
                                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                         <li><a class="dropdown-item" href="#"><i class="fas fa-user-circle fa-fw"></i> Hồ sơ của tôi</a></li>
-                                         <li><a class="dropdown-item" href="#"><i class="fas fa-cog fa-fw"></i> Cài đặt</a></li>
+                                         <li><a class="dropdown-item" href="infor-user.html"><i class="fas fa-user-circle fa-fw"></i> Hồ sơ của tôi</a></li>
                                          <li><hr class="dropdown-divider"></li>
                                          <li><a class="dropdown-item" href="#" id="logout-button"><i class="fas fa-sign-out-alt fa-fw"></i> Đăng xuất</a></li>
                                      </ul>
@@ -1943,7 +2077,6 @@
             const detailModalBody = document.getElementById('documentDetailBody');
             const modalViewButton = document.getElementById('modal-view-button');
 
-            // START: KHAI BÁO BIẾN CHO MODAL MỚI (ĐÃ CẬP NHẬT)
             const pdfViewerModalEl = document.getElementById('pdfViewerModal');
             const pdfIframe = document.getElementById('pdf-iframe');
             const pdfLoaderOverlay = document.getElementById('pdf-loader-overlay');
@@ -1951,9 +2084,7 @@
             const pdfProgressText = document.getElementById('pdf-progress-text');
             const pdfCustomHeader = document.getElementById('pdf-viewer-custom-header');
             const pdfTitlePlaceholder = document.getElementById('pdf-viewer-title-placeholder');
-            // START: THÊM BIẾN CHO POPUP MỚI
             const updatingOverlay = document.getElementById('updating-document-overlay');
-            // END: THÊM BIẾN CHO POPUP MỚI
 
 
             // Hàm định dạng ngày tháng
@@ -2010,7 +2141,7 @@
                     }
                     
                     const cardHTML = `
-                        <div class="col-lg-4 col-md-6 col-12 d-flex reveal-on-scroll"> 
+                        <div class="col-lg-4 col-md-6 col-6 d-flex reveal-on-scroll"> 
                             <div class="document-card" data-doc-id="${doc.id}" data-bs-toggle="modal" data-bs-target="#documentDetailModal" style="cursor: pointer;">
                                 <div class="document-card-thumbnail">
                                     <img src="${doc.image_url || 'https://placehold.co/400x300/cccccc/ffffff?text=Document'}" alt="${doc.title || ''}">
@@ -2022,8 +2153,14 @@
                                     </h3>
                                     <div class="document-card-price">${priceHTML}</div>
                                     <div class="document-card-footer">
-                                        <span class="info-item"><i class="fas fa-user-edit"></i> ${doc.author_name || 'Tác giả'}</span>
-                                        <span class="info-item"><i class="fas fa-calendar-alt"></i> ${formatDate(doc.published_at)}</span>
+                                        <span class="info-item">
+                                            <i class="fas fa-user-edit"></i>
+                                            <span class="author-name-text">${doc.author_name || 'Tác giả'}</span>
+                                        </span>
+                                        <span class="info-item">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span>${formatDate(doc.published_at)}</span>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -2282,7 +2419,6 @@
                     </div>
                 `;
                 detailModalBody.innerHTML = modalContentHTML;
-                // Gán URL vào data attribute của nút "Xem Ngay"
                 modalViewButton.dataset.docUrl = doc.document_url || '#';
                 modalViewButton.dataset.docTitle = doc.title || 'Tài liệu';
             }
@@ -2303,20 +2439,16 @@
                 });
             }
             
-            // START: LOGIC MỚI CHO NÚT "XEM NGAY" VÀ POPUP "ĐANG CẬP NHẬT"
             if (modalViewButton) {
                 modalViewButton.addEventListener('click', function() {
                     const docUrl = this.dataset.docUrl;
 
                     if (docUrl && docUrl !== '#') {
-                        // Nếu có URL, mở modal xem PDF
                         const pdfModal = bootstrap.Modal.getOrCreateInstance(pdfViewerModalEl);
                         pdfModal.show();
                     } else {
-                        // Nếu không có URL, hiển thị popup "Đang cập nhật"
                         if (updatingOverlay) {
                             updatingOverlay.classList.add('show');
-                            // Tự động ẩn popup sau 3 giây
                             setTimeout(() => {
                                 updatingOverlay.classList.remove('show');
                             }, 3000);
@@ -2327,10 +2459,9 @@
 
             if (pdfViewerModalEl) {
                 pdfViewerModalEl.addEventListener('show.bs.modal', function() {
-                    // 1. Reset trạng thái khi modal được mở
                     pdfLoaderOverlay.classList.remove('hidden');
                     pdfIframe.classList.remove('loaded');
-                    pdfIframe.src = ''; // Đảm bảo iframe trống
+                    pdfIframe.src = '';
                     pdfCustomHeader.style.opacity = '0';
                     pdfCustomHeader.style.visibility = 'hidden';
                     
@@ -2338,12 +2469,10 @@
                     pdfProgressBar.setAttribute('aria-valuenow', '0');
                     pdfProgressText.textContent = 'Đang tải tài liệu: 0%';
 
-                    // 2. Lấy URL và tiêu đề tài liệu từ nút đã lưu
                     const docUrl = modalViewButton.dataset.docUrl;
                     const docTitle = modalViewButton.dataset.docTitle || 'Tài liệu';
                     pdfTitlePlaceholder.textContent = docTitle;
 
-                    // 3. Bắt đầu mô phỏng tiến trình tải
                     let progress = 0;
                     const interval = setInterval(() => {
                         progress += Math.floor(Math.random() * 5) + 1;
@@ -2355,7 +2484,6 @@
 
                         if (progress === 100) {
                             clearInterval(interval);
-                            // 4. Khi hoàn tất, ẩn lớp phủ và hiển thị iframe
                             setTimeout(() => {
                                 pdfLoaderOverlay.classList.add('hidden');
                                 pdfIframe.classList.add('loaded');
@@ -2365,12 +2493,10 @@
                         }
                     }, 100);
 
-                    // 5. Tải iframe
                     const embedUrl = docUrl.replace("/view", "/preview");
                     pdfIframe.src = embedUrl;
                 });
 
-                // Xóa src của iframe khi modal bị đóng
                 pdfViewerModalEl.addEventListener('hidden.bs.modal', function() {
                     pdfIframe.src = '';
                     pdfIframe.classList.remove('loaded');
@@ -2378,9 +2504,7 @@
                     pdfCustomHeader.style.visibility = 'hidden';
                 });
             }
-            // END: LOGIC MỚI
 
-            // Logic cho hiệu ứng cuộn
             function setupScrollAnimations() {
                 const scrollElements = document.querySelectorAll(".reveal-on-scroll:not(.is-visible)");
                 if (!("IntersectionObserver" in window)) {
@@ -2411,9 +2535,41 @@
             }
 
             initializePage();
+
+            // ======================= MESSENGER WIDGET LOGIC (ĐÃ CẬP NHẬT) =======================
+            const messengerWidget = document.getElementById('messenger-widget-container');
+            const closeMessengerBtn = document.getElementById('messenger-close-btn');
+            const messengerFabIcon = document.querySelector('.messenger-fab-icon');
+
+            if (messengerWidget && closeMessengerBtn && messengerFabIcon) {
+                const collapseWidget = () => {
+                    messengerWidget.classList.add('collapsed');
+                    sessionStorage.setItem('messengerCollapsed', 'true');
+                };
+
+                const expandWidget = () => {
+                    messengerWidget.classList.remove('collapsed');
+                    sessionStorage.removeItem('messengerCollapsed');
+                };
+
+                if (sessionStorage.getItem('messengerCollapsed') === 'true') {
+                    messengerWidget.classList.add('collapsed');
+                }
+
+                closeMessengerBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    collapseWidget();
+                });
+
+                messengerFabIcon.addEventListener('click', (e) => {
+                    if (messengerWidget.classList.contains('collapsed')) {
+                        e.preventDefault(); 
+                        expandWidget();
+                    }
+                });
+            }
         });
 
-        // PRELOADER LOGIC (GIỮ NGUYÊN)
         window.addEventListener('load', function() {
             const preloader = document.getElementById('preloader');
             if (preloader) {
@@ -2425,8 +2581,6 @@
                 }, 200);
             }
         });
-
-        // File Javascript trong ứng dụng của người dùng
 
     </script>
 </body>
