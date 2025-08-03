@@ -1174,40 +1174,156 @@
             }
         }
         
+        /* ======================= CSS CHO ICON MESSENGER NỔI (ĐÃ CẬP NHẬT) ======================= */
+        .messenger-widget-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1050;
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            transition: gap 0.3s ease; /* Thêm hiệu ứng chuyển đổi cho khoảng cách */
+        }
+
+        /* Lớp mới để xử lý trạng thái thu gọn */
+        .messenger-widget-container.collapsed .messenger-text-bubble,
+        .messenger-widget-container.collapsed .messenger-close-btn {
+            transform: scale(0);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .messenger-widget-container.collapsed .messenger-text-bubble {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .messenger-widget-container.collapsed {
+            gap: 0; /* Bỏ khoảng cách khi thu gọn */
+        }
+        
+        /* CẬP NHẬT: Thêm quy tắc để thu nhỏ icon chính khi thu gọn */
+        .messenger-widget-container.collapsed .messenger-fab-icon {
+            transform: scale(0.7); /* Thu nhỏ icon còn 70% */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); /* Giảm bóng đổ cho hợp lý */
+            cursor: pointer; /* Biến con trỏ thành hình bàn tay để báo hiệu có thể nhấp */
+        }
+        /* CẬP NHẬT: Thêm hiệu ứng hover cho icon đã thu nhỏ */
+        .messenger-widget-container.collapsed .messenger-fab-icon:hover {
+            transform: scale(0.8); /* Phóng to nhẹ khi di chuột qua */
+        }
+
+
+        .messenger-icon-wrapper {
+            position: relative; /* Làm gốc cho nút close */
+            flex-shrink: 0;
+        }
+
+        .messenger-fab-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .messenger-fab-icon:hover {
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(120, 73, 242, 0.5);
+        }
+
+        .messenger-text-bubble {
+            background-color: var(--bg-white);
+            padding: 12px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            max-width: 220px;
+            margin-bottom: 5px;
+            animation: pop-in 0.5s 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+            transform: scale(0);
+            transform-origin: right bottom;
+            /* Thêm hiệu ứng chuyển đổi khi thu gọn */
+            transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+            white-space: nowrap; /* Ngăn chữ bị ngắt dòng khi thu gọn */
+            overflow: hidden; /* Ẩn nội dung khi thu gọn */
+        }
+
+        .messenger-close-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 26px;
+            height: 26px;
+            background-color: var(--text-primary);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            font-size: 16px;
+            line-height: 22px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 12;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .messenger-close-btn:hover {
+            transform: scale(1.15) rotate(180deg);
+            background-color: var(--danger-color);
+        }
+
+        @keyframes pop-in {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive cho mobile */
+        @media (max-width: 767.98px) {
+            .messenger-widget-container {
+                right: 15px;
+                bottom: 15px;
+                gap: 10px;
+            }
+
+            .messenger-fab-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+            
+            .messenger-close-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 14px;
+                line-height: 20px;
+            }
+        }
+        /* ======================= HẾT CSS CHO ICON MESSENGER NỔI ======================= */
     </style>
 </head>
 
 <body>
-    <!-- Messenger Chat Plugin -->
-    <div id="fb-root"></div>
-
-    <div id="fb-customer-chat" class="fb-customerchat">
-    </div>
-
-    <script>
-      var chatbox = document.getElementById('fb-customer-chat');
-      chatbox.setAttribute("page_id", "592872130581144");
-      chatbox.setAttribute("attribution", "biz_inbox");
-    </script>
-
-    <!-- Your SDK code -->
-    <script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          xfbml            : true,
-          version          : 'v19.0'
-        });
-      };
-
-      (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    </script>
-    
     <div id="preloader">
         <div class="preloader-content">
             <div class="loader"></div>
@@ -1675,6 +1791,20 @@
     </div>
     <!-- ======================= HẾT POPUP QUẢNG CÁO ======================= -->
 
+    <!-- ======================= MESSENGER FLOATING WIDGET ======================= -->
+    <div class="messenger-widget-container" id="messenger-widget-container">
+        <div class="messenger-text-bubble">
+            <p class="mb-0">Tham gia nhóm cộng đồng</p>
+        </div>
+        <div class="messenger-icon-wrapper">
+            <button class="messenger-close-btn" id="messenger-close-btn" title="Ẩn">&times;</button>
+            <a href="https://m.me/YOUR_PAGE_ID" class="messenger-fab-icon" target="_blank" title="Nhắn tin cho chúng tôi">
+                <i class="fas fa-users"></i>
+            </a>
+        </div>
+    </div>
+    <!-- ======================= END MESSENGER FLOATING WIDGET ======================= -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
@@ -1744,8 +1874,7 @@
                                 <span class="gradient-text fw-bold">${fullName}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-user-circle fa-fw"></i> Hồ sơ của tôi</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog fa-fw"></i> Cài đặt</a></li>
+                                <li><a class="dropdown-item" href="infor-user.html"><i class="fas fa-user-circle fa-fw"></i> Hồ sơ của tôi</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="#" id="logout-button"><i class="fas fa-sign-out-alt fa-fw"></i> Đăng xuất</a></li>
                             </ul>
@@ -2133,6 +2262,38 @@
             
             initializePage();
 
+            // ======================= MESSENGER WIDGET LOGIC (ĐÃ CẬP NHẬT) =======================
+            const messengerWidget = document.getElementById('messenger-widget-container');
+            const closeMessengerBtn = document.getElementById('messenger-close-btn');
+            const messengerFabIcon = document.querySelector('.messenger-fab-icon');
+
+            if (messengerWidget && closeMessengerBtn && messengerFabIcon) {
+                const collapseWidget = () => {
+                    messengerWidget.classList.add('collapsed');
+                    sessionStorage.setItem('messengerCollapsed', 'true');
+                };
+
+                const expandWidget = () => {
+                    messengerWidget.classList.remove('collapsed');
+                    sessionStorage.removeItem('messengerCollapsed');
+                };
+
+                if (sessionStorage.getItem('messengerCollapsed') === 'true') {
+                    messengerWidget.classList.add('collapsed');
+                }
+
+                closeMessengerBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    collapseWidget();
+                });
+
+                messengerFabIcon.addEventListener('click', (e) => {
+                    if (messengerWidget.classList.contains('collapsed')) {
+                        e.preventDefault(); 
+                        expandWidget();
+                    }
+                });
+            }
         });
 
         // ======================= PRELOADER LOGIC =======================
@@ -2191,7 +2352,6 @@
             }
         });
     </script>
-    
-</body>
+    </body>
 
 </html>
