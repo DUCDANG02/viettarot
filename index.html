@@ -1,0 +1,2428 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VietTarot - Trang Chủ</title>
+
+    <link rel="icon" type="image/png" href="image/logotab.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* Chú thích: Khai báo các biến màu và font chữ toàn cục cho website */
+        /* Việc này giúp dễ dàng thay đổi giao diện toàn trang chỉ bằng cách sửa ở một nơi */
+        :root {
+            --primary-blue: #4A6CF3;   /* Màu xanh dương chính */
+            --primary-purple: #9B49F2; /* Màu tím chính */
+            --text-primary: #1A1229;   /* Màu chữ chính (đen đậm) */
+            --text-secondary: #5A6474; /* Màu chữ phụ (xám) */
+            --bg-white: #FFFFFF;       /* Màu nền trắng */
+            --bg-off-white: #F8F7FA;   /* Màu nền trắng ngà */
+            --border-color: #E5E7EB;   /* Màu đường viền */
+            --danger-color: #dc3545;   /* Màu cho thông báo lỗi */
+            --warning-color: #FFC107;  /* Màu cho sao đánh giá */
+            --success-color: #198754;  /* Màu cho thông báo thành công */
+            /* Màu gradient kết hợp từ xanh và tím */
+            --gradient-primary: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
+        }
+
+        /* ================== THAY ĐỔI FONT CHỮ TẠI ĐÂY ================== -->
+        /* Chú thích: Áp dụng font chữ và màu nền mặc định cho toàn bộ trang */
+        body {
+            font-family: 'Poppins', sans-serif; /* Sử dụng font Poppins đã import */
+            background-color: var(--bg-white);  /* Nền trắng */
+            color: var(--text-primary);         /* Màu chữ đen đậm */
+        }
+        /* ============================================================= */
+
+        /* ======================= CSS CHO MÀN HÌNH CHỜ (PRELOADER) ======================= */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-white); /* Nền trắng đồng bộ với trang web */
+            z-index: 9999; /* Luôn nằm trên cùng */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.75s ease, visibility 0.75s ease; /* Hiệu ứng mờ dần khi ẩn */
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #preloader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .preloader-content {
+            text-align: center;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--primary-blue); /* Sử dụng màu xanh của trang web */
+            border-top-color: var(--primary-purple); /* Điểm nhấn màu tím để tạo hiệu ứng xoay */
+            border-radius: 50%;
+            animation: spin 1s linear infinite; /* Animation xoay tròn vô hạn */
+            margin: 0 auto; /* Căn giữa vòng tròn */
+        }
+
+        .loading-text {
+            margin-top: 1rem; /* Khoảng cách giữa vòng tròn và chữ */
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-secondary); /* Sử dụng màu chữ phụ */
+            letter-spacing: 1px; /* Tăng khoảng cách ký tự cho dễ đọc */
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        /* ======================= HẾT CSS CHO PRELOADER ======================= */
+
+
+        /* ======================= CSS CHO HEADER DÍNH VÀ CÓ BÓNG MỜ ======================= */
+        header {
+            /* --- Các thuộc tính giúp header dính lại khi cuộn --- */
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            
+            /* --- Tạo hiệu ứng đổ bóng gradient --- */
+            /* Chúng ta lấy màu nền trắng từ navbar cũ gán cho header */
+            background-color: var(--bg-white);
+            
+            /* Dùng box-shadow với màu của theme để tạo hiệu ứng bóng mờ lan tỏa, mềm mại */
+            /* Đây là một kỹ thuật tạo bóng trông giống gradient và hiện đại hơn */
+            box-shadow: 0 10px 40px -15px rgba(74, 108, 243, 0.25);
+            transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
+        }
+
+            /* --- Tinh chỉnh lại Navbar bên trong Header --- */
+        .navbar {
+            /* Bỏ màu nền và bóng của navbar để nó trong suốt trên header */
+            background-color: transparent !important;
+            box-shadow: none !important;
+            padding: 15px 0px;
+        }
+
+        /* Chú thích: Tùy chỉnh logo thương hiệu */
+        .navbar-brand {
+            font-weight: 700;  /* Chữ đậm */
+            font-size: 1.75rem;  /* Cỡ chữ lớn hơn */
+        }
+        
+        /* Chú thích: Lớp để tạo hiệu ứng gradient cho chữ "Viet" */
+        .gradient-text {
+            background: var(--gradient-primary); /* Áp dụng nền gradient */
+            -webkit-background-clip: text;     /* Cắt nền theo hình dạng của chữ (cho trình duyệt Safari/Chrome) */
+            background-clip: text;             /* Cắt nền theo hình dạng của chữ */
+            -webkit-text-fill-color: transparent;/* Làm cho màu chữ trong suốt để nền hiện ra */
+            color: var(--primary-blue);      /* Màu dự phòng nếu trình duyệt không hỗ trợ */
+        }
+
+        /* Chú thích: Tùy chỉnh các mục menu (nav-link) */
+        .navbar-nav .nav-link {
+            color: var(--text-secondary); /* Màu chữ xám */
+            font-weight: 500;             /* Chữ hơi đậm */
+            padding: 0.4rem 1.7rem;       /* Đệm trong (trên-dưới, trái-phải) */
+            margin: 0 0.6rem;             /* Khoảng cách ngoài giữa các mục */
+            border-radius: 20px;          /* Bo tròn góc */
+            display: flex;                /* Sử dụng flexbox để căn chỉnh icon và chữ */
+            align-items: center;          /* Căn giữa theo chiều dọc */
+            position: relative;           /* Cần cho hiệu ứng hover */
+            z-index: 1;                   /* Đảm bảo nội dung nổi lên trên hiệu ứng */
+            overflow: hidden;             /* Ẩn phần nền gradient tràn ra ngoài */
+            transition: color 0.4s ease-in-out; /* Hiệu ứng chuyển màu chữ mượt mà */
+            background-color: transparent; /* Nền trong suốt mặc định */
+        }
+
+        /* Chú thích: Lớp giả ::before để tạo nền gradient động khi di chuột (hover) */
+        .navbar-nav .nav-link::before {
+            content: '';                    /* Bắt buộc phải có cho pseudo-element */
+            position: absolute;             /* Vị trí tuyệt đối so với nav-link */
+            top: 0; left: 0; right: 0; bottom: 0; /* Phủ kín toàn bộ nav-link */
+            background-image: var(--gradient-primary); /* Nền gradient */
+            z-index: -1;                    /* Nằm dưới nội dung của nav-link */
+            transform: scaleX(0);           /* Ban đầu co lại theo chiều ngang (ẩn đi) */
+            transform-origin: left;         /* Hiệu ứng bắt đầu từ bên trái */
+            transition: transform 0.4s ease-in-out; /* Hiệu ứng phóng to mượt mà */
+        }
+
+        /* Chú thích: Khi di chuột vào nav-link */
+        .navbar-nav .nav-link:hover {
+            color: var(--bg-white); /* Đổi màu chữ thành trắng */
+        }
+        .navbar-nav .nav-link:hover::before {
+            transform: scaleX(1);   /* Phóng to nền gradient ra để hiển thị */
+        }
+
+        /* Chú thích: Tùy chỉnh cho mục menu đang được chọn (active) thành dạng viên thuốc */
+        .navbar-nav .nav-link.active {
+            color: var(--bg-white); /* Đổi màu chữ thành trắng */
+            font-weight: 600;
+        }
+        
+        /* Chú thích: Luôn hiển thị nền gradient cho mục active */
+        .navbar-nav .nav-link.active::before {
+            transform: scaleX(1); /* Phóng to nền gradient ra để hiển thị */
+        }
+
+        /* Chú thích: Khi hover vào mục đang active thì chữ vẫn là màu trắng */
+        .navbar-nav .nav-link.active:hover {
+            color: var(--bg-white); 
+        }
+
+        /* Chú thích: Tùy chỉnh navbar trên màn hình nhỏ (khi đã thu gọn) */
+        @media (max-width: 991.98px) {
+            .navbar-nav {
+                padding-top: 1rem; /* Thêm khoảng đệm phía trên menu khi mở ra */
+            }
+            .navbar-nav .nav-item {
+                margin-bottom: 0.5rem; /* Tăng khoảng cách giữa các mục menu */
+            }
+            .navbar-nav .nav-item:last-child {
+                margin-bottom: 0;
+            }
+            .navbar-nav .nav-link {
+                margin: 0; /* Reset horizontal margin */
+                padding: 0.75rem 1rem; /* Tăng vùng đệm cho dễ bấm */
+                justify-content: center; /* Căn giữa nội dung link trên mobile */
+            }
+        }
+        
+        /* Chú thích: Tùy chỉnh menu thả xuống (dropdown) */
+        .dropdown-menu {
+            border-radius: 0.75rem; /* Bo góc */
+            border: 1px solid var(--border-color); /* Đường viền */
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.05); /* Đổ bóng */
+            padding: 0.5rem 0;      /* Đệm trong */
+            margin-top: 0.5rem !important; /* Khoảng cách với mục cha */
+        }
+        .dropdown-item {
+            padding: 0.5rem 1.2rem; /* Đệm trong */
+            font-weight: 500;       /* Chữ vừa */
+            color: var(--text-secondary); /* Màu chữ xám */
+            display: flex;          /* Dùng flexbox để căn icon */
+            align-items: center;    /* Căn giữa theo chiều dọc */
+        }
+        .dropdown-item:hover, .dropdown-item:focus {
+            background-color: var(--bg-off-white); /* Đổi nền khi hover */
+            color: var(--text-primary);            /* Đổi màu chữ khi hover */
+        }
+        .dropdown-item .fa-fw {
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
+        }
+        
+        /* Chú thích: Tùy chỉnh nút bấm có nền gradient */
+        .btn-gradient {
+            background: var(--gradient-primary); /* Nền gradient */
+            border: none;                     /* Không có đường viền */
+            color: white;                     /* Chữ trắng */
+            font-weight: 600;                 /* Chữ hơi đậm */
+            padding: 0.75rem 1.5rem;          /* Đệm trong */
+            border-radius: 50px;              /* Bo tròn thành hình viên thuốc */
+            transition: all 0.4s ease;        /* Hiệu ứng chuyển động mượt mà */
+            box-shadow: 0 4px 15px rgba(120, 73, 242, 0.4); /* Đổ bóng màu tím mờ */
+            display: inline-flex;             /* Hiển thị như inline-block và dùng flex */
+            align-items: center;              /* Căn giữa icon và chữ theo chiều dọc */
+            justify-content: center;          /* Căn giữa nội dung theo chiều ngang */
+            text-decoration: none;
+            background-size: 200% auto; /* Kích thước nền lớn hơn để có không gian di chuyển */
+        }
+
+        .btn-gradient:hover {
+            color: white;                     /* Giữ màu chữ trắng khi hover */
+            transform: translateY(-2px);      /* Di chuyển nút lên trên một chút */
+            box-shadow: 0 6px 20px rgba(120, 73, 242, 0.5); /* Tăng độ đậm của bóng */
+            background-position: right center; /* Di chuyển nền gradient khi hover */
+        }
+
+        .fa-user{
+            margin-right: 10px;
+        }
+
+        /* === CSS THIẾT KẾ LẠI MODAL ĐĂNG NHẬP / ĐĂNG KÝ === */
+        .modal.fade .modal-dialog {
+            transform: translate(0, -25px);
+            transition: transform 0.4s ease-out;
+        }
+        .modal.show .modal-dialog {
+            transform: translate(0, 0);
+        }
+        .modal-content {
+            border-radius: 1rem;            /* Bo tròn góc modal */
+            border: none;                   /* Bỏ viền mặc định */
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); /* Đổ bóng đẹp hơn */
+        }
+        .modal-header {
+            border-bottom: 1px solid var(--border-color); /* Viền dưới cho header */
+            padding: 1.5rem;                  /* Tăng đệm */
+            position: relative;               /* Cần cho nút close */
+        }
+        .modal-body {
+            padding: 1.5rem;                  /* Tăng đệm */
+        }
+        .modal-title {
+            font-weight: 700;                 /* Chữ tiêu đề đậm */
+            color: var(--text-primary);
+        }
+        .modal-subtitle {
+            font-size: 0.95rem;               /* Cỡ chữ phụ đề */
+            color: var(--text-secondary);
+        }
+        .btn-close { /* Nút đóng modal (dấu X) */
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+        .form-group-icon {
+            position: relative;
+        }
+        .form-group-icon .form-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%); /* Căn icon chính giữa ô input theo chiều dọc */
+            color: var(--text-secondary);
+            pointer-events: none; /* Icon không thể được click */
+        }
+        .form-control { /* Tùy chỉnh chung cho các ô input */
+            background-color: var(--bg-off-white);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .form-control-icon { /* Ô input có icon bên trái cần thêm đệm trái */
+            padding-left: 2.8rem !important;
+        }
+        .form-control:focus { /* Khi người dùng click vào ô input */
+            background-color: var(--bg-white);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(74, 108, 243, 0.2); /* Tạo viền sáng màu xanh */
+        }
+        .form-text a { /* Link "Quên mật khẩu?" */
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+        .social-login-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .social-login-divider::before,
+        .social-login-divider::after {
+            content: '';
+            flex: 1; /* Hai đường kẻ sẽ tự động co giãn lấp đầy không gian */
+            border-bottom: 1px solid var(--border-color);
+        }
+        .social-login-divider:not(:empty)::before { margin-right: .5em; } /* Khoảng cách giữa kẻ và chữ */
+        .social-login-divider:not(:empty)::after { margin-left: .5em; }
+        
+        .btn-social {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column; /* Xếp icon và chữ theo chiều dọc */
+            justify-content: center;
+            align-items: center;
+            gap: 0.3rem; /* Khoảng cách giữa icon và chữ */
+            text-decoration: none;
+        }
+        .btn-social:hover {
+            background-color: var(--bg-off-white);
+            border-color: #d1d5db;
+        }
+        .btn-social img {
+            width: 22px;
+            height: 22px;
+        }
+        .btn-social-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .invalid-feedback {
+            display: none; /* Ẩn mặc định, chỉ hiện khi có lỗi bằng JS */
+            width: 100%;
+            margin-top: .25rem;
+            font-size: .875em;
+            color: var(--danger-color);
+        }
+        .form-control.is-invalid { /* Khi ô input có lỗi */
+            border-color: var(--danger-color); /* Viền màu đỏ */
+        }
+        .form-control.is-invalid:focus {
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25); /* Viền sáng màu đỏ khi focus */
+        }
+        .form-control.is-valid { /* Khi ô input hợp lệ */
+            border-color: #198754; /* Viền màu xanh lá */
+        }
+        .form-control.is-valid:focus {
+            box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25); /* Viền sáng màu xanh lá khi focus */
+        }
+        .password-toggle-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer; /* Biến con trỏ thành hình bàn tay */
+            color: var(--text-secondary);
+        }
+        
+        .auth-alert {
+            font-size: 0.9rem;
+            padding: 0.75rem 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            background-color: var(--border-color); /* Màu nền dự phòng */
+            border: 2px solid var(--primary-purple); /* Thêm viền màu tím */
+            box-shadow: 0 2px 8px rgba(155, 73, 242, 0.4); /* Thêm hiệu ứng toả sáng */
+        }
+
+        /* CSS cho thông báo khớp mật khẩu */
+        #password-match-feedback {
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+            width: 100%;
+        }
+        .password-match {
+            color: var(--success-color);
+        }
+        .password-mismatch {
+            color: var(--danger-color);
+        }
+
+        /* ======================= CSS CHO HERO SLIDER (SLIDER ĐẦU TRANG) ======================= */
+        #heroSlider {
+            padding: 0;
+            margin: 0;
+        }
+        .carousel-item {
+            height: 85vh; /* Chiều cao của slider, chiếm 85% chiều cao màn hình */
+            min-height: 500px; /* Chiều cao tối thiểu */
+            background-size: cover; /* Ảnh nền luôn che phủ toàn bộ item */
+            background-position: center; /* Căn giữa ảnh nền */
+            background-repeat: no-repeat; /* Không lặp lại ảnh nền */
+        }
+
+        .carousel-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(26, 18, 41, 0.5); /* Lớp phủ màu đen mờ 50% */
+        }
+
+        .carousel-caption {
+            bottom: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Căn giữa tuyệt đối */
+            width: 80%;
+            text-align: center;
+        }
+        
+        /* Animation cho nội dung slider */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translate3d(0, -50px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        .carousel-item.active .carousel-caption h1 {
+             animation: fadeInDown 1s both;
+        }
+        .carousel-item.active .carousel-caption p {
+             animation: fadeInDown 1s both 0.3s; /* Delay 0.3s */
+        }
+         .carousel-item.active .carousel-caption .btn {
+             animation: fadeInDown 1s both 0.6s; /* Delay 0.6s */
+        }
+
+
+        .carousel-caption h1 {
+            font-weight: 700;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6); /* Đổ bóng cho chữ để dễ đọc */
+        }
+
+        .carousel-caption p {
+            font-size: 1.25rem;
+            color: var(--bg-off-white);
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: rgba(26, 18, 41, 0.5); /* Nền icon hơi mờ */
+            border-radius: 50%; /* Bo tròn */
+            padding: 1.5rem; /* Tăng kích thước vùng bấm */
+            background-size: 50%; /* Kích thước của hình mũi tên bên trong */
+        }
+
+        .carousel-indicators {
+            margin-bottom: 1rem;
+        }
+        .carousel-indicators [data-bs-target] {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--bg-white);
+            opacity: 0.7;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+            position: relative; 
+            border: none;
+            padding: 0;
+        }
+        
+        .carousel-indicators .active {
+            opacity: 1;
+            background-color: transparent; 
+        }
+
+        .carousel-indicators .active::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--gradient-primary); 
+        }
+
+        @media (max-width: 767.98px) {
+            /* Giảm chiều cao slider trên mobile */
+            .carousel-item {
+                height: 60vh; 
+                min-height: 450px; 
+            }
+            .carousel-control-prev-icon,
+            .carousel-control-next-icon {
+                padding: 1rem; 
+                background-size: 60%; 
+            }
+            .carousel-indicators {
+                bottom: 20px;
+            }
+
+            /* Căn chỉnh lại caption trên mobile */
+            .carousel-caption {
+                width: 90%; /* Tăng chiều rộng để chữ không bị gò bó */
+                bottom: 60px; /* Điều chỉnh vị trí từ dưới lên */
+                top: auto;
+                transform: translateX(-50%);
+            }
+            .carousel-caption h1 {
+                font-size: 2rem; /* Giảm kích thước tiêu đề */
+                margin-bottom: 0.75rem; /* Giảm khoảng cách dưới */
+            }
+            .carousel-caption p {
+                font-size: 0.95rem; /* Giảm kích thước mô tả */
+                line-height: 1.4;
+                margin-bottom: 1rem; /* Giảm khoảng cách dưới */
+            }
+            .carousel-caption .btn {
+                padding: 0.5rem 1rem; /* Thu nhỏ nút bấm một chút */
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* ======================= CSS CHO HIỆU ỨNG XUẤT HIỆN KHI CUỘN ======================= */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform; /* Tối ưu hóa hiệu năng animation */
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ======================= CSS CHUNG CHO CÁC SECTION ======================= */
+        .section-title {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .section-subtitle {
+            color: var(--text-secondary);
+        }
+        
+        /* ======================= CSS CHO DỊCH VỤ (NỀN SÁNG) ======================= */
+        #services {
+            background-color: var(--bg-off-white); /* Nền phụ màu trắng ngà */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-item-wrapper {
+            display: flex;
+            flex-direction: column; /* Xếp các item theo chiều dọc */
+            gap: 2rem; /* Khoảng cách giữa các item */
+            height: 100%;
+            justify-content: space-between; /* Dàn đều các item theo chiều dọc */
+        }
+
+        .service-item {
+            background-color: var(--bg-white); /* Nền trắng cho các thẻ dịch vụ */
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            transition: box-shadow 0.3s ease, transform 0.3s ease; /* Hiệu ứng mượt mà */
+            display: flex;
+            gap: 1.25rem; /* Khoảng cách giữa icon và nội dung */
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px); /* Nhấc thẻ lên một chút khi hover */
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.05); /* Tăng bóng */
+        }
+
+        .service-item.text-lg-end {
+            flex-direction: row-reverse; /* Đảo ngược thứ tự của icon và nội dung */
+        }
+
+        .service-icon {
+            flex-shrink: 0; /* Ngăn icon bị co lại */
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary); /* Nền gradient */
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: var(--bg-white); /* Icon màu trắng */
+        }
+
+        .service-content h5 {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .service-content p {
+            margin-bottom: 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .central-hand-image {
+            max-width: 100%;
+            height: auto;
+            transition: transform 0.4s ease;
+        }
+        
+        .central-hand-image:hover {
+            transform: scale(1.05); /* Phóng to nhẹ ảnh khi hover */
+        }
+        
+        @media (max-width: 991.98px) { /* Trên tablet */
+            .service-item.text-lg-end {
+                flex-direction: row; /* Đưa icon về lại bên trái */
+            }
+            .central-hand-image {
+                max-width: 250px; /* Thu nhỏ ảnh */
+                margin: 2rem 0;
+            }
+        }
+
+        @media (max-width: 767.98px) { /* Trên mobile */
+            .service-item {
+                text-align: left !important; /* Luôn căn trái chữ */
+            }
+        }
+        
+        /* ======================= CSS CHO KHỐI KHÓA HỌC NỔI BẬT ======================= */
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem; /* Khoảng cách giữa tiêu đề và nhãn "Mới" */
+            margin-bottom: 2rem; /* Khoảng cách tới danh sách khóa học */
+        }
+
+        .badge-new {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--bg-white);
+            background: var(--gradient-primary);
+            border-radius: 6px;
+            text-transform: uppercase; /* Viết hoa */
+            line-height: 1.2;
+        }
+
+        .course-card {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem; /* Bo góc tròn hơn */
+            overflow: hidden; /* Ẩn các phần thừa ra khỏi góc bo tròn */
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            height: 100%; /* Giúp các card trong cùng 1 hàng cao bằng nhau */
+            display: flex;
+            flex-direction: column; /* Xếp các phần tử con theo chiều dọc */
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-card-thumbnail {
+            display: block;
+            position: relative;
+            line-height: 0; /* Loại bỏ khoảng trống thừa dưới ảnh */
+            overflow: hidden; /* Đảm bảo hiệu ứng scale không tràn ra ngoài */
+        }
+
+        .course-card-thumbnail img {
+            width: 100%;
+            height: auto; /* Để ảnh tự điều chỉnh chiều cao theo tỷ lệ */
+            transition: transform 0.3s ease;
+        }
+
+        .course-card:hover .course-card-thumbnail img {
+            transform: scale(1.05); /* Hiệu ứng phóng to ảnh khi hover */
+        }
+
+
+        .course-card .crown-icon {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-size: 0.9rem;
+            width: 32px;
+            height: 32px;
+            background-color: rgba(0, 0, 0, 0.3); /* Nền tối mờ để nổi bật */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFD700; /* Màu vàng của vương miện */
+            z-index: 2;
+        }
+
+        .course-card-body {
+            padding: 1.25rem;
+            flex-grow: 1; /* Giúp phần body co giãn, đẩy footer xuống dưới */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            line-height: 1.5; /* CẬP NHẬT: Đảm bảo chiều cao dòng nhất quán */
+            min-height: 3.3em; /* CẬP NHẬT: Đặt chiều cao tối thiểu để chứa 2 dòng (1.1em * 1.5 * 2) */
+        }
+        
+        .course-card-title a {
+            color: inherit; 
+            text-decoration: none;
+            transition: color 0.3s ease;
+            /* CẬP NHẬT: CSS để ẩn văn bản dài và hiển thị dấu "..." */
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Giới hạn văn bản trong 2 dòng */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .course-card-title a:hover {
+            color: var(--primary-blue); /* Đổi màu khi hover */
+        }
+
+        .course-card-price {
+           text-align: right; /* CẬP NHẬT */
+        }
+
+        .course-card-price .original-price {
+            text-decoration: line-through; /* Gạch ngang giá gốc */
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .course-card-price .sale-price {
+            font-weight: 700;
+            color: var(--danger-color); /* Màu đỏ cho giá khuyến mãi */
+            font-size: 1.1rem;
+        }
+        
+        /* CẬP NHẬT: Thêm style cho giá miễn phí */
+        .course-card-price .sale-price.text-success {
+            color: var(--success-color) !important;
+        }
+
+        /* CẬP NHẬT: Thêm style cho phần thông tin giảng viên/loại khóa học */
+        .course-card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .course-card-meta .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+
+        /* ======================= CSS CHO PHẢN HỒI CỦA HỌC VIÊN (GIAO DIỆN MỚI) ======================= */
+        #testimonials {
+            background-color: var(--bg-off-white);
+        }
+
+        .testimonial-card {
+            background-color: var(--bg-white);
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            height: 100%;
+            display: flex;  
+            flex-direction: column; 
+            position: relative; /* Rất quan trọng: làm gốc cho avatar */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center; /* Căn giữa toàn bộ nội dung */
+            margin-top: 45px; /* Tạo không gian cho avatar ở trên */
+            padding: 0; /* Xóa padding cũ */
+        }
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--bg-white); /* Tạo viền trắng xung quanh avatar */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Đổ bóng cho avatar */
+            position: absolute; /* Quan trọng: định vị tuyệt đối */
+            top: -45px; /* Đẩy avatar lên trên, một nửa trong một nửa ngoài card */
+            left: 50%; /* Căn giữa theo chiều ngang */
+            transform: translateX(-50%); /* Căn giữa theo chiều ngang */
+            z-index: 5;
+        }
+
+        .testimonial-content {
+            padding: 3.5rem 1.5rem 1.5rem 1.5rem; /* Tăng padding-top để không bị avatar đè lên */
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .testimonial-header {
+            margin-bottom: 1rem;
+        }
+        .testimonial-name {
+            font-weight: 700; /* Chữ đậm hơn */
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+        }
+        .testimonial-info {
+            font-size: 0.9rem;
+            color: var(--primary-purple); /* Đổi màu cho thu hút */
+            margin-bottom: 0.75rem;
+        }
+        .testimonial-rating {
+            display: flex;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+            color: var(--warning-color);
+            justify-content: center; /* Căn giữa các ngôi sao */
+        }
+
+        .testimonial-body {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            flex-grow: 1; /* Đẩy nội dung xuống */
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .testimonial-quote-mark {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: var(--primary-blue);
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .testimonials-slider .swiper-button-prev,
+        .testimonials-slider .swiper-button-next {
+            color: var(--primary-blue);
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .testimonials-slider .swiper-button-prev:hover,
+        .testimonials-slider .swiper-button-next:hover {
+            color: var(--bg-white);
+            background: var(--gradient-primary);
+        }
+        .testimonials-slider .swiper-button-prev::after,
+        .testimonials-slider .swiper-button-next::after {
+            font-size: 1rem; /* Chỉnh kích thước mũi tên */
+            font-weight: 700;
+        }
+        @media (max-width: 767.98px) {
+            .testimonials-slider .swiper-button-prev,
+            .testimonials-slider .swiper-button-next {
+                display: none;
+            }
+        }
+
+        .testimonials-slider .swiper-pagination-bullet {
+            width: 10px;
+            height: 10px;
+            background-color: var(--text-secondary);
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+        .testimonials-slider .swiper-pagination-bullet-active {
+            opacity: 1;
+            background: var(--gradient-primary);
+            transform: scale(1.2);
+        }
+        .testimonials-slider .swiper-pagination {
+            position: static; /* Đưa pagination ra ngoài slider */
+            margin-top: 3rem; /* Tăng khoảng cách lên chút */
+        }
+
+        /* ======================= CSS CHO FOOTER ======================= */
+        .site-footer {
+            background: var(--gradient-primary); /* Nền gradient */
+            color: rgba(255, 255, 255, 0.8); /* Chữ trắng mờ */
+            font-size: 0.95rem;
+            padding-top: 4rem;
+            background-size: 200% 200%; /* Kích thước nền lớn để animation */
+            animation: gradient-animation 10s ease infinite; /* Áp dụng animation */
+        }
+        /* Keyframe cho animation của footer */
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+
+        .footer-widget h5 {
+            color: var(--bg-white);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo {
+            font-weight: 700;
+            font-size: 1.75rem;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        .footer-logo .gradient-text {
+            background: var(--bg-white);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .footer-logo span:last-child {
+            color: var(--bg-white); /* Chữ "Tarot" cũng màu trắng */
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: var(--bg-white);
+            padding-left: 5px; /* Hiệu ứng thụt vào khi hover */
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1); /* Nền trắng mờ */
+            color: var(--bg-white);
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+        .social-icons a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .footer-bottom {
+            background-color: rgba(0, 0, 0, 0.1); /* Nền tối hơn một chút cho phần copyright */
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+        }
+        .footer-bottom p {
+            color: var(--bg-white);
+        }
+
+        /* ======================= CSS CHO LOGO HÌNH ẢNH ======================= */
+        #header-logo {
+            max-height: 40px; 
+            width: auto;      
+        }
+
+        #footer-logo {
+            max-height: 50px; 
+            width: auto;
+        }
+
+        /* CSS CHO THÔNG BÁO THÀNH CÔNG */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 18, 41, 0.7);
+            z-index: 1060; /* Phải cao hơn z-index của modal (1055) */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .fullscreen-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .success-notification {
+            background-color: var(--bg-white);
+            padding: 2.5rem 3rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); /* Hiệu ứng nảy lên */
+        }
+        .fullscreen-overlay.show .success-notification {
+            transform: scale(1);
+        }
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+        .success-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .success-message {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        /* ======================= CSS CHO POPUP QUẢNG CÁO ======================= */
+        .promo-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(26, 18, 41, 0.75); /* Nền mờ */
+            z-index: 2000; /* Cao hơn tất cả các phần tử khác */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .promo-popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .promo-popup-content {
+            position: relative;
+            background-color: var(--bg-white);
+            border-radius: 1rem;
+            overflow: hidden; /* Đảm bảo ảnh bo tròn theo */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            
+            /* --- Responsive 1:1 Aspect Ratio --- */
+            width: 100%; /* Chiếm 100% chiều rộng của container cha */
+            max-width: 500px; /* Chiều rộng tối đa mặc định cho màn hình lớn */
+            aspect-ratio: 1 / 1; /* Tỷ lệ 1:1 */
+
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+
+        .promo-popup-overlay.show .promo-popup-content {
+            transform: scale(1);
+        }
+
+        .promo-popup-content a {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .promo-popup-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Đảm bảo ảnh lấp đầy mà không bị méo */
+        }
+
+        .promo-popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            line-height: 36px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+
+        .promo-popup-close:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        
+        /* Chú thích: Tối ưu hóa hiển thị cho các thiết bị di động */
+        @media (max-width: 576px) {
+            .promo-popup-content {
+                /* Trên màn hình nhỏ, giới hạn chiều rộng tối đa là 90% chiều rộng của viewport */
+                /* Điều này tạo ra một khoảng trống nhỏ ở hai bên, giúp popup không bị dính vào cạnh màn hình */
+                max-width: 90vw; 
+            }
+
+            .promo-popup-close {
+                /* Giảm nhẹ kích thước nút đóng trên mobile cho cân đối hơn */
+                width: 32px;
+                height: 32px;
+                font-size: 20px;
+                line-height: 32px;
+            }
+        }
+        
+        /* ======================= CSS CHO ICON MESSENGER NỔI (ĐÃ CẬP NHẬT) ======================= */
+        .messenger-widget-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1050;
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            transition: gap 0.3s ease; /* Thêm hiệu ứng chuyển đổi cho khoảng cách */
+        }
+
+        /* Lớp mới để xử lý trạng thái thu gọn */
+        .messenger-widget-container.collapsed .messenger-text-bubble,
+        .messenger-widget-container.collapsed .messenger-close-btn {
+            transform: scale(0);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .messenger-widget-container.collapsed .messenger-text-bubble {
+            width: 0;
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .messenger-widget-container.collapsed {
+            gap: 0; /* Bỏ khoảng cách khi thu gọn */
+        }
+        
+        /* CẬP NHẬT: Thêm quy tắc để thu nhỏ icon chính khi thu gọn */
+        .messenger-widget-container.collapsed .messenger-fab-icon {
+            transform: scale(0.7); /* Thu nhỏ icon còn 70% */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); /* Giảm bóng đổ cho hợp lý */
+            cursor: pointer; /* Biến con trỏ thành hình bàn tay để báo hiệu có thể nhấp */
+        }
+        /* CẬP NHẬT: Thêm hiệu ứng hover cho icon đã thu nhỏ */
+        .messenger-widget-container.collapsed .messenger-fab-icon:hover {
+            transform: scale(0.8); /* Phóng to nhẹ khi di chuột qua */
+        }
+
+
+        .messenger-icon-wrapper {
+            position: relative; /* Làm gốc cho nút close */
+            flex-shrink: 0;
+        }
+
+        .messenger-fab-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .messenger-fab-icon:hover {
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(120, 73, 242, 0.5);
+        }
+
+        .messenger-text-bubble {
+            background-color: var(--bg-white);
+            padding: 12px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            max-width: 220px;
+            margin-bottom: 5px;
+            animation: pop-in 0.5s 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+            transform: scale(0);
+            transform-origin: right bottom;
+            /* Thêm hiệu ứng chuyển đổi khi thu gọn */
+            transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+            white-space: nowrap; /* Ngăn chữ bị ngắt dòng khi thu gọn */
+            overflow: hidden; /* Ẩn nội dung khi thu gọn */
+        }
+
+        .messenger-close-btn {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 26px;
+            height: 26px;
+            background-color: var(--text-primary);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            font-size: 16px;
+            line-height: 22px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 12;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .messenger-close-btn:hover {
+            transform: scale(1.15) rotate(180deg);
+            background-color: var(--danger-color);
+        }
+
+        @keyframes pop-in {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive cho mobile */
+        @media (max-width: 767.98px) {
+            .messenger-widget-container {
+                right: 15px;
+                bottom: 15px;
+                gap: 10px;
+            }
+
+            .messenger-fab-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+            
+            .messenger-close-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 14px;
+                line-height: 20px;
+            }
+        }
+        /* ======================= HẾT CSS CHO ICON MESSENGER NỔI ======================= */
+        
+        /* THÊM MỚI: CSS CHO THÔNG BÁO */
+        .notification-badge {
+            position: absolute;
+            min-width: 22px;
+            height: 22px;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-white);
+            transform: scale(1);
+            animation: pulse-badge 1.5s infinite;
+            z-index: 10;
+        }
+        
+        #userDropdown .notification-badge {
+             top: -2px;
+             right: 0;
+        }
+
+        .dropdown-item .notification-badge {
+            position: static;
+            margin-left: auto;
+            transform: scale(0.9);
+            animation: none;
+            border: none;
+            padding: 0 6px;
+        }
+
+        @keyframes pulse-badge {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="loader"></div>
+            <div class="loading-text">Đang tải...</div>
+        </div>
+    </div>
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="https://placehold.co/150x40/E5E7EB/1A1229?text=Loading..." alt="VietTarot Logo" id="header-logo">
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">
+                                <i class="fas fa-home me-2"></i>
+                                Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fas fa-graduation-cap me-2"></i>
+                                Khoá học
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="document.html">
+                                <i class="fas fa-book me-2"></i>
+                                Tài liệu
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="blog.html">
+                                <i class="fas fa-scroll me-2"></i>
+                                Bài Viết
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fas fa-users me-2"></i>
+                                Về chúng tôi
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div id="auth-container" class="d-flex justify-content-center mt-3 mt-lg-0">
+                        </div>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div id="heroSlider" class="carousel slide">
+            <div class="carousel-indicators" id="slider-indicators"></div>
+
+            <div class="carousel-inner" id="slider-inner">
+                <div class="carousel-item active" style="background-image: url('https://placehold.co/1920x800/1A1229/FFFFFF?text=Loading...')">
+                     <div class="carousel-caption">
+                        <h1>Đang tải dữ liệu...</h1>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroSlider" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        <section id="services" class="py-5">
+            <div class="container py-4">
+                <div class="row mb-5 text-center">
+                    <div class="col-lg-8 mx-auto">
+                        <h2 class="section-title">Dịch Vụ Của Chúng Tôi</h2>
+                        <p class="section-subtitle lead">
+                            Khám phá các dịch vụ huyền học đa dạng được thiết kế để soi sáng và dẫn lối cho hành trình của bạn.
+                        </p>
+                    </div>
+                </div>
+        
+                <div class="row align-items-center">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item-wrapper">
+                            <div class="service-item text-lg-end">
+                                <div class="service-content">
+                                    <h5>Tài liệu độc quyền</h5>
+                                    <p>Tài liệu độc quyền do VietTarot phát hành sưu tầm.</p>
+                                </div>
+                                <div class="service-icon">
+                                    <i class="fas fa-book-open"></i>
+                                </div>
+                            </div>
+                            <div class="service-item text-lg-end">
+                                <div class="service-content">
+                                    <h5>Bài viết bổ ích</h5>
+                                    <p>Sưu tầm và phát hành những bài hữu ích và giá trị.</p>
+                                </div>
+                                <div class="service-icon">
+                                    <i class="fas fa-gem"></i>
+                                </div>
+                            </div>
+                            <div class="service-item text-lg-end">
+                                <div class="service-content">
+                                    <h5>Cộng đồng lớn mạnh</h5>
+                                    <p>Cộng đồng Reader lớn sẵn sàng hỗ trợ bạn.</p>
+                                </div>
+                                <div class="service-icon">
+                                    <i class="fas fa-compass"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="col-lg-4 d-none d-lg-block text-center">
+                        <img src="https://placehold.co/400x400/E5E7EB/1A1229?text=Loading..." alt="ảnh ở giữa" class="central-hand-image" id="service-image">
+                    </div>
+        
+                    <div class="col-lg-4 col-md-6 mt-4 mt-md-0">
+                        <div class="service-item-wrapper">
+                            <div class="service-item">
+                                <div class="service-icon">
+                                    <i class="fas fa-heart-pulse"></i>
+                                </div>
+                                <div class="service-content">
+                                    <h5>Khoá học chất lượng</h5>
+                                    <p>Sự kết hợp cả lý thuyết lẫn thực hành.</p>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <div class="service-icon">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                <div class="service-content">
+                                    <h5>Kiến thức nâng cao</h5>
+                                    <p>Tiếp xúc với các phương pháp thực thi mới lạ.</p>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <div class="service-icon">
+                                    <i class="fas fa-moon"></i>
+                                </div>
+                                <div class="service-content">
+                                    <h5>Hỗ trợ và bảo hành</h5>
+                                    <p>Hỗ trợ 24/7 cơ hội làm CTV của VietTarot.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="featured-courses" class="py-5 bg-white">
+            <div class="container py-4">
+                <div class="section-heading">
+                    <h2 class="section-title">Khóa học Pro</h2>
+                    <span class="badge-new">Mới</span>
+                </div>
+        
+                <div class="row g-4" id="courses-list">
+                    <div class="col-12 text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Đang tải các khóa học...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="testimonials" class="py-5">
+            <div class="container py-4">
+                <div class="row mb-5 text-center">
+                    <div class="col-lg-8 mx-auto">
+                        <h2 class="section-title">Học Viên Nói Gì Về Chúng Tôi</h2>
+                        <p class="section-subtitle lead">
+                            Những chia sẻ chân thực từ các học viên đã đồng hành cùng VietTarot trên con đường khai phá tri thức.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="swiper testimonials-slider">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="testimonial-card">
+                                <img src="https://kynguyenlamdep.com/wp-content/uploads/2022/08/anh-trai-dep-selfie-che-mat.jpg" alt="Avatar học viên Trần Minh Anh" class="testimonial-avatar">
+                                <div class="testimonial-content">
+                                    <div class="testimonial-header">
+                                        <h6 class="testimonial-name">Trần Minh Anh</h6>
+                                        <p class="testimonial-info">Học viên Tarot Nâng Cao</p>
+                                        <div class="testimonial-rating">
+                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <p class="testimonial-body">
+                                        <i class="fas fa-quote-left testimonial-quote-mark"></i>
+                                        Khóa học Tarot Nâng Cao thực sự vượt ngoài mong đợi của mình. Kiến thức chuyên sâu và cách giảng viên Linh Chi truyền đạt rất lôi cuốn.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide">
+                            <div class="testimonial-card">
+                                <img src="https://static-images.vnncdn.net/files/publish/2023/4/21/1-trung-tadashi-1530.jpg" alt="Avatar học viên Lê Hoàng Bách" class="testimonial-avatar">
+                                <div class="testimonial-content">
+                                    <div class="testimonial-header">
+                                        <h6 class="testimonial-name">Lê Hoàng Bách</h6>
+                                        <p class="testimonial-info">Học viên Tarot Vỡ Lòng</p>
+                                        <div class="testimonial-rating">
+                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <p class="testimonial-body">
+                                        <i class="fas fa-quote-left testimonial-quote-mark"></i>
+                                        Mình chưa biết gì về Tarot nhưng khóa học này rất dễ hiểu. Giờ mình đã tự tin giải những trải bài đơn giản cho bản thân và bạn bè. Rất khuyến khích!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide">
+                            <div class="testimonial-card">
+                                <img src="https://tiki.vn/blog/wp-content/uploads/2023/01/oLkoHpw9cqRtLPTbg67bgtUvUdV1BnXRnAqqBZOVkEtPgf-_Ct3ADFJYXIjfDd0fTyECLEsWq5yZ2CCOEGxIsuHSmNNNUZQcnQT5-Ld6yoK19Q_Sphb0MmX64ga-O_TIPjItNkTL5ns4zqP1Z0OBzsIoeYKtcewnrjnVsw8vfG8uYwwCDkXaoozCrmH1kA.jpg" alt="Avatar khách hàng Phạm Thu Hà" class="testimonial-avatar">
+                                <div class="testimonial-content">
+                                    <div class="testimonial-header">
+                                        <h6 class="testimonial-name">Phạm Thu Hà</h6>
+                                        <p class="testimonial-info">Khách hàng xem Tarot</p>
+                                        <div class="testimonial-rating">
+                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                        </div>
+                                    </div>
+                                    <p class="testimonial-body">
+                                        <i class="fas fa-quote-left testimonial-quote-mark"></i>
+                                        Dịch vụ tư vấn Chiêm tinh rất chuyên nghiệp. Bản phân tích chi tiết đã giúp mình định hướng được nhiều điều trong công việc và cuộc sống.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="swiper-slide">
+                            <div class="testimonial-card">
+                                <img src="https://tse3.mm.bing.net/th/id/OIF.TJYcUCKu0T4DzoLIVdCmoQ?pid=Api&P=0&h=220" alt="Avatar thành viên Nguyễn Thị Mai" class="testimonial-avatar">
+                                <div class="testimonial-content">
+                                    <div class="testimonial-header">
+                                        <h6 class="testimonial-name">Nguyễn Thị Mai</h6>
+                                        <p class="testimonial-info">Thành viên cộng đồng</p>
+                                        <div class="testimonial-rating">
+                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+                                    <p class="testimonial-body">
+                                        <i class="fas fa-quote-left testimonial-quote-mark"></i>
+                                        Thật tuyệt vời! Cộng đồng VietTarot rất sôi nổi và luôn sẵn sàng giúp đỡ những người mới như mình. Cảm ơn VietTarot rất nhiều!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+            </div>
+        </section>
+        </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                    <div class="footer-widget">
+                        <a class="footer-logo" href="#">
+                             <img src="https://placehold.co/180x50/E5E7EB/1A1229?text=Loading..." alt="VietTarot Logo" id="footer-logo">
+                        </a>
+                        <p class="mt-3">Nền tảng học Tarot và Huyền học trực tuyến hàng đầu Việt Nam. Khai phá tiềm năng, thấu hiểu bản thân và định hướng tương lai.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                    <div class="footer-widget">
+                        <h5>Khám Phá</h5>
+                        <ul class="list-unstyled footer-links">
+                            <li><a href="#">Trang chủ</a></li>
+                            <li><a href="#">Khoá học</a></li>
+                            <li><a href="#">Tài liệu</a></li>
+                            <li><a href="#">Về chúng tôi</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <div class="footer-widget">
+                        <h5>Tài Liệu</h5>
+                        <ul class="list-unstyled footer-links">
+                            <li><a href="#">Ý nghĩa 78 lá bài Tarot</a></li>
+                            <li><a href="#">Các trải bài thông dụng</a></li>
+                            <li><a href="#">Kiến thức Chiêm tinh</a></li>
+                            <li><a href="#">Kiến thức Thần số học</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h5>Kết Nối Với Chúng Tôi</h5>
+                        <p>Theo dõi VietTarot trên các nền tảng mạng xã hội để không bỏ lỡ kiến thức hữu ích!</p>
+                        <div class="social-icons mt-3">
+                            <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" title="Youtube"><i class="fab fa-youtube"></i></a>
+                            <a href="#" title="Tiktok"><i class="fab fa-tiktok"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container text-center">
+                <p class="mb-0">&copy; 2025 được phát triển bởi hệ thống VietTarot</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="fullscreen-success-overlay" class="fullscreen-overlay">
+        <div class="success-notification">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h4 class="success-title">Thành Công!</h4>
+            <p class="success-message">Bạn đã tạo tài khoản thành công.</p>
+        </div>
+    </div>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title" id="loginModalLabel">Đăng nhập</h5>
+                        <p class="mb-0 modal-subtitle">Chào mừng bạn trở lại VietTarot!</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="login-form">
+                        <div id="login-alert"></div>
+                        <div class="mb-3 form-group-icon">
+                            <i class="fas fa-envelope form-icon"></i>
+                            <input type="email" class="form-control form-control-icon" id="loginEmail" placeholder="Email" required>
+                        </div>
+                        <div class="mb-3 form-group-icon">
+                            <i class="fas fa-lock form-icon"></i>
+                            <input type="password" class="form-control form-control-icon" id="loginPassword" placeholder="Mật khẩu" required>
+                            <i class="fas fa-eye password-toggle-icon" id="toggleLoginPassword"></i>
+                        </div>
+                        <div class="mb-4 text-end">
+                            <div id="passwordHelp" class="form-text">
+                                <a href="#">Quên mật khẩu?</a>
+                            </div>
+                        </div>
+                        <button type="submit" id="login-submit-btn" class="btn btn-gradient w-100 py-2">Đăng nhập</button>
+                    </form>
+
+                    <div class="social-login-divider my-4">Hoặc tiếp tục với</div>
+
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button class="btn btn-social" title="Đăng nhập với Google">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google logo">
+                                <span class="btn-social-text">Google</span>
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-social" title="Đăng nhập với Facebook" id="facebook-login-btn">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook logo">
+                                <span class="btn-social-text">Facebook</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <p class="mb-0 text-secondary">Chưa có tài khoản? 
+                            <a href="#" class="fw-bold text-decoration-none" data-bs-toggle="modal" data-bs-target="#registerModal" style="color: var(--primary-blue);">Đăng ký ngay</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title" id="registerModalLabel">Tạo tài khoản</h5>
+                        <p class="mb-0 modal-subtitle">Bắt đầu hành trình khám phá Tarot của bạn!</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm" novalidate>
+                        <div id="register-alert"></div>
+                        <div class="mb-3">
+                            <div class="form-group-icon">
+                                <i class="fas fa-user form-icon"></i>
+                                <input type="text" class="form-control form-control-icon" id="registerName" placeholder="Họ và tên" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group-icon">
+                                <i class="fas fa-envelope form-icon"></i>
+                                <input type="email" class="form-control form-control-icon" id="registerEmail" placeholder="Email" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group-icon">
+                                <i class="fas fa-phone form-icon"></i>
+                                <input type="tel" class="form-control form-control-icon" id="registerPhone" placeholder="Số điện thoại" required>
+                            </div>
+                        </div>
+                         <div class="mb-3 form-group-icon">
+                            <i class="fas fa-lock form-icon"></i>
+                            <input type="password" class="form-control form-control-icon" id="registerPassword" placeholder="Mật khẩu" required>
+                            <i class="fas fa-eye password-toggle-icon" id="toggleRegisterPassword"></i>
+                        </div>
+                        <div class="mb-4 form-group-icon">
+                            <i class="fas fa-check-circle form-icon"></i>
+                            <input type="password" class="form-control form-control-icon" id="confirmPassword" placeholder="Xác nhận mật khẩu" required>
+                            <i class="fas fa-eye password-toggle-icon" id="toggleConfirmPassword"></i>
+                            <div id="password-match-feedback" class="mt-1"></div>
+                        </div>
+                        <button type="submit" id="register-submit-btn" class="btn btn-gradient w-100 py-2" disabled>Tạo tài khoản</button>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <p class="mb-0 text-secondary">Đã có tài khoản? 
+                            <a href="#" class="fw-bold text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginModal" style="color: var(--primary-blue);">Đăng nhập ngay</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ======================= POPUP QUẢNG CÁO ======================= -->
+    <div id="promotionPopup" class="promo-popup-overlay">
+        <div class="promo-popup-content">
+            <button id="closePromoPopup" class="promo-popup-close" title="Đóng">&times;</button>
+            <!-- Cập nhật: Thêm ID cho thẻ a và img để JS có thể truy cập -->
+            <a href="#" target="_blank" id="promo-link">
+                <img src="https://placehold.co/500x500/1A1229/FFFFFF?text=Loading+Promo..." alt="Quảng cáo khuyến mãi" id="promo-image">
+            </a>
+        </div>
+    </div>
+    <!-- ======================= HẾT POPUP QUẢNG CÁO ======================= -->
+
+    <!-- ======================= MESSENGER FLOATING WIDGET ======================= -->
+    <div class="messenger-widget-container" id="messenger-widget-container">
+        <div class="messenger-text-bubble">
+            <p class="mb-0">Tham gia nhóm cộng đồng</p>
+        </div>
+        <div class="messenger-icon-wrapper">
+            <button class="messenger-close-btn" id="messenger-close-btn" title="Ẩn">&times;</button>
+            <a href="https://m.me/YOUR_PAGE_ID" class="messenger-fab-icon" target="_blank" title="Nhắn tin cho chúng tôi">
+                <i class="fas fa-users"></i>
+            </a>
+        </div>
+    </div>
+    <!-- ======================= END MESSENGER FLOATING WIDGET ======================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+        // Chú thích: Đợi toàn bộ nội dung HTML của trang được tải và phân tích xong rồi mới chạy script
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // ======================= SUPABASE CLIENT INITIALIZATION =======================
+            const SUPABASE_URL = 'https://lkznteubcwladqkxyaqo.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrem50ZXViY3dsYWRxa3h5YXFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjcwODksImV4cCI6MjA2NzgwMzA4OX0.7P4-H_ujbLG2KLEFiVtlGIs8o515OkqNw9MVPDF7sCY';
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            // ======================= DOM ELEMENT SELECTORS =======================
+            const authContainer = document.getElementById('auth-container');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('registerForm');
+            const facebookLoginBtn = document.getElementById('facebook-login-btn'); 
+            
+            const defaultAvatarIcon = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='50' fill='%23E5E7EB'/%3E%3Cpath d='M66.95 66.78a25.02 25.02 0 00-33.9 0C24.4 71.3 20 79.95 20 90h60c0-10.05-4.4-18.7-13.05-23.22zM50 55c-10.33 0-18.7-8.37-18.7-18.7S39.67 17.6 50 17.6s18.7 8.37 18.7 18.7-8.37 18.7-18.7 18.7z' fill='%23A0AEC0'/%3E%3C/svg%3E";
+
+            // THÊM MỚI: LOGIC THÔNG BÁO
+            const NOTIFICATION_KEY = 'newDocumentsCount';
+
+            function getNotificationCount() {
+                return parseInt(localStorage.getItem(NOTIFICATION_KEY) || '0', 10);
+            }
+
+            function setNotificationCount(count) {
+                const newCount = Math.max(0, count);
+                localStorage.setItem(NOTIFICATION_KEY, newCount);
+            }
+
+            function updateAllNotifications() {
+                const count = getNotificationCount();
+                const userDropdown = document.getElementById('userDropdown');
+                const profileDropdownItem = document.getElementById('profile-dropdown-item');
+
+                if (userDropdown) {
+                    userDropdown.style.position = 'relative';
+                    let badge = userDropdown.querySelector('.notification-badge');
+                    if (count > 0) {
+                        if (!badge) {
+                            badge = document.createElement('span');
+                            badge.className = 'notification-badge';
+                            userDropdown.appendChild(badge);
+                        }
+                        badge.textContent = count;
+                    } else {
+                        if (badge) badge.remove();
+                    }
+                }
+
+                if (profileDropdownItem) {
+                    let badge = profileDropdownItem.querySelector('.notification-badge');
+                    if (count > 0) {
+                        if (!badge) {
+                            badge = document.createElement('span');
+                            badge.className = 'notification-badge';
+                            profileDropdownItem.appendChild(badge);
+                        }
+                        badge.textContent = `+${count}`;
+                    } else {
+                        if (badge) badge.remove();
+                    }
+                }
+            }
+
+
+            // ======================= HELPER FUNCTIONS =======================
+            
+            function translateSupabaseError(errorMessage) {
+                if (!errorMessage) return "Đã có lỗi xảy ra. Vui lòng thử lại.";
+                
+                if (errorMessage.includes("User already registered")) {
+                    return "Email này đã được đăng ký. Vui lòng sử dụng email khác.";
+                }
+                if (errorMessage.includes("Password should be at least 6 characters")) {
+                    return "Mật khẩu phải có ít nhất 6 ký tự.";
+                }
+                if (errorMessage.includes("Invalid login credentials")) {
+                    return "Email hoặc mật khẩu không chính xác.";
+                }
+                if (errorMessage.includes("Unable to validate email address: invalid format")) {
+                    return "Địa chỉ email không hợp lệ.";
+                }
+                
+                return `Đã xảy ra lỗi: ${errorMessage}`;
+            }
+
+            function showAlert(containerId, message, type = 'danger') {
+                const alertContainer = document.getElementById(containerId);
+                if (alertContainer) {
+                    alertContainer.innerHTML = `
+                        <div class="alert alert-${type} alert-dismissible fade show auth-alert" role="alert">
+                            ${message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `;
+                }
+            }
+
+            // SỬA ĐỔI: Cập nhật hàm updateUI để tích hợp thông báo
+            function updateUI(user) {
+                if (!authContainer) return;
+
+                if (user) {
+                    const fullName = user.user_metadata?.full_name || user.email;
+                    const avatarUrl = user.user_metadata?.avatar_url || defaultAvatarIcon;
+
+                    authContainer.innerHTML = `
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                               style="background-color: transparent; padding: 0.1rem 0.5rem; margin:0; border-radius: 50px;">
+                                <img src="${avatarUrl}" alt="${fullName}" class="user-avatar">
+                                <span class="gradient-text fw-bold">${fullName}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" id="profile-dropdown-item" href="infor-user.html"><i class="fas fa-user-circle fa-fw"></i> Hồ sơ của tôi</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="logout-button"><i class="fas fa-sign-out-alt fa-fw"></i> Đăng xuất</a></li>
+                            </ul>
+                        </div>
+                    `;
+                    document.getElementById('logout-button').addEventListener('click', handleLogout);
+                    // Gọi hàm cập nhật thông báo
+                    updateAllNotifications();
+                } else {
+                    authContainer.innerHTML = `
+                        <a href="#" class="btn-gradient" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fa-solid fa-user me-2"></i>
+                            <span>Đăng ký / Đăng nhập</span>
+                        </a>
+                    `;
+                }
+            }
+
+            // ======================= AUTHENTICATION LOGIC =======================
+            
+            async function handleRegister(event) {
+                event.preventDefault(); 
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const phone = document.getElementById('registerPhone').value;
+                const password = document.getElementById('registerPassword').value;
+                const registerButton = document.getElementById('register-submit-btn');
+
+                document.getElementById('register-alert').innerHTML = '';
+                
+                registerButton.disabled = true;
+                registerButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xử lý...`;
+
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: name,
+                            phone: phone
+                        }
+                    }
+                });
+
+                if (error) {
+                    showAlert('register-alert', translateSupabaseError(error.message));
+                    registerButton.disabled = false;
+                    registerButton.innerHTML = 'Tạo tài khoản';
+                } else {
+                    const registerModalInstance = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                    const successOverlay = document.getElementById('fullscreen-success-overlay');
+
+                    if (registerModalInstance) {
+                        registerModalInstance.hide();
+                    }
+
+                    if (successOverlay) {
+                        successOverlay.classList.add('show');
+                    }
+
+                    setTimeout(() => {
+                        if (successOverlay) {
+                            successOverlay.classList.remove('show');
+                        }
+                        
+                        registerForm.reset();
+                        registerButton.disabled = true; 
+                        registerButton.innerHTML = 'Tạo tài khoản';
+                        
+                    }, 2500);
+                }
+            }
+
+            async function handleLogin(event) {
+                event.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                const loginButton = document.getElementById('login-submit-btn'); 
+
+                document.getElementById('login-alert').innerHTML = '';
+
+                loginButton.disabled = true;
+                loginButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang đăng nhập...`;
+
+                setTimeout(async () => {
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: email,
+                        password: password,
+                    });
+
+                    if (error) {
+                        showAlert('login-alert', translateSupabaseError(error.message));
+                    } else if (data.user) {
+                        const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                        loginModal.hide();
+                        loginForm.reset();
+                    }
+
+                    loginButton.disabled = false;
+                    loginButton.innerHTML = 'Đăng nhập';
+
+                }, 1500);
+            }
+
+            async function signInWithFacebook() {
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: 'facebook',
+                });
+
+                if (error) {
+                    console.error('Lỗi khi đăng nhập Facebook:', error);
+                    showAlert('login-alert', 'Không thể đăng nhập bằng Facebook. Vui lòng thử lại.');
+                }
+            }
+
+            async function handleLogout(event) {
+                event.preventDefault();
+                await supabase.auth.signOut();
+            }
+
+            supabase.auth.onAuthStateChange((event, session) => {
+                updateUI(session ? session.user : null);
+            });
+
+            // Gán sự kiện cho các form và nút
+            if (registerForm) {
+                registerForm.addEventListener('submit', handleRegister);
+            }
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+            if (facebookLoginBtn) {
+                facebookLoginBtn.addEventListener('click', signInWithFacebook);
+            }
+            
+            if (registerForm) {
+                const inputs = registerForm.querySelectorAll('input');
+                const registerSubmitBtn = document.getElementById('register-submit-btn');
+                const passwordInput = document.getElementById('registerPassword');
+                const confirmPasswordInput = document.getElementById('confirmPassword');
+                const feedbackDiv = document.getElementById('password-match-feedback');
+
+                function validateRegisterForm() {
+                    let allFilled = true;
+                    inputs.forEach(input => {
+                        if (input.value.trim() === '') {
+                            allFilled = false;
+                        }
+                    });
+
+                    const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
+
+                    if (confirmPasswordInput.value !== '') {
+                        if (passwordsMatch) {
+                            feedbackDiv.textContent = 'Mật khẩu đã khớp!';
+                            feedbackDiv.className = 'password-match';
+                        } else {
+                            feedbackDiv.textContent = 'Mật khẩu không khớp!';
+                            feedbackDiv.className = 'password-mismatch';
+                        }
+                    } else {
+                        feedbackDiv.textContent = '';
+                    }
+
+                    if (allFilled && passwordsMatch) {
+                        registerSubmitBtn.disabled = false;
+                    } else {
+                        registerSubmitBtn.disabled = true;
+                    }
+                }
+
+                inputs.forEach(input => {
+                    input.addEventListener('input', validateRegisterForm);
+                });
+            }
+
+            function setupPasswordToggle(toggleId, passwordId) {
+                const toggleIcon = document.getElementById(toggleId);
+                const passwordInput = document.getElementById(passwordId);
+
+                if (toggleIcon && passwordInput) {
+                    toggleIcon.addEventListener('click', function() {
+                        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                        passwordInput.setAttribute('type', type);
+                        this.classList.toggle('fa-eye');
+                        this.classList.toggle('fa-eye-slash');
+                    });
+                }
+            }
+
+            setupPasswordToggle('toggleLoginPassword', 'loginPassword');
+            setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
+            setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
+
+
+            // ======================= LOAD DYNAMIC CONTENT (EXISTING CODE) =======================
+            async function loadWebsiteSettings() {
+                const { data, error } = await supabase
+                    .from('website_settings')
+                    .select('*') 
+                    .eq('id', 1)
+                    .single();
+
+                if (error) { 
+                    console.error('Lỗi khi tải cài đặt website:', error.message); 
+                    return; 
+                }
+                
+                if (data) {
+                    const headerLogo = document.getElementById('header-logo');
+                    const footerLogo = document.getElementById('footer-logo');
+                    const serviceImage = document.getElementById('service-image');
+                    const promoLink = document.getElementById('promo-link');
+                    const promoImage = document.getElementById('promo-image');
+
+                    if (headerLogo && data.header_logo_url) headerLogo.src = data.header_logo_url;
+                    if (footerLogo && data.footer_logo_url) footerLogo.src = data.footer_logo_url;
+                    if (serviceImage && data.service_image_url) serviceImage.src = data.service_image_url;
+                    
+                    if (promoImage && data.promotion_image_url) {
+                        promoImage.src = data.promotion_image_url;
+                    }
+                    if (promoLink && data.promotion_link_url) {
+                        promoLink.href = data.promotion_link_url;
+                    }
+                }
+            }
+
+            async function loadSliders() {
+                const { data, error } = await supabase.from('sliders').select('title, description, image_url, button_text, button_link').order('display_order', { ascending: true });
+                if (error) { console.error('Lỗi khi tải sliders:', error.message); return; }
+                if (data && data.length > 0) { renderSliders(data); }
+            }
+
+            function renderSliders(sliders) {
+                const indicatorsContainer = document.getElementById('slider-indicators');
+                const innerContainer = document.getElementById('slider-inner');
+                indicatorsContainer.innerHTML = '';
+                innerContainer.innerHTML = '';
+                sliders.forEach((slider, index) => {
+                    const indicatorButton = document.createElement('button');
+                    indicatorButton.type = 'button';
+                    indicatorButton.dataset.bsTarget = '#heroSlider';
+                    indicatorButton.dataset.bsSlideTo = index;
+                    indicatorButton.setAttribute('aria-label', `Slide ${index + 1}`);
+                    if (index === 0) {
+                        indicatorButton.classList.add('active');
+                        indicatorButton.setAttribute('aria-current', 'true');
+                    }
+                    indicatorsContainer.appendChild(indicatorButton);
+                    const carouselItem = document.createElement('div');
+                    carouselItem.classList.add('carousel-item');
+                    if (index === 0) { carouselItem.classList.add('active'); }
+                    carouselItem.style.backgroundImage = `url('${slider.image_url}')`;
+                    const captionDiv = document.createElement('div');
+                    captionDiv.classList.add('carousel-caption');
+                    
+                    let captionHTML = '';
+                    if (slider.title) { captionHTML += `<h1 class="display-3">${slider.title}</h1>`; }
+                    if (slider.description) { captionHTML += `<p class="lead my-4">${slider.description}</p>`; }
+                    if (slider.button_text && slider.button_link) { captionHTML += `<a href="${slider.button_link}" class="btn btn-gradient btn-lg">${slider.button_text}</a>`; }
+                    
+                    captionDiv.innerHTML = captionHTML;
+                    carouselItem.appendChild(captionDiv);
+                    innerContainer.appendChild(carouselItem);
+                });
+                const heroSlider = document.getElementById('heroSlider');
+                if (heroSlider) {
+                    new bootstrap.Carousel(heroSlider, {
+                        interval: 5000, ride: 'carousel', pause: false
+                    });
+                }
+            }
+
+            async function loadCourses() {
+                const { data, error } = await supabase.from('courses').select('*').order('created_at', { ascending: false }).limit(4);
+                if (error) { console.error('Lỗi khi tải khóa học:', error.message); return; }
+                if (data && data.length > 0) { renderCourses(data); }
+            }
+
+            function renderCourses(courses) {
+                const coursesListContainer = document.getElementById('courses-list');
+                coursesListContainer.innerHTML = '';
+                courses.forEach(course => {
+                    const formatPrice = (price) => {
+                        if (price === null || price === undefined) return '';
+                        return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                    };
+
+                    const salePriceText = course.price_sale > 0 ? formatPrice(course.price_sale) : 'Miễn phí';
+                    const salePriceClass = course.price_sale > 0 ? 'sale-price' : 'sale-price text-success fw-bold';
+                    const originalPriceDisplay = course.price_original && course.price_sale > 0 && course.price_original > course.price_sale 
+                        ? `<span class="original-price">${formatPrice(course.price_original)}</span>` 
+                        : '';
+
+                    let typeIconClass = 'fas fa-tag';
+                    if (course.course_type) {
+                        switch (course.course_type.toLowerCase()) {
+                            case 'miễn phí': typeIconClass = 'fas fa-gift'; break;
+                            case 'cơ bản': typeIconClass = 'fas fa-layer-group'; break;
+                            case 'nâng cao': typeIconClass = 'fas fa-rocket'; break;
+                        }
+                    }
+                    const courseCardHTML = `
+                        <div class="col-lg-3 col-md-6 d-flex">
+                            <div class="course-card">
+                                <a href="${course.course_link || '#'}" class="course-card-thumbnail">
+                                    <img src="${course.image_url || 'https://placehold.co/400x300/cccccc/ffffff?text=Image'}" alt="${course.title || 'Course Image'}">
+                                    ${course.course_type && course.course_type.toLowerCase() !== 'miễn phí' ? '<span class="crown-icon"><i class="fas fa-crown"></i></span>' : ''}
+                                </a>
+                                <div class="course-card-body">
+                                    <div class="course-card-meta mb-2">
+                                        <span class="info-item"><i class="fas fa-user-circle"></i> ${course.instructor_name || 'Giảng viên'}</span>
+                                        <span class="info-item"><i class="${typeIconClass}"></i> ${course.course_type || 'Loại'}</span>
+                                    </div>
+                                    <h3 class="course-card-title"><a href="${course.course_link || '#'}">${course.title || 'Tên khóa học'}</a></h3>
+                                    
+                                    <div class="mt-auto pt-3 border-top">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="fw-bold text-secondary" style="font-size: 0.9rem;">Giá:</span>
+                                            <div class="course-card-price">
+                                                ${originalPriceDisplay}
+                                                <span class="${salePriceClass}">${salePriceText}</span>
+                                            </div>
+                                        </div>
+                                        <a href="${course.course_link || '#'}" class="btn btn-gradient w-100">Xem chi tiết</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    coursesListContainer.innerHTML += courseCardHTML;
+                });
+            }
+
+            const testimonialsSlider = new Swiper('.testimonials-slider', {
+                speed: 600, loop: true, autoplay: { delay: 5000, disableOnInteraction: false },
+                slidesPerView: 1,
+                pagination: { el: '.swiper-pagination', clickable: true },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                breakpoints: {
+                    768: { slidesPerView: 2, spaceBetween: 20 },
+                    992: { slidesPerView: 3, spaceBetween: 30 }
+                }
+            });
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                         observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            function initializeScrollAnimations() {
+                 const scrollElements = document.querySelectorAll('.section-title, .section-subtitle, .service-item, .course-card, .testimonial-card, .central-hand-image');
+                scrollElements.forEach(el => {
+                    el.classList.add('animate-on-scroll');
+                    observer.observe(el);
+                });
+            }
+            
+            async function initializePage() {
+                await Promise.all([
+                    loadWebsiteSettings(),
+                    loadSliders(),
+                    loadCourses()
+                ]);
+
+                 setTimeout(initializeScrollAnimations, 100);
+            }
+            
+            initializePage();
+
+            const messengerWidget = document.getElementById('messenger-widget-container');
+            const closeMessengerBtn = document.getElementById('messenger-close-btn');
+            const messengerFabIcon = document.querySelector('.messenger-fab-icon');
+
+            if (messengerWidget && closeMessengerBtn && messengerFabIcon) {
+                const collapseWidget = () => {
+                    messengerWidget.classList.add('collapsed');
+                    sessionStorage.setItem('messengerCollapsed', 'true');
+                };
+
+                const expandWidget = () => {
+                    messengerWidget.classList.remove('collapsed');
+                    sessionStorage.removeItem('messengerCollapsed');
+                };
+
+                if (sessionStorage.getItem('messengerCollapsed') === 'true') {
+                    messengerWidget.classList.add('collapsed');
+                }
+
+                closeMessengerBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    collapseWidget();
+                });
+
+                messengerFabIcon.addEventListener('click', (e) => {
+                    if (messengerWidget.classList.contains('collapsed')) {
+                        e.preventDefault(); 
+                        expandWidget();
+                    }
+                });
+            }
+        });
+
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                setTimeout(() => {
+                    preloader.classList.add('fade-out');
+                    preloader.addEventListener('transitionend', () => {
+                        preloader.style.display = 'none';
+                    });
+                }, 200);
+            }
+            
+            const promotionPopup = document.getElementById('promotionPopup');
+            const closePromoPopup = document.getElementById('closePromoPopup');
+
+            if (promotionPopup && closePromoPopup) {
+                if (!sessionStorage.getItem('promoShown')) {
+                    setTimeout(() => {
+                        promotionPopup.classList.add('show');
+                        sessionStorage.setItem('promoShown', 'true');
+                    }, 1000);
+                }
+
+                const closePopup = () => {
+                    promotionPopup.classList.remove('show');
+                };
+
+                closePromoPopup.addEventListener('click', closePopup);
+
+                promotionPopup.addEventListener('click', (event) => {
+                    if (event.target === promotionPopup) {
+                        closePopup();
+                    }
+                });
+
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape' && promotionPopup.classList.contains('show')) {
+                        closePopup();
+                    }
+                });
+            }
+        });
+    </script>
+    </body>
+
+</html>
