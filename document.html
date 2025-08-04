@@ -17,47 +17,26 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* Chú thích: Khai báo các biến màu và font chữ toàn cục cho website */
-        /* Việc này giúp dễ dàng thay đổi giao diện toàn trang chỉ bằng cách sửa ở một nơi */
         :root {
             --primary-blue: #4A6CF3;
-            /* Màu xanh dương chính */
             --primary-purple: #9B49F2;
-            /* Màu tím chính */
             --text-primary: #1A1229;
-            /* Màu chữ chính (đen đậm) */
             --text-secondary: #5A6474;
-            /* Màu chữ phụ (xám) */
             --bg-white: #FFFFFF;
-            /* Màu nền trắng */
             --bg-off-white: #F8F7FA;
-            /* Màu nền trắng ngà */
             --border-color: #E5E7EB;
-            /* Màu đường viền */
             --danger-color: #dc3545;
-            /* Màu cho thông báo lỗi */
             --warning-color: #FFC107;
-            /* Màu cho sao đánh giá */
             --success-color: #198754;
-            /* Màu cho thông báo thành công */
-            /* Màu gradient kết hợp từ xanh và tím */
             --gradient-primary: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
         }
 
-        /* ================== THAY ĐỔI FONT CHỮ TẠI ĐÂY ================== -->
-        /* Chú thích: Áp dụng font chữ và màu nền mặc định cho toàn bộ trang */
         body {
             font-family: 'Poppins', sans-serif;
-            /* Sử dụng font Poppins đã import */
             background-color: var(--bg-off-white);
-            /* Nền trắng ngà cho trang tài liệu */
             color: var(--text-primary);
-            /* Màu chữ đen đậm */
         }
-
-        /* ============================================================= */
-
-        /* ======================= CSS CHO MÀN HÌNH CHỜ (PRELOADER) ======================= */
+        
         #preloader {
             position: fixed;
             top: 0;
@@ -65,14 +44,11 @@
             right: 0;
             bottom: 0;
             background-color: var(--bg-white);
-            /* Nền trắng đồng bộ với trang web */
             z-index: 9999;
-            /* Luôn nằm trên cùng */
             display: flex;
             justify-content: center;
             align-items: center;
             transition: opacity 0.75s ease, visibility 0.75s ease;
-            /* Hiệu ứng mờ dần khi ẩn */
             opacity: 1;
             visibility: visible;
         }
@@ -90,25 +66,18 @@
             width: 60px;
             height: 60px;
             border: 5px solid var(--primary-blue);
-            /* Sử dụng màu xanh của trang web */
             border-top-color: var(--primary-purple);
-            /* Điểm nhấn màu tím để tạo hiệu ứng xoay */
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            /* Animation xoay tròn vô hạn */
             margin: 0 auto;
-            /* Căn giữa vòng tròn */
         }
 
         .loading-text {
             margin-top: 1rem;
-            /* Khoảng cách giữa vòng tròn và chữ */
             font-size: 1.1rem;
             font-weight: 500;
             color: var(--text-secondary);
-            /* Sử dụng màu chữ phụ */
             letter-spacing: 1px;
-            /* Tăng khoảng cách ký tự cho dễ đọc */
         }
 
         @keyframes spin {
@@ -116,148 +85,92 @@
                 transform: rotate(360deg);
             }
         }
-
-        /* ======================= HẾT CSS CHO PRELOADER ======================= */
-
-
-        /* ======================= CSS CHO HEADER DÍNH VÀ CÓ BÓNG MỜ ======================= */
+        
         header {
-            /* --- Các thuộc tính giúp header dính lại khi cuộn --- */
             position: sticky;
             top: 0;
             z-index: 1030;
-
-            /* --- Tạo hiệu ứng đổ bóng gradient --- */
-            /* Chúng ta lấy màu nền trắng từ navbar cũ gán cho header */
             background-color: var(--bg-white);
-
-            /* Dùng box-shadow với màu của theme để tạo hiệu ứng bóng mờ lan tỏa, mềm mại */
-            /* Đây là một kỹ thuật tạo bóng trông giống gradient và hiện đại hơn */
             box-shadow: 0 10px 40px -15px rgba(74, 108, 243, 0.25);
             transition: all 0.3s ease-in-out;
-            /* Hiệu ứng chuyển động mượt mà */
         }
 
-        /* --- Tinh chỉnh lại Navbar bên trong Header --- */
         .navbar {
-            /* Bỏ màu nền và bóng của navbar để nó trong suốt trên header */
             background-color: transparent !important;
             box-shadow: none !important;
             padding: 15px 0px;
         }
 
-        /* Chú thích: Tùy chỉnh logo thương hiệu */
         .navbar-brand {
             font-weight: 700;
-            /* Chữ đậm */
             font-size: 1.75rem;
-            /* Cỡ chữ lớn hơn */
         }
 
-        /* Chú thích: Lớp để tạo hiệu ứng gradient cho chữ "Viet" */
         .gradient-text {
             background: var(--gradient-primary);
-            /* Áp dụng nền gradient */
             -webkit-background-clip: text;
-            /* Cắt nền theo hình dạng của chữ (cho trình duyệt Safari/Chrome) */
             background-clip: text;
-            /* Cắt nền theo hình dạng của chữ */
             -webkit-text-fill-color: transparent;
-            /* Làm cho màu chữ trong suốt để nền hiện ra */
             color: var(--primary-blue);
-            /* Màu dự phòng nếu trình duyệt không hỗ trợ */
         }
 
-        /* Chú thích: Tùy chỉnh các mục menu (nav-link) */
         .navbar-nav .nav-link {
             color: var(--text-secondary);
-            /* Màu chữ xám */
             font-weight: 500;
-            /* Chữ hơi đậm */
             padding: 0.4rem 1.7rem;
-            /* Đệm trong (trên-dưới, trái-phải) */
             margin: 0 0.6rem;
-            /* Khoảng cách ngoài giữa các mục */
             border-radius: 20px;
-            /* Bo tròn góc */
             display: flex;
-            /* Sử dụng flexbox để căn chỉnh icon và chữ */
             align-items: center;
-            /* Căn giữa theo chiều dọc */
             position: relative;
-            /* Cần cho hiệu ứng hover */
             z-index: 1;
-            /* Đảm bảo nội dung nổi lên trên hiệu ứng */
             overflow: hidden;
-            /* Ẩn phần nền gradient tràn ra ngoài */
             transition: color 0.4s ease-in-out;
-            /* Hiệu ứng chuyển màu chữ mượt mà */
             background-color: transparent;
-            /* Nền trong suốt mặc định */
         }
 
-        /* Chú thích: Lớp giả ::before để tạo nền gradient động khi di chuột (hover) */
         .navbar-nav .nav-link::before {
             content: '';
-            /* Bắt buộc phải có cho pseudo-element */
             position: absolute;
-            /* Vị trí tuyệt đối so với nav-link */
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            /* Phủ kín toàn bộ nav-link */
             background-image: var(--gradient-primary);
-            /* Nền gradient */
             z-index: -1;
-            /* Nằm dưới nội dung của nav-link */
             transform: scaleX(0);
-            /* Ban đầu co lại theo chiều ngang (ẩn đi) */
             transform-origin: left;
-            /* Hiệu ứng bắt đầu từ bên trái */
             transition: transform 0.4s ease-in-out;
-            /* Hiệu ứng phóng to mượt mà */
         }
 
-        /* Chú thích: Khi di chuột vào nav-link */
         .navbar-nav .nav-link:hover {
             color: var(--bg-white);
-            /* Đổi màu chữ thành trắng */
         }
 
         .navbar-nav .nav-link:hover::before {
             transform: scaleX(1);
-            /* Phóng to nền gradient ra để hiển thị */
         }
 
-        /* Chú thích: Tùy chỉnh cho mục menu đang được chọn (active) thành dạng viên thuốc */
         .navbar-nav .nav-link.active {
             color: var(--bg-white);
-            /* Đổi màu chữ thành trắng */
             font-weight: 600;
         }
 
-        /* Chú thích: Luôn hiển thị nền gradient cho mục active */
         .navbar-nav .nav-link.active::before {
             transform: scaleX(1);
-            /* Phóng to nền gradient ra để hiển thị */
         }
 
-        /* Chú thích: Khi hover vào mục đang active thì chữ vẫn là màu trắng */
         .navbar-nav .nav-link.active:hover {
             color: var(--bg-white);
         }
 
-        /* Chú thích: Tùy chỉnh navbar trên màn hình nhỏ (khi đã thu gọn) */
         @media (max-width: 991.98px) {
             .navbar-nav {
                 padding-top: 1rem;
-                /* Thêm khoảng đệm phía trên menu khi mở ra */
             }
 
             .navbar-nav .nav-item {
                 margin-bottom: 0.5rem;
-                /* Tăng khoảng cách giữa các mục menu */
             }
 
             .navbar-nav .nav-item:last-child {
@@ -266,47 +179,31 @@
 
             .navbar-nav .nav-link {
                 margin: 0;
-                /* Reset horizontal margin */
                 padding: 0.75rem 1rem;
-                /* Tăng vùng đệm cho dễ bấm */
                 justify-content: center;
-                /* Căn giữa nội dung link trên mobile */
             }
         }
 
-        /* Chú thích: Tùy chỉnh menu thả xuống (dropdown) */
         .dropdown-menu {
             border-radius: 0.75rem;
-            /* Bo góc */
             border: 1px solid var(--border-color);
-            /* Đường viền */
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            /* Đổ bóng */
             padding: 0.5rem 0;
-            /* Đệm trong */
             margin-top: 0.5rem !important;
-            /* Khoảng cách với mục cha */
         }
 
         .dropdown-item {
             padding: 0.5rem 1.2rem;
-            /* Đệm trong */
             font-weight: 500;
-            /* Chữ vừa */
             color: var(--text-secondary);
-            /* Màu chữ xám */
             display: flex;
-            /* Dùng flexbox để căn icon */
             align-items: center;
-            /* Căn giữa theo chiều dọc */
         }
 
         .dropdown-item:hover,
         .dropdown-item:focus {
             background-color: var(--bg-off-white);
-            /* Đổi nền khi hover */
             color: var(--text-primary);
-            /* Đổi màu chữ khi hover */
         }
 
         .dropdown-item .fa-fw {
@@ -315,51 +212,33 @@
             margin-right: 8px;
         }
 
-        /* Chú thích: Tùy chỉnh nút bấm có nền gradient */
         .btn-gradient {
             background: var(--gradient-primary);
-            /* Nền gradient */
             border: none;
-            /* Không có đường viền */
             color: white;
-            /* Chữ trắng */
             font-weight: 600;
-            /* Chữ hơi đậm */
             padding: 0.75rem 1.5rem;
-            /* Đệm trong */
             border-radius: 50px;
-            /* Bo tròn thành hình viên thuốc */
             transition: all 0.4s ease;
-            /* Hiệu ứng chuyển động mượt mà */
             box-shadow: 0 4px 15px rgba(120, 73, 242, 0.4);
-            /* Đổ bóng màu tím mờ */
             display: inline-flex;
-            /* Hiển thị như inline-block và dùng flex */
             align-items: center;
-            /* Căn giữa icon và chữ theo chiều dọc */
             justify-content: center;
-            /* Căn giữa nội dung theo chiều ngang */
             text-decoration: none;
             background-size: 200% auto;
-            /* Kích thước nền lớn hơn để có không gian di chuyển */
         }
 
         .btn-gradient:hover {
             color: white;
-            /* Giữ màu chữ trắng khi hover */
             transform: translateY(-2px);
-            /* Di chuyển nút lên trên một chút */
             box-shadow: 0 6px 20px rgba(120, 73, 242, 0.5);
-            /* Tăng độ đậm của bóng */
             background-position: right center;
-            /* Di chuyển nền gradient khi hover */
         }
 
         .fa-user {
             margin-right: 10px;
         }
 
-        /* === CSS THIẾT KẾ LẠI MODAL ĐĂNG NHẬP / ĐĂNG KÝ === */
         .modal.fade .modal-dialog {
             transform: translate(0, -25px);
             transition: transform 0.4s ease-out;
@@ -371,41 +250,31 @@
 
         .modal-content {
             border-radius: 1rem;
-            /* Bo tròn góc modal */
             border: none;
-            /* Bỏ viền mặc định */
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            /* Đổ bóng đẹp hơn */
         }
 
         .modal-header {
             border-bottom: 1px solid var(--border-color);
-            /* Viền dưới cho header */
             padding: 1.5rem;
-            /* Tăng đệm */
             position: relative;
-            /* Cần cho nút close */
         }
 
         .modal-body {
             padding: 1.5rem;
-            /* Tăng đệm */
         }
 
         .modal-title {
             font-weight: 700;
-            /* Chữ tiêu đề đậm */
             color: var(--text-primary);
         }
 
         .modal-subtitle {
             font-size: 0.95rem;
-            /* Cỡ chữ phụ đề */
             color: var(--text-secondary);
         }
 
         .btn-close {
-            /* Nút đóng modal (dấu X) */
             position: absolute;
             top: 1.5rem;
             right: 1.5rem;
@@ -420,14 +289,11 @@
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            /* Căn icon chính giữa ô input theo chiều dọc */
             color: var(--text-secondary);
             pointer-events: none;
-            /* Icon không thể được click */
         }
 
         .form-control {
-            /* Tùy chỉnh chung cho các ô input */
             background-color: var(--bg-off-white);
             border: 1px solid var(--border-color);
             padding: 0.8rem 1rem;
@@ -436,20 +302,16 @@
         }
 
         .form-control-icon {
-            /* Ô input có icon bên trái cần thêm đệm trái */
             padding-left: 2.8rem !important;
         }
 
         .form-control:focus {
-            /* Khi người dùng click vào ô input */
             background-color: var(--bg-white);
             border-color: var(--primary-blue);
             box-shadow: 0 0 0 3px rgba(74, 108, 243, 0.2);
-            /* Tạo viền sáng màu xanh */
         }
 
         .form-text a {
-            /* Link "Quên mật khẩu?" */
             color: var(--primary-blue);
             text-decoration: none;
         }
@@ -466,7 +328,6 @@
         .social-login-divider::after {
             content: '';
             flex: 1;
-            /* Hai đường kẻ sẽ tự động co giãn lấp đầy không gian */
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -474,7 +335,6 @@
             margin-right: .5em;
         }
 
-        /* Khoảng cách giữa kẻ và chữ */
         .social-login-divider:not(:empty)::after {
             margin-left: .5em;
         }
@@ -487,11 +347,9 @@
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            /* Xếp icon và chữ theo chiều dọc */
             justify-content: center;
             align-items: center;
             gap: 0.3rem;
-            /* Khoảng cách giữa icon và chữ */
             text-decoration: none;
         }
 
@@ -513,7 +371,6 @@
 
         .invalid-feedback {
             display: none;
-            /* Ẩn mặc định, chỉ hiện khi có lỗi bằng JS */
             width: 100%;
             margin-top: .25rem;
             font-size: .875em;
@@ -521,25 +378,19 @@
         }
 
         .form-control.is-invalid {
-            /* Khi ô input có lỗi */
             border-color: var(--danger-color);
-            /* Viền màu đỏ */
         }
 
         .form-control.is-invalid:focus {
             box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
-            /* Viền sáng màu đỏ khi focus */
         }
 
         .form-control.is-valid {
-            /* Khi ô input hợp lệ */
             border-color: #198754;
-            /* Viền màu xanh lá */
         }
 
         .form-control.is-valid:focus {
             box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
-            /* Viền sáng màu xanh lá khi focus */
         }
 
         .password-toggle-icon {
@@ -548,7 +399,6 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            /* Biến con trỏ thành hình bàn tay */
             color: var(--text-secondary);
         }
 
@@ -564,14 +414,10 @@
             object-fit: cover;
             margin-right: 10px;
             background-color: var(--border-color);
-            /* Màu nền dự phòng */
             border: 2px solid var(--primary-purple);
-            /* Thêm viền màu tím */
             box-shadow: 0 2px 8px rgba(155, 73, 242, 0.4);
-            /* Thêm hiệu ứng toả sáng */
         }
 
-        /* CSS cho thông báo khớp mật khẩu */
         #password-match-feedback {
             font-size: 0.875em;
             margin-top: 0.25rem;
@@ -585,8 +431,7 @@
         .password-mismatch {
             color: var(--danger-color);
         }
-
-        /* ======================= CSS CHUNG CHO CÁC SECTION ======================= */
+        
         .section-title {
             font-weight: 700;
             color: var(--text-primary);
@@ -596,21 +441,15 @@
             color: var(--text-secondary);
         }
 
-        /* ======================= CSS CHO FOOTER ======================= */
         .site-footer {
             background: var(--gradient-primary);
-            /* Nền gradient */
             color: rgba(255, 255, 255, 0.8);
-            /* Chữ trắng mờ */
             font-size: 0.95rem;
             padding-top: 4rem;
             background-size: 200% 200%;
-            /* Kích thước nền lớn để animation */
             animation: gradient-animation 10s ease infinite;
-            /* Áp dụng animation */
         }
 
-        /* Keyframe cho animation của footer */
         @keyframes gradient-animation {
             0% {
                 background-position: 0% 50%;
@@ -649,7 +488,6 @@
 
         .footer-logo span:last-child {
             color: var(--bg-white);
-            /* Chữ "Tarot" cũng màu trắng */
         }
 
         .footer-links li {
@@ -665,7 +503,6 @@
         .footer-links a:hover {
             color: var(--bg-white);
             padding-left: 5px;
-            /* Hiệu ứng thụt vào khi hover */
         }
 
         .social-icons a {
@@ -674,7 +511,6 @@
             height: 40px;
             border-radius: 50%;
             background-color: rgba(255, 255, 255, 0.1);
-            /* Nền trắng mờ */
             color: var(--bg-white);
             justify-content: center;
             align-items: center;
@@ -690,7 +526,6 @@
 
         .footer-bottom {
             background-color: rgba(0, 0, 0, 0.1);
-            /* Nền tối hơn một chút cho phần copyright */
             padding: 1.5rem 0;
             margin-top: 3rem;
         }
@@ -699,7 +534,6 @@
             color: var(--bg-white);
         }
 
-        /* ======================= CSS CHO LOGO HÌNH ẢNH ======================= */
         #header-logo {
             max-height: 40px;
             width: auto;
@@ -710,7 +544,6 @@
             width: auto;
         }
 
-        /* CSS CHO THÔNG BÁO THÀNH CÔNG */
         .fullscreen-overlay {
             position: fixed;
             top: 0;
@@ -719,7 +552,6 @@
             height: 100%;
             background-color: rgba(26, 18, 41, 0.7);
             z-index: 1060;
-            /* Phải cao hơn z-index của modal (1055) */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -741,7 +573,6 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             transform: scale(0.9);
             transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-            /* Hiệu ứng nảy lên */
         }
 
         .fullscreen-overlay.show .success-notification {
@@ -768,18 +599,13 @@
             margin-bottom: 0;
         }
         
-        /* START: CSS MỚI CHO POPUP "ĐANG CẬP NHẬT" */
         .updating-icon {
             font-size: 4rem;
-            color: var(--primary-blue); /* Sử dụng màu xanh dương */
+            color: var(--primary-blue); 
             margin-bottom: 1rem;
             line-height: 1;
         }
-        /* END: CSS MỚI CHO POPUP "ĐANG CẬP NHẬT" */
-
-        /* ============================ START: CSS ĐÃ CẬP NHẬT CHO TRANG TÀI LIỆU ============================ */
         
-        /* --- CSS cho Header với nền gradient --- */
         .page-header {
             padding: 3rem 0;
             text-align: center;
@@ -805,9 +631,8 @@
             margin-bottom: 2rem; 
         }
 
-        /* --- CSS cho thanh tìm kiếm mới trong header --- */
         .header-search-form {
-            position: relative; /* Container cho input và button */
+            position: relative;
             max-width: 700px;
             margin: 0 auto;
         }
@@ -824,49 +649,47 @@
         }
 
         .header-search-form #document-search {
-            width: 100%; /* Chiếm toàn bộ chiều rộng của container */
-            padding: 1rem 8.5rem 1rem 3.5rem; /* Thay đổi: Tăng padding-right để chừa chỗ cho nút */
+            width: 100%;
+            padding: 1rem 8.5rem 1rem 3.5rem;
             border-radius: 50px;
             border: 1px solid var(--border-color);
             background-color: var(--bg-white);
             box-shadow: none;
             transition: all 0.3s ease;
             color: var(--text-primary);
-            height: 56px; /* Đặt chiều cao cố định để căn chỉnh nút dễ hơn */
+            height: 56px;
         }
                 
         .header-search-form #document-search::placeholder {
             color: var(--text-secondary);
         }
 
-        /* Nút tìm kiếm mới */
         .header-search-form .btn-gradient {
-            position: absolute; /* Thay đổi: Định vị tuyệt đối */
-            right: 12px; /* Thay đổi: Căn phải bên trong input */
-            top: 50%; /* Thay đổi: Căn giữa theo chiều dọc */
-            transform: translateY(-50%); /* Thay đổi: Căn giữa theo chiều dọc */
-            border-radius: 50px; /* Hình viên thuốc */
-            padding: 0.5rem 1.2rem; /* Thay đổi: Giảm padding để nút nhỏ hơn */
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 50px;
+            padding: 0.5rem 1.2rem;
             white-space: nowrap;
             z-index: 2;
-            font-size: 0.9rem; /* Giảm cỡ chữ một chút */
-            box-shadow: none; /* Bỏ box-shadow mặc định của btn-gradient */
+            font-size: 0.9rem;
+            box-shadow: none;
         }
 
         .header-search-form .btn-gradient:hover {
-            transform: translateY(-50%) scale(1.05); /* Điều chỉnh lại hiệu ứng hover */
+            transform: translateY(-50%) scale(1.05);
             box-shadow: 0 4px 15px rgba(120, 73, 242, 0.4);
         }
         
-        /* --- CSS cho phần nội dung chính --- */
         .document-container-wrapper {
             background-color: var(--bg-white);
             padding: 2.5rem;
             border-radius: 1rem;
             box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-            margin-top: -80px; /* Kéo khối nội dung lên trên, đè lên phần dưới của header */
-            position: relative; /* Cần để hoạt động đúng */
-            z-index: 5; /* Nằm trên header */
+            margin-top: -80px;
+            position: relative;
+            z-index: 5;
         }
         
         .document-card {
@@ -1427,7 +1250,6 @@
             }
         }
         
-        /* ======================= CSS CHO ICON MESSENGER NỔI (ĐÃ CẬP NHẬT) ======================= */
         .messenger-widget-container {
             position: fixed;
             bottom: 25px;
@@ -1436,10 +1258,9 @@
             display: flex;
             align-items: flex-end;
             gap: 15px;
-            transition: gap 0.3s ease; /* Thêm hiệu ứng chuyển đổi cho khoảng cách */
+            transition: gap 0.3s ease;
         }
 
-        /* Lớp mới để xử lý trạng thái thu gọn */
         .messenger-widget-container.collapsed .messenger-text-bubble,
         .messenger-widget-container.collapsed .messenger-close-btn {
             transform: scale(0);
@@ -1456,23 +1277,21 @@
         }
 
         .messenger-widget-container.collapsed {
-            gap: 0; /* Bỏ khoảng cách khi thu gọn */
+            gap: 0;
         }
         
-        /* CẬP NHẬT: Thêm quy tắc để thu nhỏ icon chính khi thu gọn */
         .messenger-widget-container.collapsed .messenger-fab-icon {
-            transform: scale(0.7); /* Thu nhỏ icon còn 70% */
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); /* Giảm bóng đổ cho hợp lý */
-            cursor: pointer; /* Biến con trỏ thành hình bàn tay để báo hiệu có thể nhấp */
+            transform: scale(0.7);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
         }
-        /* CẬP NHẬT: Thêm hiệu ứng hover cho icon đã thu nhỏ */
         .messenger-widget-container.collapsed .messenger-fab-icon:hover {
-            transform: scale(0.8); /* Phóng to nhẹ khi di chuột qua */
+            transform: scale(0.8);
         }
 
 
         .messenger-icon-wrapper {
-            position: relative; /* Làm gốc cho nút close */
+            position: relative;
             flex-shrink: 0;
         }
 
@@ -1510,10 +1329,9 @@
             animation: pop-in 0.5s 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
             transform: scale(0);
             transform-origin: right bottom;
-            /* Thêm hiệu ứng chuyển đổi khi thu gọn */
             transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease, padding 0.3s ease, margin 0.3s ease;
-            white-space: nowrap; /* Ngăn chữ bị ngắt dòng khi thu gọn */
-            overflow: hidden; /* Ẩn nội dung khi thu gọn */
+            white-space: nowrap;
+            overflow: hidden;
         }
 
         .messenger-close-btn {
@@ -1551,7 +1369,6 @@
             }
         }
 
-        /* Responsive cho mobile */
         @media (max-width: 767.98px) {
             .messenger-widget-container {
                 right: 15px;
@@ -1572,11 +1389,108 @@
                 line-height: 20px;
             }
         }
-        /* ======================= HẾT CSS CHO ICON MESSENGER NỔI ======================= */
+        
+        .notification-badge {
+            position: absolute;
+            min-width: 22px;
+            height: 22px;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-white);
+            transform: scale(1);
+            animation: pulse-badge 1.5s infinite;
+            z-index: 10;
+        }
+        
+        #userDropdown .notification-badge {
+             top: -2px;
+             right: 0;
+        }
+
+        .dropdown-item .notification-badge {
+            position: static;
+            margin-left: auto;
+            transform: scale(0.9);
+            animation: none;
+            border: none;
+            padding: 0 6px;
+        }
+
+        @keyframes pulse-badge {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+            }
+        }
+        
+        #deleteConfirmModal .modal-header {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        #deleteConfirmModal .modal-body {
+            text-align: center;
+        }
+        #deleteConfirmModal .delete-icon {
+            font-size: 3rem;
+            color: var(--danger-color);
+            margin-bottom: 1rem;
+        }
+        #deleteConfirmModal .modal-title {
+            font-weight: 600;
+        }
+
+        /* ======================= START: CSS CHO HIỆU ỨNG TUYẾT RƠI ======================= */
+        #snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Cho phép click xuyên qua các phần tử bên dưới */
+            z-index: 999; /* Đảm bảo tuyết rơi bên dưới các modal (thường có z-index > 1000) */
+            overflow: hidden;
+        }
+
+        .snowflake {
+            position: absolute;
+            color: white;
+            font-size: 20px; /* Kích thước sẽ được ghi đè bởi JavaScript */
+            line-height: 1;
+            opacity: 0; /* Bắt đầu với trạng thái trong suốt */
+            will-change: transform, opacity; /* Tối ưu hóa hiệu năng animation */
+            animation: fall linear infinite;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg); /* Rơi xuống dưới màn hình và xoay */
+                opacity: 0;
+            }
+        }
+        /* ======================= END: CSS CHO HIỆU ỨNG TUYẾT RƠI ======================= */
+
     </style>
 </head>
 
 <body>
+    <!-- THÊM MỚI: Container cho hiệu ứng tuyết rơi -->
+    <div id="snow-container"></div>
+    
     <!-- Màn hình chờ -->
     <div id="preloader">
         <div class="preloader-content">
@@ -1639,7 +1553,7 @@
         </nav>
     </header>
 
-    <!-- Nội dung chính của trang Tài liệu -->
+    <!-- Nội dung chính của trang Tài liệu (Giữ nguyên) -->
     <main>
         <section class="page-header">
             <div class="container">
@@ -1779,7 +1693,7 @@
         </div>
     </footer>
 
-    <!-- Các Modal (Auth) -->
+    <!-- Các Modal (Auth - Giữ nguyên) -->
     <div id="fullscreen-success-overlay" class="fullscreen-overlay">
         <div class="success-notification">
             <div class="success-icon">
@@ -1900,7 +1814,7 @@
         </div>
     </div>
 
-    <!-- Modal Chi tiết Tài liệu -->
+    <!-- Modal Chi tiết Tài liệu (Giữ nguyên) -->
     <div class="modal fade" id="documentDetailModal" tabindex="-1" aria-labelledby="documentDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -1917,6 +1831,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" id="modal-save-button" class="btn btn-outline-primary">
+                        <i class="fas fa-bookmark me-2"></i>Lưu vào sổ tay
+                    </button>
                     <button type="button" id="modal-view-button" class="btn btn-gradient">
                         <i class="fas fa-file-pdf me-2"></i>Xem Ngay
                     </button>
@@ -1925,7 +1842,7 @@
         </div>
     </div>
 
-    <!-- Modal Trình xem PDF -->
+    <!-- Modal Trình xem PDF (Giữ nguyên) -->
     <div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
             <div class="modal-content">
@@ -1963,7 +1880,32 @@
         </div>
     </div>
 
-    <!-- ======================= MESSENGER FLOATING WIDGET (MỚI THÊM) ======================= -->
+    <!-- Modal Xác nhận Bỏ Lưu (Giữ nguyên) -->
+    <div class="modal fade" id="unsaveConfirmModal" tabindex="-1" aria-labelledby="unsaveConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="unsaveConfirmModalLabel">Xác nhận Bỏ Lưu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                     <div class="delete-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <p>Bạn có chắc chắn muốn bỏ lưu tài liệu này không?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="confirm-unsave-btn">Bỏ lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container (Giữ nguyên) -->
+    <div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100"></div>
+
+    <!-- Messenger Floating Widget (Giữ nguyên) -->
     <div class="messenger-widget-container" id="messenger-widget-container">
         <div class="messenger-text-bubble">
             <p class="mb-0">Tham gia nhóm cộng đồng - Hỗ trợ 24/7</p>
@@ -1975,7 +1917,6 @@
             </a>
         </div>
     </div>
-    <!-- ======================= END MESSENGER FLOATING WIDGET ======================= -->
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -1989,12 +1930,104 @@
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrem50ZXViY3dsYWRxa3h5YXFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjcwODksImV4cCI6MjA2NzgwMzA4OX0.7P4-H_ujbLG2KLEFiVtlGIs8o515OkqNw9MVPDF7sCY';
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
-            // ======================= AUTHENTICATION LOGIC (ĐÃ CẬP NHẬT) =======================
+            // ======================= LOGIC THÔNG BÁO MỚI (GIỮ NGUYÊN) =======================
+            const NOTIFICATION_KEY = 'newDocumentsCount';
+
+            function getNotificationCount() {
+                return parseInt(localStorage.getItem(NOTIFICATION_KEY) || '0', 10);
+            }
+
+            function setNotificationCount(count) {
+                const newCount = Math.max(0, count);
+                localStorage.setItem(NOTIFICATION_KEY, newCount);
+            }
+
+            function updateAllNotifications() {
+                const count = getNotificationCount();
+                const userDropdown = document.getElementById('userDropdown');
+                const profileDropdownItem = document.getElementById('profile-dropdown-item');
+
+                if (userDropdown) {
+                    userDropdown.style.position = 'relative';
+                    let badge = userDropdown.querySelector('.notification-badge');
+                    if (count > 0) {
+                        if (!badge) {
+                            badge = document.createElement('span');
+                            badge.className = 'notification-badge';
+                            userDropdown.appendChild(badge);
+                        }
+                        badge.textContent = count;
+                    } else {
+                        if (badge) badge.remove();
+                    }
+                }
+
+                if (profileDropdownItem) {
+                    let badge = profileDropdownItem.querySelector('.notification-badge');
+                    if (count > 0) {
+                        if (!badge) {
+                            badge = document.createElement('span');
+                            badge.className = 'notification-badge';
+                            profileDropdownItem.appendChild(badge);
+                        }
+                        badge.textContent = `+${count}`;
+                    } else {
+                        if (badge) badge.remove();
+                    }
+                }
+            }
+
+
+            // ======================= AUTHENTICATION LOGIC (GIỮ NGUYÊN) =======================
             const authContainer = document.getElementById('auth-container');
             const loginForm = document.getElementById('login-form');
             const registerForm = document.getElementById('registerForm');
             const facebookLoginBtn = document.getElementById('facebook-login-btn');
             const defaultAvatarIcon = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='50' fill='%23E5E7EB'/%3E%3Cpath d='M66.95 66.78a25.02 25.02 0 00-33.9 0C24.4 71.3 20 79.95 20 90h60c0-10.05-4.4-18.7-13.05-23.22zM50 55c-10.33 0-18.7-8.37-18.7-18.7S39.67 17.6 50 17.6s18.7 8.37 18.7 18.7-8.37 18.7-18.7 18.7z' fill='%23A0AEC0'/%3E%3C/svg%3E";
+            
+            function showToast(message, type = 'success') {
+                const toastContainer = document.getElementById('toast-container');
+                if (!toastContainer) return;
+
+                let iconClass, bgClass;
+                switch(type) {
+                    case 'danger':
+                        iconClass = 'fa-times-circle';
+                        bgClass = 'text-bg-danger';
+                        break;
+                    case 'info':
+                        iconClass = 'fa-info-circle';
+                        bgClass = 'text-bg-info';
+                        break;
+                    default:
+                        iconClass = 'fa-check-circle';
+                        bgClass = 'text-bg-success';
+                }
+                
+                const toastId = 'toast-' + Math.random().toString(36).substring(2, 9);
+
+                const toastHTML = `
+                    <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <i class="fas ${iconClass} me-2"></i>
+                                ${message}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>
+                `;
+                toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+                
+                const toastElement = document.getElementById(toastId);
+                const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+                toast.show();
+                
+                toastElement.addEventListener('hidden.bs.toast', () => {
+                    toastElement.remove();
+                });
+            }
+
             function translateSupabaseError(errorMessage){if(!errorMessage)return"Đã có lỗi xảy ra. Vui lòng thử lại.";if(errorMessage.includes("User already registered")){return"Email này đã được đăng ký. Vui lòng sử dụng email khác."}if(errorMessage.includes("Password should be at least 6 characters")){return"Mật khẩu phải có ít nhất 6 ký tự."}if(errorMessage.includes("Invalid login credentials")){return"Email hoặc mật khẩu không chính xác."}if(errorMessage.includes("Unable to validate email address: invalid format")){return"Địa chỉ email không hợp lệ."}return`Đã xảy ra lỗi: ${errorMessage}`}
             function showAlert(containerId,message,type='danger'){const alertContainer=document.getElementById(containerId);if(alertContainer){alertContainer.innerHTML=`
                                  <div class="alert alert-${type} alert-dismissible fade show auth-alert" role="alert">
@@ -2002,28 +2035,84 @@
                                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                  </div>
                              `}}
-            function updateUI(user){if(!authContainer)return;if(user){const fullName=user.user_metadata?.full_name||user.email;const avatarUrl=user.user_metadata?.avatar_url||defaultAvatarIcon;authContainer.innerHTML=`
-                                 <div class="nav-item dropdown">
-                                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
-                                        style="background-color: transparent; padding: 0.1rem 0.5rem; margin:0; border-radius: 50px;">
-                                         <img src="${avatarUrl}" alt="${fullName}" class="user-avatar">
-                                         <span class="gradient-text fw-bold">${fullName}</span>
-                                     </a>
-                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                         <li><a class="dropdown-item" href="infor-user.html"><i class="fas fa-user-circle fa-fw"></i> Hồ sơ của tôi</a></li>
-                                         <li><hr class="dropdown-divider"></li>
-                                         <li><a class="dropdown-item" href="#" id="logout-button"><i class="fas fa-sign-out-alt fa-fw"></i> Đăng xuất</a></li>
-                                     </ul>
-                                 </div>
-                             `;document.getElementById('logout-button').addEventListener('click',handleLogout)}else{authContainer.innerHTML=`
-                                 <a href="#" class="btn-gradient" data-bs-toggle="modal" data-bs-target="#loginModal">
-                                     <i class="fa-solid fa-user me-2"></i>
-                                     <span>Đăng ký / Đăng nhập</span>
-                                 </a>
-                             `}}
-            async function handleRegister(event){event.preventDefault();const name=document.getElementById('registerName').value;const email=document.getElementById('registerEmail').value;const phone=document.getElementById('registerPhone').value;const password=document.getElementById('registerPassword').value;const registerButton=document.getElementById('register-submit-btn');document.getElementById('register-alert').innerHTML='';registerButton.disabled=true;registerButton.innerHTML=`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xử lý...`;const{data,error}=await supabase.auth.signUp({email:email,password:password,phone:phone,options:{data:{full_name:name}}});if(error){showAlert('register-alert',translateSupabaseError(error.message));registerButton.disabled=false;registerButton.innerHTML='Tạo tài khoản'}else{const registerModalInstance=bootstrap.Modal.getInstance(document.getElementById('registerModal'));const successOverlay=document.getElementById('fullscreen-success-overlay');if(registerModalInstance){registerModalInstance.hide()}if(successOverlay){successOverlay.classList.add('show')}
-            setTimeout(()=>{if(successOverlay){successOverlay.classList.remove('show')}
-            registerForm.reset();registerButton.disabled=true;registerButton.innerHTML='Tạo tài khoản'},2500)}}
+            function updateUI(user){
+                if(!authContainer)return;
+                if(user){
+                    const fullName=user.user_metadata?.full_name||user.email;
+                    const avatarUrl=user.user_metadata?.avatar_url||defaultAvatarIcon;
+                    authContainer.innerHTML=`
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                                style="background-color: transparent; padding: 0.1rem 0.5rem; margin:0; border-radius: 50px;">
+                                <img src="${avatarUrl}" alt="${fullName}" class="user-avatar">
+                                <span class="gradient-text fw-bold">${fullName}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" id="profile-dropdown-item" href="infor-user.html"><i class="fas fa-user-circle fa-fw"></i> Hồ sơ của tôi</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="logout-button"><i class="fas fa-sign-out-alt fa-fw"></i> Đăng xuất</a></li>
+                            </ul>
+                        </div>
+                    `;
+                    document.getElementById('logout-button').addEventListener('click',handleLogout);
+                    updateAllNotifications();
+                } else {
+                    authContainer.innerHTML=`
+                        <a href="#" class="btn-gradient" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fa-solid fa-user me-2"></i>
+                            <span>Đăng ký / Đăng nhập</span>
+                        </a>
+                    `;
+                }
+            }
+            
+            async function handleRegister(event){
+                event.preventDefault();
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const phone = document.getElementById('registerPhone').value;
+                const password = document.getElementById('registerPassword').value;
+                const registerButton = document.getElementById('register-submit-btn');
+                
+                document.getElementById('register-alert').innerHTML = '';
+                registerButton.disabled = true;
+                registerButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xử lý...`;
+
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: name,
+                            phone: phone 
+                        }
+                    }
+                });
+
+                if (error) {
+                    showAlert('register-alert', translateSupabaseError(error.message));
+                    registerButton.disabled = false;
+                    registerButton.innerHTML = 'Tạo tài khoản';
+                } else {
+                    const registerModalInstance = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                    const successOverlay = document.getElementById('fullscreen-success-overlay');
+                    if (registerModalInstance) {
+                        registerModalInstance.hide();
+                    }
+                    if (successOverlay) {
+                        successOverlay.classList.add('show');
+                    }
+                    setTimeout(() => {
+                        if (successOverlay) {
+                            successOverlay.classList.remove('show');
+                        }
+                        registerForm.reset();
+                        registerButton.disabled = true;
+                        registerButton.innerHTML = 'Tạo tài khoản';
+                    }, 2500);
+                }
+            }
+
             async function handleLogin(event){event.preventDefault();const email=document.getElementById('loginEmail').value;const password=document.getElementById('loginPassword').value;const loginButton=document.getElementById('login-submit-btn');document.getElementById('login-alert').innerHTML='';loginButton.disabled=true;loginButton.innerHTML=`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang đăng nhập...`;setTimeout(async()=>{const{data,error}=await supabase.auth.signInWithPassword({email:email,password:password,});if(error){showAlert('login-alert',translateSupabaseError(error.message))}else if(data.user){const loginModal=bootstrap.Modal.getInstance(document.getElementById('loginModal'));loginModal.hide();loginForm.reset()}
             loginButton.disabled=false;loginButton.innerHTML='Đăng nhập'},1500)}
             async function signInWithFacebook(){const{data,error}=await supabase.auth.signInWithOAuth({provider:'facebook',});if(error){console.error('Lỗi khi đăng nhập Facebook:',error);showAlert('login-alert','Không thể đăng nhập bằng Facebook. Vui lòng thử lại.')}}
@@ -2056,7 +2145,7 @@
                 }
             }
             
-            // ======================= START: LOGIC CẬP NHẬT CHO TRANG TÀI LIỆU =======================
+            // ======================= LOGIC TRANG TÀI LIỆU (GIỮ NGUYÊN) =======================
             let allDocuments = [];
             let currentDocuments = [];
             let currentPage = 1;
@@ -2076,6 +2165,7 @@
             const detailModalEl = document.getElementById('documentDetailModal');
             const detailModalBody = document.getElementById('documentDetailBody');
             const modalViewButton = document.getElementById('modal-view-button');
+            const modalSaveButton = document.getElementById('modal-save-button'); 
 
             const pdfViewerModalEl = document.getElementById('pdfViewerModal');
             const pdfIframe = document.getElementById('pdf-iframe');
@@ -2086,15 +2176,16 @@
             const pdfTitlePlaceholder = document.getElementById('pdf-viewer-title-placeholder');
             const updatingOverlay = document.getElementById('updating-document-overlay');
 
+            const unsaveConfirmModalEl = document.getElementById('unsaveConfirmModal');
+            const confirmUnsaveBtn = document.getElementById('confirm-unsave-btn');
+            const unsaveConfirmModal = new bootstrap.Modal(unsaveConfirmModalEl);
 
-            // Hàm định dạng ngày tháng
             function formatDate(dateString) {
                 if (!dateString) return 'Không rõ ngày';
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };
                 return new Date(dateString).toLocaleDateString('vi-VN', options);
             }
 
-            // Hàm định dạng tiền tệ
             function formatCurrency(number) {
                 if (typeof number !== 'number' || isNaN(number)) {
                     return 'N/A';
@@ -2102,7 +2193,6 @@
                 return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
             }
 
-            // Hàm render danh sách tài liệu chính
             function renderDocuments(documentsToRender) {
                 if (!documentsListContainer) return;
                 documentsListContainer.innerHTML = ''; 
@@ -2170,7 +2260,6 @@
                 });
             }
 
-            // Hàm thiết lập phân trang
             function setupPagination(items, wrapper, rows_per_page) {
                 if (!wrapper) return;
                 wrapper.innerHTML = "";
@@ -2228,8 +2317,6 @@
                 wrapper.appendChild(createPageItem('&raquo;', false, currentPage === page_count));
             }
 
-
-            // Hàm hiển thị trang hiện tại
             function displayPage(items, wrapper, rows_per_page, page) {
                 if (!wrapper) return;
                 page--; 
@@ -2239,14 +2326,13 @@
                 renderDocuments(paginatedItems);
             }
 
-            // Hàm cập nhật hiển thị khi chuyển trang hoặc lọc
             function updatePage() {
                 displayPage(currentDocuments, documentsListContainer, itemsPerPage, currentPage);
                 setupPagination(currentDocuments, paginationControls, itemsPerPage);
                 setupScrollAnimations();
+                document.querySelector('.documents-section').scrollIntoView({ behavior: 'smooth' });
             }
 
-            // Hàm áp dụng bộ lọc
             function applyFilters() {
                 let filtered = allDocuments;
 
@@ -2263,7 +2349,6 @@
                 updatePage();
             }
 
-            // Tải danh mục cho bộ lọc
             async function loadCategories() {
                 if(!categoryFilterList) return;
                 const { data, error } = await supabase.from('documents').select('category');
@@ -2282,7 +2367,6 @@
                 });
             }
 
-            // Hàm render các tài liệu trong sidebar
             function renderSidebarDocuments(container, documents) {
                 if (!container) return;
                 container.innerHTML = '';
@@ -2306,7 +2390,6 @@
                 });
             }
 
-            // Tải tất cả tài liệu từ Supabase
             async function loadAllDocuments() {
                 if(documentsLoader) documentsLoader.style.display = 'block';
                 const { data, error } = await supabase
@@ -2327,7 +2410,6 @@
                 updatePage();
             }
 
-            // Tải các tài liệu cho sidebar
             async function loadSidebarDocuments() {
                 const { data: latestData, error: latestError } = await supabase
                     .from('documents').select('*').order('published_at', { ascending: false }).limit(4);
@@ -2340,7 +2422,6 @@
                 else renderSidebarDocuments(popularDocumentsContainer, popularData || []);
             }
             
-            // Gán sự kiện cho bộ lọc
             if (filtersContainer) {
                 filtersContainer.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -2362,7 +2443,6 @@
                 });
             }
 
-            // Xử lý sự kiện tìm kiếm
             if(searchInput) {
                 searchInput.addEventListener('input', (e) => {
                     const searchTerm = e.target.value.toLowerCase().trim();
@@ -2374,7 +2454,6 @@
                 });
             }
 
-            // Logic cho Modal chi tiết
             function populateModal(doc) {
                 if (!doc) return;
 
@@ -2422,15 +2501,57 @@
                 modalViewButton.dataset.docUrl = doc.document_url || '#';
                 modalViewButton.dataset.docTitle = doc.title || 'Tài liệu';
             }
+            
+            async function checkIfDocumentIsSaved(docId) {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    setSaveButtonState('unsaved');
+                    return;
+                }
+
+                const { data, error } = await supabase
+                    .from('saved_documents')
+                    .select('id')
+                    .eq('user_id', user.id)
+                    .eq('document_id', docId)
+                    .single();
+
+                if (data) {
+                    setSaveButtonState('saved');
+                } else {
+                    setSaveButtonState('unsaved');
+                }
+            }
+
+            function setSaveButtonState(state) {
+                if (!modalSaveButton) return;
+                modalSaveButton.dataset.savedState = state;
+                if (state === 'saved') {
+                    modalSaveButton.disabled = false;
+                    modalSaveButton.classList.remove('btn-outline-primary');
+                    modalSaveButton.classList.add('btn-success');
+                    modalSaveButton.innerHTML = '<i class="fas fa-check me-2"></i>Đã lưu';
+                } else { // unsaved state
+                    modalSaveButton.disabled = false;
+                    modalSaveButton.classList.remove('btn-success');
+                    modalSaveButton.classList.add('btn-outline-primary');
+                    modalSaveButton.innerHTML = '<i class="fas fa-bookmark me-2"></i>Lưu vào sổ tay';
+                }
+            }
+
 
             if (detailModalEl) {
-                detailModalEl.addEventListener('show.bs.modal', function (event) {
+                detailModalEl.addEventListener('show.bs.modal', async function (event) {
                     const card = event.relatedTarget;
                     const docId = card.getAttribute('data-doc-id');
+                    
+                    this.dataset.docId = docId;
+
                     const documentData = allDocuments.find(d => d.id == docId);
 
                     if (documentData) {
                         populateModal(documentData);
+                        await checkIfDocumentIsSaved(docId); 
                     } else {
                         detailModalBody.innerHTML = '<p class="text-danger">Không thể tải thông tin chi tiết của tài liệu. Vui lòng thử lại.</p>';
                         modalViewButton.dataset.docUrl = '#';
@@ -2456,6 +2577,77 @@
                     }
                 });
             }
+            
+            if (modalSaveButton) {
+                modalSaveButton.addEventListener('click', async function() {
+                    const { data: { user } } = await supabase.auth.getUser();
+
+                    if (!user) {
+                        const detailModalInstance = bootstrap.Modal.getInstance(detailModalEl);
+                        if (detailModalInstance) detailModalInstance.hide();
+                        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                        loginModal.show();
+                        showAlert('login-alert', 'Vui lòng đăng nhập để lưu tài liệu!', 'info');
+                        return;
+                    }
+
+                    const docId = detailModalEl.dataset.docId;
+                    if (!docId) return;
+
+                    const currentState = this.dataset.savedState;
+
+                    if (currentState === 'unsaved') {
+                        // --- Logic LƯU tài liệu ---
+                        this.disabled = true;
+                        this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang lưu...';
+
+                        const { error } = await supabase.from('saved_documents').insert({ user_id: user.id, document_id: docId });
+
+                        if (error) {
+                            showToast(`Lỗi: ${error.message}`, 'danger');
+                            setSaveButtonState('unsaved'); // Quay lại trạng thái cũ nếu lỗi
+                        } else {
+                            showToast('Đã lưu tài liệu vào sổ tay!', 'success');
+                            setSaveButtonState('saved');
+                            let count = getNotificationCount();
+                            setNotificationCount(count + 1);
+                            updateAllNotifications();
+                        }
+                    } else if (currentState === 'saved') {
+                        // --- Logic BỎ LƯU tài liệu ---
+                        confirmUnsaveBtn.dataset.docId = docId;
+                        unsaveConfirmModal.show();
+                    }
+                });
+            }
+            
+            if(confirmUnsaveBtn) {
+                confirmUnsaveBtn.addEventListener('click', async function() {
+                    const docId = this.dataset.docId;
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (!docId || !user) return;
+
+                    this.disabled = true;
+                    this.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Đang xử lý...`;
+
+                    const { error } = await supabase.from('saved_documents').delete().match({ user_id: user.id, document_id: docId });
+                    
+                    this.disabled = false;
+                    this.innerHTML = 'Bỏ lưu';
+                    unsaveConfirmModal.hide();
+
+                    if (error) {
+                        showToast(`Lỗi khi bỏ lưu: ${error.message}`, 'danger');
+                    } else {
+                        showToast('Đã bỏ lưu tài liệu.', 'info');
+                        setSaveButtonState('unsaved');
+                        let count = getNotificationCount();
+                        setNotificationCount(count - 1);
+                        updateAllNotifications();
+                    }
+                });
+            }
+
 
             if (pdfViewerModalEl) {
                 pdfViewerModalEl.addEventListener('show.bs.modal', function() {
@@ -2522,7 +2714,6 @@
                 scrollElements.forEach(el => observer.observe(el));
             }
 
-            // Khởi tạo trang
             async function initializePage() {
                 document.querySelectorAll('.sidebar-widget').forEach(el => el.classList.add('reveal-on-scroll'));
                 await Promise.all([
@@ -2536,7 +2727,6 @@
 
             initializePage();
 
-            // ======================= MESSENGER WIDGET LOGIC (ĐÃ CẬP NHẬT) =======================
             const messengerWidget = document.getElementById('messenger-widget-container');
             const closeMessengerBtn = document.getElementById('messenger-close-btn');
             const messengerFabIcon = document.querySelector('.messenger-fab-icon');
@@ -2568,6 +2758,80 @@
                     }
                 });
             }
+            
+            // ======================= START: LOGIC HIỆU ỨNG TUYẾT RƠI =======================
+            const snowContainer = document.getElementById('snow-container');
+            let snowInterval;
+
+            /**
+             * Tạo một bông tuyết mới với các thuộc tính ngẫu nhiên.
+             */
+            function createSnowflake() {
+                if (!snowContainer) return;
+                const snowflake = document.createElement('div');
+                snowflake.innerHTML = '❄️'; // Sử dụng emoji bông tuyết
+                snowflake.classList.add('snowflake');
+
+                const size = Math.random() * 15 + 10; // Kích thước từ 10px đến 25px
+                snowflake.style.fontSize = `${size}px`;
+                snowflake.style.left = `${Math.random() * 100}vw`; // Vị trí bắt đầu ngẫu nhiên theo chiều ngang
+                snowflake.style.animationDuration = `${Math.random() * 5 + 5}s`; // Thời gian rơi từ 5 đến 10 giây
+                snowflake.style.animationDelay = `${Math.random() * 5}s`; // Bắt đầu rơi sau một khoảng thời gian ngẫu nhiên
+                snowflake.style.opacity = Math.random() * 0.5 + 0.3; // Độ mờ ngẫu nhiên
+
+                snowContainer.appendChild(snowflake);
+
+                // Tự động xóa bông tuyết khỏi DOM sau khi nó rơi xong để tránh làm đầy bộ nhớ
+                setTimeout(() => {
+                    snowflake.remove();
+                }, (parseFloat(snowflake.style.animationDuration) + parseFloat(snowflake.style.animationDelay)) * 1000);
+            }
+
+            /**
+             * Bắt đầu hiệu ứng tuyết rơi.
+             * @param {number} numberOfFlakes - Số lượng bông tuyết ban đầu.
+             */
+            function startSnowEffect(numberOfFlakes = 50) {
+                if (!snowContainer) return;
+                snowContainer.style.display = 'block';
+                // Xóa các bông tuyết cũ trước khi bắt đầu
+                snowContainer.innerHTML = '';
+                // Tạo các bông tuyết ban đầu
+                for (let i = 0; i < numberOfFlakes; i++) {
+                    createSnowflake();
+                }
+                // Tạo thêm bông tuyết mới định kỳ
+                snowInterval = setInterval(createSnowflake, 500);
+            }
+
+            /**
+             * Dừng hiệu ứng tuyết rơi và xóa tất cả bông tuyết.
+             */
+            function stopSnowEffect() {
+                if (!snowContainer) return;
+                snowContainer.style.display = 'none';
+                snowContainer.innerHTML = ''; // Xóa tất cả bông tuyết
+                if (snowInterval) {
+                    clearInterval(snowInterval); // Dừng việc tạo bông tuyết mới
+                }
+            }
+
+            // Tích hợp với Modal xem PDF
+            if (pdfViewerModalEl) {
+                // Khi modal xem PDF được mở, dừng hiệu ứng tuyết
+                pdfViewerModalEl.addEventListener('show.bs.modal', function() {
+                    stopSnowEffect();
+                });
+
+                // Khi modal xem PDF được đóng, bắt đầu lại hiệu ứng tuyết
+                pdfViewerModalEl.addEventListener('hidden.bs.modal', function() {
+                    startSnowEffect();
+                });
+            }
+
+            // Bắt đầu hiệu ứng tuyết rơi khi trang được tải lần đầu
+            startSnowEffect();
+            // ======================= END: LOGIC HIỆU ỨNG TUYẾT RƠI =======================
         });
 
         window.addEventListener('load', function() {
