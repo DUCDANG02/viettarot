@@ -7,7 +7,7 @@
     <title>Hồ Sơ Của Tôi - VietTarot</title>
 
     <!-- Các link CSS và Font từ trang chủ -->
-    <link rel="icon" type="image/png" href="image/logotab.png">
+    <link rel="icon" type="image/png" href="https://placehold.co/32x32/9B49F2/FFFFFF?text=VT">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +39,7 @@
             color: var(--text-primary);
         }
 
-        /* ======================= CSS HEADER & FOOTER ======================= */
+        /* ======================= CSS HEADER & FOOTER (ĐỒNG BỘ TỪ INDEX.HTML) ======================= */
         header {
             position: sticky;
             top: 0;
@@ -62,6 +62,9 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
             color: var(--primary-blue);
+        }
+        .navbar-toggler {
+            position: relative;
         }
         .navbar-nav .nav-link {
             color: var(--text-secondary);
@@ -197,24 +200,7 @@
             margin-top: 3rem;
         }
         .footer-bottom p { color: var(--bg-white); }
-        .form-control {
-            background-color: var(--bg-white);
-            border: 1px solid var(--border-color);
-            padding: 0.8rem 1rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-        }
-        .form-control:focus {
-            background-color: var(--bg-white);
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(74, 108, 243, 0.2);
-        }
-        .form-control:disabled {
-            background-color: var(--bg-off-white);
-            color: var(--text-secondary);
-            cursor: not-allowed;
-        }
-
+        
         /* ======================= CSS CHO TRANG HỒ SƠ ======================= */
         .profile-section { padding: 4rem 0; }
         .profile-sidebar {
@@ -326,11 +312,28 @@
             color: var(--text-secondary);
             margin-bottom: 0.5rem;
         }
+        .form-control {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            background-color: var(--bg-white);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(74, 108, 243, 0.2);
+        }
+        .form-control:disabled {
+            background-color: var(--bg-off-white);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
         .password-wrapper { position: relative; }
         .password-toggle-icon {
             position: absolute;
             right: 1rem;
-            top: 75%; /* Đã sửa: Điều chỉnh vị trí theo chiều dọc */
+            top: 75%;
             transform: translateY(-50%);
             cursor: pointer;
             color: var(--text-secondary);
@@ -509,10 +512,9 @@
             max-width: 60%;
         }
         
+        /* CSS CHO THÔNG BÁO (ĐỒNG BỘ TỪ INDEX.HTML) */
         .notification-badge {
             position: absolute;
-            top: 5px;
-            right: 5px;
             min-width: 22px;
             height: 22px;
             background-color: var(--danger-color);
@@ -526,26 +528,36 @@
             border: 2px solid var(--bg-white);
             transform: scale(1);
             animation: pulse-badge 1.5s infinite;
+            z-index: 10;
         }
-
         #userDropdown .notification-badge {
-            top: -2px;
-            right: 5px;
+             top: -2px;
+             right: 0;
         }
-
+        .navbar-toggler .notification-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 10px;
+            height: 10px;
+            min-width: auto;
+            padding: 0;
+            font-size: 0;
+            border-width: 2px;
+        }
+        .profile-nav .nav-link .notification-badge {
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            min-width: 20px;
+            height: 20px;
+            font-size: 11px;
+            animation: none; /* Tắt animation pulse trong menu */
+        }
         @keyframes pulse-badge {
-            0% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
-            }
-            70% {
-                transform: scale(1);
-                box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
-            }
-            100% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
-            }
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
         }
         
         #deleteConfirmModal .modal-header {
@@ -567,33 +579,23 @@
         /* ======================= TÙY CHỈNH CHO GIAO DIỆN MOBILE ======================= */
         @media (max-width: 576px) {
             .saved-document-item {
-                align-items: flex-start; /* Căn các mục lên trên cùng */
-                gap: 0.75rem; /* Giảm khoảng cách giữa các phần tử */
-                padding: 0.75rem; /* Giảm padding của mỗi mục */
+                align-items: flex-start;
+                gap: 0.75rem;
+                padding: 0.75rem;
             }
-            
-            .saved-document-stt {
-                display: none; /* Ẩn số thứ tự để tiết kiệm không gian */
-            }
-
+            .saved-document-stt { display: none; }
             .saved-document-thumbnail {
-                width: 65px; /* Giảm kích thước ảnh đại diện tài liệu */
+                width: 65px;
                 height: 65px;
             }
-            
             .saved-document-info h6 {
-                font-size: 0.9rem; /* Giảm kích thước font tiêu đề */
-                line-height: 1.3; /* Cải thiện khả năng đọc */
+                font-size: 0.9rem;
+                line-height: 1.3;
             }
-            
-            .saved-document-info p {
-                font-size: 0.8rem; /* Giảm kích thước font phụ */
-            }
-
+            .saved-document-info p { font-size: 0.8rem; }
             .btn-remove-saved {
-                padding: .25rem .6rem; /* Làm cho nút xóa nhỏ hơn */
+                padding: .25rem .6rem;
                 font-size: .8rem;
-                /* Đảm bảo nút xóa không làm vỡ layout */
                 margin-left: auto; 
             }
         }
@@ -945,7 +947,51 @@
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrem50ZXViY3dsYWRxa3h5YXFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjcwODksImV4cCI6MjA2NzgwMzA4OX0.7P4-H_ujbLG2KLEFiVtlGIs8o515OkqNw9MVPDF7sCY';
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // ======================= START: LOGIC THÔNG BÁO MỚI =======================
+            // =========================================================================
+            // ===== BẮT ĐẦU: LOGIC MỚI CHO CHỨC NĂNG NGƯỜI DÙNG ONLINE (ĐÃ THÊM) =====
+            // =========================================================================
+            let presenceChannel = null;
+
+            function initializeRealtimePresence(user) {
+                if (presenceChannel && presenceChannel.state === 'joined') {
+                    return;
+                }
+                const userChannel = supabase.channel('online-users', {
+                    config: {
+                        presence: {
+                            key: user.id,
+                        },
+                    },
+                });
+
+                userChannel.subscribe(async (status) => {
+                    if (status === 'SUBSCRIBED') {
+                        const trackStatus = await userChannel.track({
+                            user_id: user.id,
+                            full_name: user.user_metadata?.full_name || user.email,
+                            avatar_url: user.user_metadata?.avatar_url,
+                            role: 'user'
+                        });
+                        if (trackStatus !== 'ok') {
+                            console.error('Lỗi khi phát tín hiệu online.');
+                        }
+                    }
+                });
+                presenceChannel = userChannel;
+            }
+
+            async function leavePresenceChannel() {
+                if (presenceChannel) {
+                    await presenceChannel.unsubscribe();
+                    presenceChannel = null;
+                }
+            }
+            // =========================================================================
+            // ===== KẾT THÚC: LOGIC MỚI CHO CHỨC NĂNG NGƯỜI DÙNG ONLINE =====
+            // =========================================================================
+
+
+            // ======================= START: LOGIC THÔNG BÁO MỚI (ĐỒNG BỘ TỪ INDEX.HTML) =======================
             const NOTIFICATION_KEY = 'newDocumentsCount';
 
             function getNotificationCount() {
@@ -953,59 +999,63 @@
             }
 
             function setNotificationCount(count) {
-                localStorage.setItem(NOTIFICATION_KEY, count);
+                localStorage.setItem(NOTIFICATION_KEY, Math.max(0, count));
             }
-
-            function updateAvatarNotification() {
+            
+            function updateAllNotifications() {
                 const count = getNotificationCount();
                 const userDropdown = document.getElementById('userDropdown');
-                
-                if (!userDropdown) return;
-                
-                userDropdown.style.position = 'relative';
+                const documentsLink = document.querySelector('.profile-nav .nav-link[data-target="my-documents-panel"]');
+                const navbarToggler = document.querySelector('.navbar-toggler');
 
-                let badge = userDropdown.querySelector('.notification-badge');
-
-                if (count > 0) {
-                    if (!badge) {
-                        badge = document.createElement('span');
-                        badge.className = 'notification-badge';
-                        userDropdown.appendChild(badge);
-                    }
-                    badge.textContent = count;
-                } else {
-                    if (badge) {
-                        badge.remove();
+                // Cập nhật badge trên avatar header
+                if (userDropdown) {
+                    let badge = userDropdown.querySelector('.notification-badge');
+                    if (count > 0) {
+                        if (!badge) {
+                            badge = document.createElement('span');
+                            badge.className = 'notification-badge';
+                            userDropdown.appendChild(badge);
+                        }
+                        badge.textContent = count;
+                    } else {
+                        if (badge) badge.remove();
                     }
                 }
-            }
-
-            function updateProfileNavNotifications() {
-                const count = getNotificationCount();
-                // SỬA ĐỔI: Chỉ chọn link "Tài liệu của tôi"
-                const documentsLink = document.querySelector('.profile-nav .nav-link[data-target="my-documents-panel"]');
-
-                if (!documentsLink) return;
-
-                let badge = documentsLink.querySelector('.notification-badge');
-                if (count > 0) {
-                    if (!badge) {
-                        badge = document.createElement('span');
-                        badge.className = 'notification-badge';
-                        documentsLink.appendChild(badge);
+                
+                // Cập nhật badge trên nút menu mobile
+                if (navbarToggler) {
+                    let badge = navbarToggler.querySelector('.notification-badge');
+                    if (count > 0) {
+                        if (!badge) {
+                            badge = document.createElement('span');
+                            badge.className = 'notification-badge';
+                            navbarToggler.appendChild(badge);
+                        }
+                    } else {
+                        if (badge) badge.remove();
                     }
-                    badge.textContent = `+${count}`;
-                } else {
-                    if (badge) {
-                        badge.remove();
+                }
+
+                // Cập nhật badge trong menu profile
+                if (documentsLink) {
+                    let badge = documentsLink.querySelector('.notification-badge');
+                    if (count > 0) {
+                        if (!badge) {
+                            badge = document.createElement('span');
+                            badge.className = 'notification-badge';
+                            documentsLink.appendChild(badge);
+                        }
+                        badge.textContent = `+${count}`;
+                    } else {
+                        if (badge) badge.remove();
                     }
                 }
             }
 
             function clearAllNotifications() {
                 setNotificationCount(0);
-                updateAvatarNotification();
-                updateProfileNavNotifications();
+                updateAllNotifications();
             }
             // ======================= END: LOGIC THÔNG BÁO MỚI =======================
 
@@ -1036,7 +1086,6 @@
             const pdfTitlePlaceholder = document.getElementById('pdf-viewer-title-placeholder');
             const savedDocsPaginationContainer = document.getElementById('saved-documents-pagination');
             
-            // THÊM MỚI: DOM elements cho modal xóa
             const deleteConfirmModalEl = document.getElementById('deleteConfirmModal');
             const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
             const deleteConfirmModal = new bootstrap.Modal(deleteConfirmModalEl);
@@ -1096,7 +1145,7 @@
                             </ul>
                         </div>`;
                     document.getElementById('header-logout-button').addEventListener('click', handleLogout);
-                    updateAvatarNotification();
+                    updateAllNotifications(); // Cập nhật tất cả thông báo
                 } else {
                     const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
                     window.location.replace(baseUrl + 'index.html');
@@ -1141,26 +1190,16 @@
 
             // ======================= AUTHENTICATION & DATA HANDLING =======================
             
-            // SỬA ĐỔI: Cập nhật hàm đăng xuất
+            // SỬA: Cập nhật hàm đăng xuất
             async function handleLogout(event) {
                 if(event) event.preventDefault();
-
-                // Hiển thị toast thông báo
                 showToast('Đang đăng xuất, vui lòng chờ...', 'info');
-
-                // Đăng xuất
+                await leavePresenceChannel(); // Rời kênh online trước
                 const { error } = await supabase.auth.signOut();
-
-                // Xử lý sau khi đăng xuất
                 if (error) {
                     showToast(`Lỗi khi đăng xuất: ${error.message}`, 'danger');
-                } else {
-                    // Đợi 1.5 giây để người dùng thấy thông báo rồi chuyển hướng
-                    setTimeout(() => {
-                        const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-                        window.location.replace(baseUrl + 'index.html');
-                    }, 1500);
                 }
+                // onAuthStateChange sẽ tự động xử lý chuyển hướng
             }
 
             async function handleUpdateProfile(e) {
@@ -1500,54 +1539,62 @@
 
             // ======================= INITIALIZATION =======================
             
-            async function initializePage() {
-                const { data: { session } } = await supabase.auth.getSession();
+            // SỬA: Sử dụng onAuthStateChange để khởi tạo trang
+            supabase.auth.onAuthStateChange(async (event, session) => {
                 const user = session ? session.user : null;
-                if (!user) {
+
+                if (user) {
+                    // Người dùng đã đăng nhập
+                    updateHeaderUI(user);
+                    updateProfilePageUI(user);
+                    initializeRealtimePresence(user);
+
+                    // Chỉ chạy các hàm thiết lập một lần
+                    if (!document.body.dataset.initialized) {
+                        document.body.dataset.initialized = "true";
+                        
+                        loadWebsiteSettings();
+                        updateAllNotifications();
+                        populateAvatarModal();
+                        setupPasswordToggles();
+
+                        if (profileLogoutButton) profileLogoutButton.addEventListener('click', handleLogout);
+                        if (updateProfileForm) updateProfileForm.addEventListener('submit', handleUpdateProfile);
+                        if (updatePasswordForm) updatePasswordForm.addEventListener('submit', handleUpdatePassword);
+                        if (profileNavMenu) profileNavMenu.addEventListener('click', handleNavClick);
+                        if (saveAvatarButton) saveAvatarButton.addEventListener('click', handleSaveAvatar);
+                        
+                        confirmDeleteBtn.addEventListener('click', async function() {
+                            const savedId = this.dataset.savedId;
+                            if (!savedId) return;
+
+                            this.disabled = true;
+                            this.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xóa...`;
+
+                            const { error } = await supabase.from('saved_documents').delete().eq('id', savedId);
+                            
+                            this.disabled = false;
+                            this.innerHTML = 'Xóa';
+
+                            deleteConfirmModal.hide();
+
+                            if (error) {
+                                showToast(`Lỗi khi xóa: ${error.message}`, 'danger');
+                            } else {
+                                showToast('Đã xóa tài liệu khỏi sổ tay.', 'success');
+                                setNotificationCount(getNotificationCount() - 1);
+                                updateAllNotifications();
+                                await loadSavedDocuments();
+                            }
+                        });
+                    }
+                } else {
+                    // Người dùng đã đăng xuất hoặc chưa đăng nhập
+                    leavePresenceChannel();
                     const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
                     window.location.replace(baseUrl + 'index.html');
-                    return; 
                 }
-                await Promise.all([
-                    updateHeaderUI(user),
-                    updateProfilePageUI(user),
-                    loadWebsiteSettings()
-                ]);
-
-                updateProfileNavNotifications();
-                populateAvatarModal();
-                setupPasswordToggles();
-
-                if (profileLogoutButton) profileLogoutButton.addEventListener('click', handleLogout);
-                if (updateProfileForm) updateProfileForm.addEventListener('submit', handleUpdateProfile);
-                if (updatePasswordForm) updatePasswordForm.addEventListener('submit', handleUpdatePassword);
-                if (profileNavMenu) profileNavMenu.addEventListener('click', handleNavClick);
-                if (saveAvatarButton) saveAvatarButton.addEventListener('click', handleSaveAvatar);
-                
-                confirmDeleteBtn.addEventListener('click', async function() {
-                    const savedId = this.dataset.savedId;
-                    if (!savedId) return;
-
-                    this.disabled = true;
-                    this.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xóa...`;
-
-                    const { error } = await supabase.from('saved_documents').delete().eq('id', savedId);
-                    
-                    this.disabled = false;
-                    this.innerHTML = 'Xóa';
-
-                    deleteConfirmModal.hide();
-
-                    if (error) {
-                        showToast(`Lỗi khi xóa: ${error.message}`, 'danger');
-                    } else {
-                        showToast('Đã xóa tài liệu khỏi sổ tay.', 'success');
-                        await loadSavedDocuments();
-                    }
-                });
-            }
-
-            initializePage();
+            });
         });
     </script>
 </body>
