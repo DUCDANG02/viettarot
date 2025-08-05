@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tài Liệu - VietTarot</title>
 
+    <!-- SỬA: Cập nhật đường dẫn icon -->
     <link rel="icon" type="image/png" href="image/logotab.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
@@ -112,6 +113,11 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
             color: var(--primary-blue);
+        }
+        
+        /* THÊM MỚI: CSS cho nút menu mobile */
+        .navbar-toggler {
+            position: relative;
         }
 
         .navbar-nav .nav-link {
@@ -1209,6 +1215,19 @@
                 margin-top: 1rem;
             }
 
+            /* SỬA: CSS cho footer của modal chi tiết trên mobile */
+            #documentDetailModal .modal-footer {
+                flex-wrap: nowrap;
+            }
+            #documentDetailModal .modal-footer .btn {
+                font-size: 0.8rem;
+                padding: 0.6rem 0.5rem;
+                white-space: nowrap;
+            }
+            #documentDetailModal .modal-footer .btn .fas {
+                margin-right: 4px !important;
+            }
+
             .document-card-body {
                 padding: 1rem;
             }
@@ -1411,6 +1430,19 @@
         #userDropdown .notification-badge {
              top: -2px;
              right: 0;
+        }
+
+        /* THÊM MỚI: CSS cho chấm thông báo trên nút menu mobile */
+        .navbar-toggler .notification-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 10px;
+            height: 10px;
+            min-width: auto;
+            padding: 0;
+            font-size: 0;
+            border-width: 2px;
         }
 
         .dropdown-item .notification-badge {
@@ -1897,7 +1929,68 @@
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrem50ZXViY3dsYWRxa3h5YXFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjcwODksImV4cCI6MjA2NzgwMzA4OX0.7P4-H_ujbLG2KLEFiVtlGIs8o515OkqNw9MVPDF7sCY';
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
-            // ======================= START: LOGIC THÔNG BÁO MỚI =======================
+            // =========================================================================
+            // ===== BẮT ĐẦU: LOGIC MỚI CHO CHỨC NĂNG NGƯỜI DÙNG ONLINE (ĐÃ THÊM) =====
+            // =========================================================================
+            let presenceChannel = null; // Biến toàn cục để giữ tham chiếu đến kênh
+
+            /**
+             * Khởi tạo và tham gia kênh theo dõi sự hiện diện của người dùng.
+             * @param {object} user - Đối tượng người dùng từ Supabase.
+             */
+            function initializeRealtimePresence(user) {
+                // Tránh đăng ký lại nếu đã kết nối
+                if (presenceChannel && presenceChannel.state === 'joined') {
+                    return;
+                }
+
+                // Tạo một kênh có tên 'online-users'
+                const userChannel = supabase.channel('online-users', {
+                    config: {
+                        presence: {
+                            key: user.id, // Sử dụng ID người dùng làm khóa định danh duy nhất
+                        },
+                    },
+                });
+
+                // Bắt đầu đăng ký kênh
+                userChannel.subscribe(async (status) => {
+                    // Khi đăng ký thành công
+                    if (status === 'SUBSCRIBED') {
+                        // Bắt đầu "phát tín hiệu" trạng thái của người dùng
+                        const trackStatus = await userChannel.track({
+                            user_id: user.id,
+                            full_name: user.user_metadata?.full_name || user.email, // Lấy tên, fallback về email
+                            avatar_url: user.user_metadata?.avatar_url, // Lấy ảnh đại diện
+                            role: 'user' // Đánh dấu là người dùng thông thường
+                        });
+                        
+                        if (trackStatus === 'ok') {
+                            console.log('Đã phát tín hiệu online thành công!');
+                        } else {
+                            console.error('Lỗi khi phát tín hiệu online.');
+                        }
+                    }
+                });
+
+                presenceChannel = userChannel; // Lưu lại tham chiếu đến kênh
+            }
+
+            /**
+             * Rời khỏi kênh theo dõi sự hiện diện.
+             */
+            async function leavePresenceChannel() {
+                if (presenceChannel) {
+                    await presenceChannel.unsubscribe(); // Hủy đăng ký kênh
+                    presenceChannel = null;
+                    console.log('Đã ngắt kết nối khỏi kênh online.');
+                }
+            }
+            // =========================================================================
+            // ===== KẾT THÚC: LOGIC MỚI CHO CHỨC NĂNG NGƯỜI DÙNG ONLINE =====
+            // =========================================================================
+
+            // ======================= START: LOGIC THÔNG BÁO MỚI (ĐÃ CẬP NHẬT) =======================
             const NOTIFICATION_KEY = 'newDocumentsCount';
 
             function getNotificationCount() {
@@ -1905,16 +1998,18 @@
             }
 
             function setNotificationCount(count) {
-                // Đảm bảo số lượng không bao giờ âm
                 const newCount = Math.max(0, count);
                 localStorage.setItem(NOTIFICATION_KEY, newCount);
             }
 
+            // SỬA: Cập nhật hàm để hiển thị thông báo trên cả nút menu mobile
             function updateAllNotifications() {
                 const count = getNotificationCount();
                 const userDropdown = document.getElementById('userDropdown');
                 const profileDropdownItem = document.getElementById('profile-dropdown-item');
+                const navbarToggler = document.querySelector('.navbar-toggler'); // Thêm selector cho nút menu
 
+                // Thông báo trên avatar (desktop)
                 if (userDropdown) {
                     userDropdown.style.position = 'relative';
                     let badge = userDropdown.querySelector('.notification-badge');
@@ -1930,6 +2025,7 @@
                     }
                 }
 
+                // Thông báo trong menu dropdown
                 if (profileDropdownItem) {
                     let badge = profileDropdownItem.querySelector('.notification-badge');
                     if (count > 0) {
@@ -1939,6 +2035,20 @@
                             profileDropdownItem.appendChild(badge);
                         }
                         badge.textContent = `+${count}`;
+                    } else {
+                        if (badge) badge.remove();
+                    }
+                }
+                
+                // THÊM MỚI: Logic cho thông báo trên nút menu (mobile)
+                if (navbarToggler) {
+                    let badge = navbarToggler.querySelector('.notification-badge');
+                    if (count > 0) {
+                        if (!badge) {
+                            badge = document.createElement('span');
+                            badge.className = 'notification-badge';
+                            navbarToggler.appendChild(badge);
+                        }
                     } else {
                         if (badge) badge.remove();
                     }
@@ -2032,6 +2142,8 @@
                             <span>Đăng ký / Đăng nhập</span>
                         </a>
                     `;
+                    // Nếu chưa đăng nhập, vẫn gọi để xóa các thông báo cũ (nếu có)
+                    updateAllNotifications();
                 }
             }
             
@@ -2085,8 +2197,27 @@
             async function handleLogin(event){event.preventDefault();const email=document.getElementById('loginEmail').value;const password=document.getElementById('loginPassword').value;const loginButton=document.getElementById('login-submit-btn');document.getElementById('login-alert').innerHTML='';loginButton.disabled=true;loginButton.innerHTML=`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang đăng nhập...`;setTimeout(async()=>{const{data,error}=await supabase.auth.signInWithPassword({email:email,password:password,});if(error){showAlert('login-alert',translateSupabaseError(error.message))}else if(data.user){const loginModal=bootstrap.Modal.getInstance(document.getElementById('loginModal'));loginModal.hide();loginForm.reset()}
             loginButton.disabled=false;loginButton.innerHTML='Đăng nhập'},1500)}
             async function signInWithFacebook(){const{data,error}=await supabase.auth.signInWithOAuth({provider:'facebook',});if(error){console.error('Lỗi khi đăng nhập Facebook:',error);showAlert('login-alert','Không thể đăng nhập bằng Facebook. Vui lòng thử lại.')}}
-            async function handleLogout(event){event.preventDefault();await supabase.auth.signOut()}
-            supabase.auth.onAuthStateChange((event,session)=>{updateUI(session?session.user:null)});if(registerForm){registerForm.addEventListener('submit',handleRegister)}
+            
+            // CHỈNH SỬA HÀM ĐĂNG XUẤT ĐỂ THÊM SỰ KIỆN OFFLINE
+            async function handleLogout(event){
+                event.preventDefault();
+                await leavePresenceChannel(); // Rời kênh online trước
+                await supabase.auth.signOut(); // Sau đó mới đăng xuất
+            }
+
+            // CHỈNH SỬA HÀM LẮNG NGHE TRẠNG THÁI XÁC THỰC ĐỂ THÊM/XÓA SỰ KIỆN ONLINE/OFFLINE
+            supabase.auth.onAuthStateChange((event,session)=>{
+                updateUI(session?session.user:null);
+                if (session?.user) {
+                    // Nếu người dùng đã đăng nhập, cho họ tham gia kênh online
+                    initializeRealtimePresence(session.user);
+                } else {
+                    // Nếu người dùng đã đăng xuất, cho họ rời khỏi kênh
+                    leavePresenceChannel();
+                }
+            });
+
+            if(registerForm){registerForm.addEventListener('submit',handleRegister)}
             if(loginForm){loginForm.addEventListener('submit',handleLogin)}
             if(facebookLoginBtn){facebookLoginBtn.addEventListener('click',signInWithFacebook)}
             if(registerForm){const inputs=registerForm.querySelectorAll('input');const registerSubmitBtn=document.getElementById('register-submit-btn');const passwordInput=document.getElementById('registerPassword');const confirmPasswordInput=document.getElementById('confirmPassword');const feedbackDiv=document.getElementById('password-match-feedback');function validateRegisterForm(){let allFilled=true;inputs.forEach(input=>{if(input.value.trim()===''){allFilled=false}});const passwordsMatch=passwordInput.value===confirmPasswordInput.value;if(confirmPasswordInput.value!==''){if(passwordsMatch){feedbackDiv.textContent='Mật khẩu đã khớp!';feedbackDiv.className='password-match'}else{feedbackDiv.textContent='Mật khẩu không khớp!';feedbackDiv.className='password-mismatch'}}else{feedbackDiv.textContent=''}
@@ -2114,7 +2245,7 @@
                 }
             }
             
-            // ======================= START: LOGIC CẬP NHẬT CHO TRANG TÀI LIỆU =======================
+            // ======================= START: LOGIC CẬP NHẬT CHO TRANG TÀI LIỆU (GIỮ NGUYÊN) =======================
             let allDocuments = [];
             let currentDocuments = [];
             let currentPage = 1;
@@ -2145,7 +2276,6 @@
             const pdfTitlePlaceholder = document.getElementById('pdf-viewer-title-placeholder');
             const updatingOverlay = document.getElementById('updating-document-overlay');
 
-            // THÊM MỚI: DOM elements cho modal bỏ lưu
             const unsaveConfirmModalEl = document.getElementById('unsaveConfirmModal');
             const confirmUnsaveBtn = document.getElementById('confirm-unsave-btn');
             const unsaveConfirmModal = new bootstrap.Modal(unsaveConfirmModalEl);
@@ -2296,12 +2426,10 @@
                 renderDocuments(paginatedItems);
             }
 
-            // SỬA ĐỔI: Thêm chức năng cuộn lên đầu
             function updatePage() {
                 displayPage(currentDocuments, documentsListContainer, itemsPerPage, currentPage);
                 setupPagination(currentDocuments, paginationControls, itemsPerPage);
                 setupScrollAnimations();
-                // Thêm dòng này để cuộn lên đầu
                 document.querySelector('.documents-section').scrollIntoView({ behavior: 'smooth' });
             }
 
@@ -2495,7 +2623,6 @@
                 }
             }
 
-            // SỬA ĐỔI: Cập nhật hàm trạng thái nút
             function setSaveButtonState(state) {
                 if (!modalSaveButton) return;
                 modalSaveButton.dataset.savedState = state;
@@ -2551,7 +2678,6 @@
                 });
             }
             
-            // SỬA ĐỔI: Logic cho nút lưu/bỏ lưu
             if (modalSaveButton) {
                 modalSaveButton.addEventListener('click', async function() {
                     const { data: { user } } = await supabase.auth.getUser();
@@ -2571,7 +2697,6 @@
                     const currentState = this.dataset.savedState;
 
                     if (currentState === 'unsaved') {
-                        // --- Logic LƯU tài liệu ---
                         this.disabled = true;
                         this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang lưu...';
 
@@ -2579,7 +2704,7 @@
 
                         if (error) {
                             showToast(`Lỗi: ${error.message}`, 'danger');
-                            setSaveButtonState('unsaved'); // Quay lại trạng thái cũ nếu lỗi
+                            setSaveButtonState('unsaved');
                         } else {
                             showToast('Đã lưu tài liệu vào sổ tay!', 'success');
                             setSaveButtonState('saved');
@@ -2588,14 +2713,12 @@
                             updateAllNotifications();
                         }
                     } else if (currentState === 'saved') {
-                        // --- Logic BỎ LƯU tài liệu ---
                         confirmUnsaveBtn.dataset.docId = docId;
                         unsaveConfirmModal.show();
                     }
                 });
             }
             
-            // THÊM MỚI: Gán sự kiện cho nút xác nhận bỏ lưu
             if(confirmUnsaveBtn) {
                 confirmUnsaveBtn.addEventListener('click', async function() {
                     const docId = this.dataset.docId;
