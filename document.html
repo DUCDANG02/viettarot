@@ -1929,42 +1929,39 @@
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrem50ZXViY3dsYWRxa3h5YXFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjcwODksImV4cCI6MjA2NzgwMzA4OX0.7P4-H_ujbLG2KLEFiVtlGIs8o515OkqNw9MVPDF7sCY';
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // Đoạn code này sẽ được thêm vào sau khi khởi tạo supabase client
-// trong các file của người dùng cuối.
+            // =====================================================================
+            // ===== BẮT ĐẦU: CODE THEO DÕI KHÁCH TRUY CẬP (ĐÃ THÊM) =====
+            // =====================================================================
+            async function trackAnonymousVisitor(supabase) {
+                const VISITOR_ID_KEY = 'anonymous_visitor_id';
+                let visitorId = localStorage.getItem(VISITOR_ID_KEY);
 
-async function trackAnonymousVisitor(supabase) {
-    const VISITOR_ID_KEY = 'anonymous_visitor_id';
-    let visitorId = localStorage.getItem(VISITOR_ID_KEY);
+                if (!visitorId) {
+                    visitorId = crypto.randomUUID(); 
+                    localStorage.setItem(VISITOR_ID_KEY, visitorId);
 
-    if (!visitorId) {
-        // Đây là khách truy cập mới
-        visitorId = crypto.randomUUID(); // Tạo ID duy nhất
-        localStorage.setItem(VISITOR_ID_KEY, visitorId);
-
-        // Gửi thông báo broadcast lên kênh realtime
-        const channel = supabase.channel('anonymous_visitors');
-        
-        // Cần subscribe trước khi gửi
-        channel.subscribe((status) => {
-            if (status === 'SUBSCRIBED') {
-                channel.send({
-                    type: 'broadcast',
-                    event: 'new_visitor',
-                    payload: { 
-                        visitorId: visitorId, 
-                        visitedAt: new Date().toISOString(),
-                        page: window.location.pathname // Gửi cả trang họ đang truy cập
-                    },
-                });
+                    const channel = supabase.channel('anonymous_visitors');
+                    
+                    channel.subscribe((status) => {
+                        if (status === 'SUBSCRIBED') {
+                            channel.send({
+                                type: 'broadcast',
+                                event: 'new_visitor',
+                                payload: { 
+                                    visitorId: visitorId, 
+                                    visitedAt: new Date().toISOString(),
+                                    page: window.location.pathname
+                                },
+                            });
+                        }
+                    });
+                }
             }
-        });
-    }
-}
-
-// Gọi hàm này sau khi supabase được khởi tạo
-// Ví dụ:
-// const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-// trackAnonymousVisitor(supabase);
+            trackAnonymousVisitor(supabase);
+            // =====================================================================
+            // ===== KẾT THÚC: CODE THEO DÕI KHÁCH TRUY CẬP =====
+            // =====================================================================
+            
             
             // =========================================================================
             // ===== BẮT ĐẦU: LOGIC MỚI CHO CHỨC NĂNG NGƯỜI DÙNG ONLINE (ĐÃ THÊM) =====
