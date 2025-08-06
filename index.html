@@ -1353,7 +1353,6 @@
             }
         }
 
-        /* THÊM MỚI: CSS CHO THÔNG BÁO */
         .notification-badge {
             position: absolute;
             min-width: 22px;
@@ -1377,7 +1376,6 @@
             right: 0;
         }
         
-        /* THÊM MỚI: CSS cho chấm thông báo trên nút menu mobile */
         .navbar-toggler .notification-badge {
             position: absolute;
             top: 4px;
@@ -1909,44 +1907,46 @@
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrem50ZXViY3dsYWRxa3h5YXFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjcwODksImV4cCI6MjA2NzgwMzA4OX0.7P4-H_ujbLG2KLEFiVtlGIs8o515OkqNw9MVPDF7sCY';
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+            // =====================================================================
+            // ===== BẮT ĐẦU: CODE THEO DÕI KHÁCH TRUY CẬP (ĐÃ THÊM) =====
+            // =====================================================================
+            async function trackAnonymousVisitor(supabase) {
+                const VISITOR_ID_KEY = 'anonymous_visitor_id';
+                let visitorId = localStorage.getItem(VISITOR_ID_KEY);
 
-            // Đoạn code này sẽ được thêm vào sau khi khởi tạo supabase client
-// trong các file của người dùng cuối.
+                if (!visitorId) {
+                    // Đây là khách truy cập mới
+                    visitorId = crypto.randomUUID(); // Tạo ID duy nhất
+                    localStorage.setItem(VISITOR_ID_KEY, visitorId);
 
-async function trackAnonymousVisitor(supabase) {
-    const VISITOR_ID_KEY = 'anonymous_visitor_id';
-    let visitorId = localStorage.getItem(VISITOR_ID_KEY);
-
-    if (!visitorId) {
-        // Đây là khách truy cập mới
-        visitorId = crypto.randomUUID(); // Tạo ID duy nhất
-        localStorage.setItem(VISITOR_ID_KEY, visitorId);
-
-        // Gửi thông báo broadcast lên kênh realtime
-        const channel = supabase.channel('anonymous_visitors');
-        
-        // Cần subscribe trước khi gửi
-        channel.subscribe((status) => {
-            if (status === 'SUBSCRIBED') {
-                channel.send({
-                    type: 'broadcast',
-                    event: 'new_visitor',
-                    payload: { 
-                        visitorId: visitorId, 
-                        visitedAt: new Date().toISOString(),
-                        page: window.location.pathname // Gửi cả trang họ đang truy cập
-                    },
-                });
+                    // Gửi thông báo broadcast lên kênh realtime
+                    const channel = supabase.channel('anonymous_visitors');
+                    
+                    // Cần subscribe trước khi gửi
+                    channel.subscribe((status) => {
+                        if (status === 'SUBSCRIBED') {
+                            channel.send({
+                                type: 'broadcast',
+                                event: 'new_visitor',
+                                payload: { 
+                                    visitorId: visitorId, 
+                                    visitedAt: new Date().toISOString(),
+                                    page: window.location.pathname // Gửi cả trang họ đang truy cập
+                                },
+                            });
+                            // Hủy đăng ký ngay sau khi gửi để tiết kiệm tài nguyên
+                            // supabase.removeChannel(channel); 
+                        }
+                    });
+                }
             }
-        });
-    }
-}
 
-// Gọi hàm này sau khi supabase được khởi tạo
-// Ví dụ:
-// const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-// trackAnonymousVisitor(supabase);
-
+            // Gọi hàm ngay sau khi định nghĩa
+            trackAnonymousVisitor(supabase);
+            // =====================================================================
+            // ===== KẾT THÚC: CODE THEO DÕI KHÁCH TRUY CẬP =====
+            // =====================================================================
+            
             const authContainer = document.getElementById('auth-container');
             const loginForm = document.getElementById('login-form');
             const registerForm = document.getElementById('registerForm');
@@ -1954,71 +1954,44 @@ async function trackAnonymousVisitor(supabase) {
 
             const defaultAvatarIcon = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='50' fill='%23E5E7EB'/%3E%3Cpath d='M66.95 66.78a25.02 25.02 0 00-33.9 0C24.4 71.3 20 79.95 20 90h60c0-10.05-4.4-18.7-13.05-23.22zM50 55c-10.33 0-18.7-8.37-18.7-18.7S39.67 17.6 50 17.6s18.7 8.37 18.7 18.7-8.37 18.7-18.7 18.7z' fill='%23A0AEC0'/%3E%3C/svg%3E";
 
-            // BÊ NGUYÊN LOGIC THÔNG BÁO TỪ TRANG document.html
             const NOTIFICATION_KEY = 'newDocumentsCount';
 
-            // =========================================================================
-            // ===== BẮT ĐẦU: LOGIC MỚI CHO CHỨC NĂNG NGƯỜI DÙNG ONLINE =====
-            // =========================================================================
-            let presenceChannel = null; // Biến toàn cục để giữ tham chiếu đến kênh
+            let presenceChannel = null; 
 
-            /**
-             * Khởi tạo và tham gia kênh theo dõi sự hiện diện của người dùng.
-             * @param {object} user - Đối tượng người dùng từ Supabase.
-             */
             function initializeRealtimePresence(user) {
-                // Tránh đăng ký lại nếu đã kết nối
                 if (presenceChannel && presenceChannel.state === 'joined') {
                     return;
                 }
-
-                // Tạo một kênh có tên 'online-users'
                 const userChannel = supabase.channel('online-users', {
                     config: {
                         presence: {
-                            key: user.id, // Sử dụng ID người dùng làm khóa định danh duy nhất
+                            key: user.id,
                         },
                     },
                 });
-
-                // Bắt đầu đăng ký kênh
                 userChannel.subscribe(async (status) => {
-                    // Khi đăng ký thành công
                     if (status === 'SUBSCRIBED') {
-                        // Bắt đầu "phát tín hiệu" trạng thái của người dùng
                         const trackStatus = await userChannel.track({
                             user_id: user.id,
-                            full_name: user.user_metadata?.full_name || user.email, // Lấy tên, fallback về email
-                            avatar_url: user.user_metadata?.avatar_url, // Lấy ảnh đại diện
-                            role: 'user' // Đánh dấu là người dùng thông thường
+                            full_name: user.user_metadata?.full_name || user.email,
+                            avatar_url: user.user_metadata?.avatar_url,
+                            role: 'user'
                         });
-                        
-                        if (trackStatus === 'ok') {
-                            console.log('Đã phát tín hiệu online thành công!');
-                        } else {
+                        if (trackStatus !== 'ok') {
                             console.error('Lỗi khi phát tín hiệu online.');
                         }
                     }
                 });
-
-                presenceChannel = userChannel; // Lưu lại tham chiếu đến kênh
+                presenceChannel = userChannel;
             }
 
-            /**
-             * Rời khỏi kênh theo dõi sự hiện diện.
-             */
             async function leavePresenceChannel() {
                 if (presenceChannel) {
-                    await presenceChannel.unsubscribe(); // Hủy đăng ký kênh
+                    await presenceChannel.unsubscribe();
                     presenceChannel = null;
-                    console.log('Đã ngắt kết nối khỏi kênh online.');
                 }
             }
-            // =========================================================================
-            // ===== KẾT THÚC: LOGIC MỚI CHO CHỨC NĂNG NGƯỜI DÙNG ONLINE =====
-            // =========================================================================
-
-
+            
             function getNotificationCount() {
                 return parseInt(localStorage.getItem(NOTIFICATION_KEY) || '0', 10);
             }
@@ -2077,23 +2050,12 @@ async function trackAnonymousVisitor(supabase) {
                 }
             }
 
-
             function translateSupabaseError(errorMessage) {
                 if (!errorMessage) return "Đã có lỗi xảy ra. Vui lòng thử lại.";
-
-                if (errorMessage.includes("User already registered")) {
-                    return "Email này đã được đăng ký. Vui lòng sử dụng email khác.";
-                }
-                if (errorMessage.includes("Password should be at least 6 characters")) {
-                    return "Mật khẩu phải có ít nhất 6 ký tự.";
-                }
-                if (errorMessage.includes("Invalid login credentials")) {
-                    return "Email hoặc mật khẩu không chính xác.";
-                }
-                if (errorMessage.includes("Unable to validate email address: invalid format")) {
-                    return "Địa chỉ email không hợp lệ.";
-                }
-
+                if (errorMessage.includes("User already registered")) return "Email này đã được đăng ký. Vui lòng sử dụng email khác.";
+                if (errorMessage.includes("Password should be at least 6 characters")) return "Mật khẩu phải có ít nhất 6 ký tự.";
+                if (errorMessage.includes("Invalid login credentials")) return "Email hoặc mật khẩu không chính xác.";
+                if (errorMessage.includes("Unable to validate email address: invalid format")) return "Địa chỉ email không hợp lệ.";
                 return `Đã xảy ra lỗi: ${errorMessage}`;
             }
 
@@ -2111,11 +2073,9 @@ async function trackAnonymousVisitor(supabase) {
 
             function updateUI(user) {
                 if (!authContainer) return;
-
                 if (user) {
                     const fullName = user.user_metadata?.full_name || user.email;
                     const avatarUrl = user.user_metadata?.avatar_url || defaultAvatarIcon;
-
                     authContainer.innerHTML = `
                         <div class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
@@ -2131,7 +2091,6 @@ async function trackAnonymousVisitor(supabase) {
                         </div>
                     `;
                     document.getElementById('logout-button').addEventListener('click', handleLogout);
-                    updateAllNotifications(); 
                 } else {
                     authContainer.innerHTML = `
                         <a href="#" class="btn-gradient" data-bs-toggle="modal" data-bs-target="#loginModal">
@@ -2139,8 +2098,8 @@ async function trackAnonymousVisitor(supabase) {
                             <span>Đăng ký / Đăng nhập</span>
                         </a>
                     `;
-                    updateAllNotifications(); 
                 }
+                updateAllNotifications();
             }
 
             async function handleRegister(event) {
@@ -2150,26 +2109,14 @@ async function trackAnonymousVisitor(supabase) {
                 const phone = document.getElementById('registerPhone').value;
                 const password = document.getElementById('registerPassword').value;
                 const registerButton = document.getElementById('register-submit-btn');
-
                 document.getElementById('register-alert').innerHTML = '';
-
                 registerButton.disabled = true;
                 registerButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xử lý...`;
-
-                const {
-                    data,
-                    error
-                } = await supabase.auth.signUp({
+                const { data, error } = await supabase.auth.signUp({
                     email: email,
                     password: password,
-                    options: {
-                        data: {
-                            full_name: name,
-                            phone: phone
-                        }
-                    }
+                    options: { data: { full_name: name, phone: phone } }
                 });
-
                 if (error) {
                     showAlert('register-alert', translateSupabaseError(error.message));
                     registerButton.disabled = false;
@@ -2177,24 +2124,13 @@ async function trackAnonymousVisitor(supabase) {
                 } else {
                     const registerModalInstance = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
                     const successOverlay = document.getElementById('fullscreen-success-overlay');
-
-                    if (registerModalInstance) {
-                        registerModalInstance.hide();
-                    }
-
-                    if (successOverlay) {
-                        successOverlay.classList.add('show');
-                    }
-
+                    if (registerModalInstance) registerModalInstance.hide();
+                    if (successOverlay) successOverlay.classList.add('show');
                     setTimeout(() => {
-                        if (successOverlay) {
-                            successOverlay.classList.remove('show');
-                        }
-
+                        if (successOverlay) successOverlay.classList.remove('show');
                         registerForm.reset();
                         registerButton.disabled = true;
                         registerButton.innerHTML = 'Tạo tài khoản';
-
                     }, 2500);
                 }
             }
@@ -2204,21 +2140,11 @@ async function trackAnonymousVisitor(supabase) {
                 const email = document.getElementById('loginEmail').value;
                 const password = document.getElementById('loginPassword').value;
                 const loginButton = document.getElementById('login-submit-btn');
-
                 document.getElementById('login-alert').innerHTML = '';
-
                 loginButton.disabled = true;
                 loginButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang đăng nhập...`;
-
                 setTimeout(async () => {
-                    const {
-                        data,
-                        error
-                    } = await supabase.auth.signInWithPassword({
-                        email: email,
-                        password: password,
-                    });
-
+                    const { data, error } = await supabase.auth.signInWithPassword({ email: email, password: password });
                     if (error) {
                         showAlert('login-alert', translateSupabaseError(error.message));
                     } else if (data.user) {
@@ -2226,56 +2152,37 @@ async function trackAnonymousVisitor(supabase) {
                         loginModal.hide();
                         loginForm.reset();
                     }
-
                     loginButton.disabled = false;
                     loginButton.innerHTML = 'Đăng nhập';
-
                 }, 1500);
             }
 
             async function signInWithFacebook() {
-                const {
-                    data,
-                    error
-                } = await supabase.auth.signInWithOAuth({
-                    provider: 'facebook',
-                });
-
+                const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'facebook' });
                 if (error) {
                     console.error('Lỗi khi đăng nhập Facebook:', error);
                     showAlert('login-alert', 'Không thể đăng nhập bằng Facebook. Vui lòng thử lại.');
                 }
             }
 
-            // CHỈNH SỬA HÀM ĐĂNG XUẤT
             async function handleLogout(event) {
                 event.preventDefault();
-                await leavePresenceChannel(); // Rời kênh online trước
-                await supabase.auth.signOut(); // Sau đó mới đăng xuất
+                await leavePresenceChannel();
+                await supabase.auth.signOut();
             }
 
-            // CHỈNH SỬA HÀM LẮNG NGHE TRẠNG THÁI XÁC THỰC
             supabase.auth.onAuthStateChange((event, session) => {
                 updateUI(session ? session.user : null);
-                
                 if (session?.user) {
-                    // Nếu người dùng đã đăng nhập, cho họ tham gia kênh online
                     initializeRealtimePresence(session.user);
                 } else {
-                    // Nếu người dùng đã đăng xuất, cho họ rời khỏi kênh
                     leavePresenceChannel();
                 }
             });
 
-            if (registerForm) {
-                registerForm.addEventListener('submit', handleRegister);
-            }
-            if (loginForm) {
-                loginForm.addEventListener('submit', handleLogin);
-            }
-            if (facebookLoginBtn) {
-                facebookLoginBtn.addEventListener('click', signInWithFacebook);
-            }
+            if (registerForm) registerForm.addEventListener('submit', handleRegister);
+            if (loginForm) loginForm.addEventListener('submit', handleLogin);
+            if (facebookLoginBtn) facebookLoginBtn.addEventListener('click', signInWithFacebook);
 
             if (registerForm) {
                 const inputs = registerForm.querySelectorAll('input');
@@ -2286,14 +2193,8 @@ async function trackAnonymousVisitor(supabase) {
 
                 function validateRegisterForm() {
                     let allFilled = true;
-                    inputs.forEach(input => {
-                        if (input.value.trim() === '') {
-                            allFilled = false;
-                        }
-                    });
-
+                    inputs.forEach(input => { if (input.value.trim() === '') allFilled = false; });
                     const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
-
                     if (confirmPasswordInput.value !== '') {
                         if (passwordsMatch) {
                             feedbackDiv.textContent = 'Mật khẩu đã khớp!';
@@ -2305,23 +2206,14 @@ async function trackAnonymousVisitor(supabase) {
                     } else {
                         feedbackDiv.textContent = '';
                     }
-
-                    if (allFilled && passwordsMatch) {
-                        registerSubmitBtn.disabled = false;
-                    } else {
-                        registerSubmitBtn.disabled = true;
-                    }
+                    registerSubmitBtn.disabled = !(allFilled && passwordsMatch);
                 }
-
-                inputs.forEach(input => {
-                    input.addEventListener('input', validateRegisterForm);
-                });
+                inputs.forEach(input => { input.addEventListener('input', validateRegisterForm); });
             }
 
             function setupPasswordToggle(toggleId, passwordId) {
                 const toggleIcon = document.getElementById(toggleId);
                 const passwordInput = document.getElementById(passwordId);
-
                 if (toggleIcon && passwordInput) {
                     toggleIcon.addEventListener('click', function() {
                         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -2337,54 +2229,26 @@ async function trackAnonymousVisitor(supabase) {
             setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
 
             async function loadWebsiteSettings() {
-                const {
-                    data,
-                    error
-                } = await supabase
-                    .from('website_settings')
-                    .select('*')
-                    .eq('id', 1)
-                    .single();
-
-                if (error) {
-                    console.error('Lỗi khi tải cài đặt website:', error.message);
-                    return;
-                }
-
+                const { data, error } = await supabase.from('website_settings').select('*').eq('id', 1).single();
+                if (error) { console.error('Lỗi khi tải cài đặt website:', error.message); return; }
                 if (data) {
                     const headerLogo = document.getElementById('header-logo');
                     const footerLogo = document.getElementById('footer-logo');
                     const serviceImage = document.getElementById('service-image');
                     const promoLink = document.getElementById('promo-link');
                     const promoImage = document.getElementById('promo-image');
-
                     if (headerLogo && data.header_logo_url) headerLogo.src = data.header_logo_url;
                     if (footerLogo && data.footer_logo_url) footerLogo.src = data.footer_logo_url;
                     if (serviceImage && data.service_image_url) serviceImage.src = data.service_image_url;
-
-                    if (promoImage && data.promotion_image_url) {
-                        promoImage.src = data.promotion_image_url;
-                    }
-                    if (promoLink && data.promotion_link_url) {
-                        promoLink.href = data.promotion_link_url;
-                    }
+                    if (promoImage && data.promotion_image_url) promoImage.src = data.promotion_image_url;
+                    if (promoLink && data.promotion_link_url) promoLink.href = data.promotion_link_url;
                 }
             }
 
             async function loadSliders() {
-                const {
-                    data,
-                    error
-                } = await supabase.from('sliders').select('title, description, image_url, button_text, button_link').order('display_order', {
-                    ascending: true
-                });
-                if (error) {
-                    console.error('Lỗi khi tải sliders:', error.message);
-                    return;
-                }
-                if (data && data.length > 0) {
-                    renderSliders(data);
-                }
+                const { data, error } = await supabase.from('sliders').select('title, description, image_url, button_text, button_link').order('display_order', { ascending: true });
+                if (error) { console.error('Lỗi khi tải sliders:', error.message); return; }
+                if (data && data.length > 0) renderSliders(data);
             }
 
             function renderSliders(sliders) {
@@ -2405,52 +2269,26 @@ async function trackAnonymousVisitor(supabase) {
                     indicatorsContainer.appendChild(indicatorButton);
                     const carouselItem = document.createElement('div');
                     carouselItem.classList.add('carousel-item');
-                    if (index === 0) {
-                        carouselItem.classList.add('active');
-                    }
+                    if (index === 0) carouselItem.classList.add('active');
                     carouselItem.style.backgroundImage = `url('${slider.image_url}')`;
                     const captionDiv = document.createElement('div');
                     captionDiv.classList.add('carousel-caption');
-
                     let captionHTML = '';
-                    if (slider.title) {
-                        captionHTML += `<h1 class="display-3">${slider.title}</h1>`;
-                    }
-                    if (slider.description) {
-                        captionHTML += `<p class="lead my-4">${slider.description}</p>`;
-                    }
-                    if (slider.button_text && slider.button_link) {
-                        captionHTML += `<a href="${slider.button_link}" class="btn btn-gradient btn-lg">${slider.button_text}</a>`;
-                    }
-
+                    if (slider.title) captionHTML += `<h1 class="display-3">${slider.title}</h1>`;
+                    if (slider.description) captionHTML += `<p class="lead my-4">${slider.description}</p>`;
+                    if (slider.button_text && slider.button_link) captionHTML += `<a href="${slider.button_link}" class="btn btn-gradient btn-lg">${slider.button_text}</a>`;
                     captionDiv.innerHTML = captionHTML;
                     carouselItem.appendChild(captionDiv);
                     innerContainer.appendChild(carouselItem);
                 });
                 const heroSlider = document.getElementById('heroSlider');
-                if (heroSlider) {
-                    new bootstrap.Carousel(heroSlider, {
-                        interval: 5000,
-                        ride: 'carousel',
-                        pause: false
-                    });
-                }
+                if (heroSlider) new bootstrap.Carousel(heroSlider, { interval: 5000, ride: 'carousel', pause: false });
             }
 
             async function loadCourses() {
-                const {
-                    data,
-                    error
-                } = await supabase.from('courses').select('*').order('created_at', {
-                    ascending: false
-                }).limit(4);
-                if (error) {
-                    console.error('Lỗi khi tải khóa học:', error.message);
-                    return;
-                }
-                if (data && data.length > 0) {
-                    renderCourses(data);
-                }
+                const { data, error } = await supabase.from('courses').select('*').order('created_at', { ascending: false }).limit(4);
+                if (error) { console.error('Lỗi khi tải khóa học:', error.message); return; }
+                if (data && data.length > 0) renderCourses(data);
             }
 
             function renderCourses(courses) {
@@ -2459,30 +2297,17 @@ async function trackAnonymousVisitor(supabase) {
                 courses.forEach(course => {
                     const formatPrice = (price) => {
                         if (price === null || price === undefined) return '';
-                        return price.toLocaleString('vi-VN', {
-                            style: 'currency',
-                            currency: 'VND'
-                        });
+                        return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
                     };
-
                     const salePriceText = course.price_sale > 0 ? formatPrice(course.price_sale) : 'Miễn phí';
                     const salePriceClass = course.price_sale > 0 ? 'sale-price' : 'sale-price text-success fw-bold';
-                    const originalPriceDisplay = course.price_original && course.price_sale > 0 && course.price_original > course.price_sale ?
-                        `<span class="original-price">${formatPrice(course.price_original)}</span>` :
-                        '';
-
+                    const originalPriceDisplay = course.price_original && course.price_sale > 0 && course.price_original > course.price_sale ? `<span class="original-price">${formatPrice(course.price_original)}</span>` : '';
                     let typeIconClass = 'fas fa-tag';
                     if (course.course_type) {
                         switch (course.course_type.toLowerCase()) {
-                            case 'miễn phí':
-                                typeIconClass = 'fas fa-gift';
-                                break;
-                            case 'cơ bản':
-                                typeIconClass = 'fas fa-layer-group';
-                                break;
-                            case 'nâng cao':
-                                typeIconClass = 'fas fa-rocket';
-                                break;
+                            case 'miễn phí': typeIconClass = 'fas fa-gift'; break;
+                            case 'cơ bản': typeIconClass = 'fas fa-layer-group'; break;
+                            case 'nâng cao': typeIconClass = 'fas fa-rocket'; break;
                         }
                     }
                     const courseCardHTML = `
@@ -2498,7 +2323,6 @@ async function trackAnonymousVisitor(supabase) {
                                         <span class="info-item"><i class="${typeIconClass}"></i> ${course.course_type || 'Loại'}</span>
                                     </div>
                                     <h3 class="course-card-title"><a href="${course.course_link || '#'}">${course.title || 'Tên khóa học'}</a></h3>
-                                    
                                     <div class="mt-auto pt-3 border-top">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <span class="fw-bold text-secondary" style="font-size: 0.9rem;">Giá:</span>
@@ -2520,28 +2344,13 @@ async function trackAnonymousVisitor(supabase) {
             const testimonialsSlider = new Swiper('.testimonials-slider', {
                 speed: 600,
                 loop: true,
-                autoplay: {
-                    delay: 5000,
-                    disableOnInteraction: false
-                },
+                autoplay: { delay: 5000, disableOnInteraction: false },
                 slidesPerView: 1,
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true
-                },
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev'
-                },
+                pagination: { el: '.swiper-pagination', clickable: true },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
                 breakpoints: {
-                    768: {
-                        slidesPerView: 2,
-                        spaceBetween: 20
-                    },
-                    992: {
-                        slidesPerView: 3,
-                        spaceBetween: 30
-                    }
+                    768: { slidesPerView: 2, spaceBetween: 20 },
+                    992: { slidesPerView: 3, spaceBetween: 30 }
                 }
             });
 
@@ -2552,9 +2361,7 @@ async function trackAnonymousVisitor(supabase) {
                         observer.unobserve(entry.target);
                     }
                 });
-            }, {
-                threshold: 0.1
-            });
+            }, { threshold: 0.1 });
 
             function initializeScrollAnimations() {
                 const scrollElements = document.querySelectorAll('.section-title, .section-subtitle, .service-item, .course-card, .testimonial-card, .central-hand-image');
@@ -2565,12 +2372,7 @@ async function trackAnonymousVisitor(supabase) {
             }
 
             async function initializePage() {
-                await Promise.all([
-                    loadWebsiteSettings(),
-                    loadSliders(),
-                    loadCourses()
-                ]);
-
+                await Promise.all([ loadWebsiteSettings(), loadSliders(), loadCourses() ]);
                 setTimeout(initializeScrollAnimations, 100);
             }
 
@@ -2585,21 +2387,12 @@ async function trackAnonymousVisitor(supabase) {
                     messengerWidget.classList.add('collapsed');
                     sessionStorage.setItem('messengerCollapsed', 'true');
                 };
-
                 const expandWidget = () => {
                     messengerWidget.classList.remove('collapsed');
                     sessionStorage.removeItem('messengerCollapsed');
                 };
-
-                if (sessionStorage.getItem('messengerCollapsed') === 'true') {
-                    messengerWidget.classList.add('collapsed');
-                }
-
-                closeMessengerBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    collapseWidget();
-                });
-
+                if (sessionStorage.getItem('messengerCollapsed') === 'true') collapseWidget();
+                closeMessengerBtn.addEventListener('click', (e) => { e.stopPropagation(); collapseWidget(); });
                 messengerFabIcon.addEventListener('click', (e) => {
                     if (messengerWidget.classList.contains('collapsed')) {
                         e.preventDefault();
@@ -2630,24 +2423,10 @@ async function trackAnonymousVisitor(supabase) {
                         sessionStorage.setItem('promoShown', 'true');
                     }, 1000);
                 }
-
-                const closePopup = () => {
-                    promotionPopup.classList.remove('show');
-                };
-
+                const closePopup = () => { promotionPopup.classList.remove('show'); };
                 closePromoPopup.addEventListener('click', closePopup);
-
-                promotionPopup.addEventListener('click', (event) => {
-                    if (event.target === promotionPopup) {
-                        closePopup();
-                    }
-                });
-
-                document.addEventListener('keydown', (event) => {
-                    if (event.key === 'Escape' && promotionPopup.classList.contains('show')) {
-                        closePopup();
-                    }
-                });
+                promotionPopup.addEventListener('click', (event) => { if (event.target === promotionPopup) closePopup(); });
+                document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && promotionPopup.classList.contains('show')) closePopup(); });
             }
         });
     </script>
