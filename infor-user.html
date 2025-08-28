@@ -359,33 +359,50 @@
         }
         .toast-container { z-index: 1100; }
         .toast-body { font-weight: 500; }
-        #avatar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-            gap: 1rem;
-            max-height: 400px;
-            overflow-y: auto;
-            padding: 0.5rem;
-        }
-        .avatar-option {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 4px solid transparent;
-            transition: all 0.3s ease;
+
+        /* CSS ĐÃ SỬA CHO TÍNH NĂNG UPLOAD */
+        .avatar-upload-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            border: 2px dashed var(--border-color);
+            border-radius: 0.75rem;
             background-color: var(--bg-off-white);
         }
-        .avatar-option:hover {
-            transform: scale(1.05);
-            border-color: rgba(155, 73, 242, 0.5);
+        #avatar-upload-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--border-color);
+            background-color: var(--bg-white);
         }
-        .avatar-option.selected {
-            border-color: var(--primary-purple);
-            box-shadow: 0 0 15px rgba(155, 73, 242, 0.5);
-            transform: scale(1.05);
+        .avatar-upload-controls {
+            text-align: center;
         }
-
+        .avatar-upload-controls p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        .btn-upload {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-upload:hover {
+            background-color: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+        
         .saved-document-list { list-style: none; padding: 0; }
         .saved-document-item {
             display: flex;
@@ -620,7 +637,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="test.html">
+                            <a class="nav-link" href="#">
                                 <i class="fas fa-graduation-cap me-2"></i>Khoá học
                             </a>
                         </li>
@@ -861,21 +878,23 @@
         </div>
     </footer>
 
-    <!-- Modal để chọn Avatar -->
+    <!-- Modal để chọn Avatar (ĐÃ ĐƠN GIẢN HÓA) -->
     <div class="modal fade" id="avatarSelectionModal" tabindex="-1" aria-labelledby="avatarSelectionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="avatarSelectionModalLabel">Chọn ảnh đại diện của bạn</h5>
+                    <h5 class="modal-title" id="avatarSelectionModalLabel">Cập nhật ảnh đại diện</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="text-secondary text-center mb-3">Hãy chọn một ảnh đại diện thật xinh nhé!</p>
-                    <div id="avatar-grid">
-                        <div class="text-center w-100">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
+                    <div class="avatar-upload-section">
+                        <img src="https://placehold.co/120x120/E5E7EB/A0AEC0?text=Preview" alt="Avatar Preview" id="avatar-upload-preview">
+                        <div class="avatar-upload-controls">
+                            <p>Chọn ảnh mới từ thiết bị của bạn (dưới 2MB).</p>
+                            <label for="avatar-upload-input" class="btn-upload">
+                                <i class="fas fa-upload me-2"></i>Chọn tệp...
+                            </label>
+                            <input type="file" id="avatar-upload-input" accept="image/png, image/jpeg" style="display: none;">
                         </div>
                     </div>
                 </div>
@@ -915,7 +934,7 @@
         </div>
     </div>
 
-    <!-- THÊM MỚI: Modal Xác nhận Xóa -->
+    <!-- Modal Xác nhận Xóa -->
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -1075,10 +1094,14 @@
             const profilePhoneInput = document.getElementById('profilePhone');
             const profileEmailInput = document.getElementById('profileEmail');
             const contentPanels = document.querySelectorAll('.profile-content-panel');
-            const avatarGrid = document.getElementById('avatar-grid');
+            
+            // Avatar Modal Elements
             const saveAvatarButton = document.getElementById('save-avatar-button');
             const avatarSelectionModalEl = document.getElementById('avatarSelectionModal');
-            let selectedAvatarUrl = null;
+            const avatarUploadInput = document.getElementById('avatar-upload-input');
+            const avatarUploadPreview = document.getElementById('avatar-upload-preview');
+            let uploadedAvatarFile = null;
+
             const myDocumentsContent = document.getElementById('my-documents-content');
             const pdfViewerModalEl = document.getElementById('pdfViewerModal');
             const pdfIframe = document.getElementById('pdf-iframe');
@@ -1148,7 +1171,7 @@
                             </ul>
                         </div>`;
                     document.getElementById('header-logout-button').addEventListener('click', handleLogout);
-                    updateAllNotifications(); // Cập nhật tất cả thông báo
+                    updateAllNotifications();
                 } else {
                     const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
                     window.location.replace(baseUrl + 'index.html');
@@ -1193,16 +1216,14 @@
 
             // ======================= AUTHENTICATION & DATA HANDLING =======================
             
-            // SỬA: Cập nhật hàm đăng xuất
             async function handleLogout(event) {
                 if(event) event.preventDefault();
                 showToast('Đang đăng xuất, vui lòng chờ...', 'info');
-                await leavePresenceChannel(); // Rời kênh online trước
+                await leavePresenceChannel(); 
                 const { error } = await supabase.auth.signOut();
                 if (error) {
                     showToast(`Lỗi khi đăng xuất: ${error.message}`, 'danger');
                 }
-                // onAuthStateChange sẽ tự động xử lý chuyển hướng
             }
 
             async function handleUpdateProfile(e) {
@@ -1272,15 +1293,99 @@
                 submitButton.disabled = false;
                 submitButton.innerHTML = originalButtonText;
             }
+
+            // ======================= AVATAR HANDLING LOGIC (SIMPLIFIED) =======================
+
+            function optimizeImage(file) {
+                return new Promise((resolve, reject) => {
+                    const MAX_WIDTH = 256;
+                    const MAX_HEIGHT = 256;
+                    const reader = new FileReader();
+
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            let width = img.width;
+                            let height = img.height;
+
+                            if (width > height) {
+                                if (width > MAX_WIDTH) {
+                                    height = Math.round((height * MAX_WIDTH) / width);
+                                    width = MAX_WIDTH;
+                                }
+                            } else {
+                                if (height > MAX_HEIGHT) {
+                                    width = Math.round((width * MAX_HEIGHT) / height);
+                                    height = MAX_HEIGHT;
+                                }
+                            }
+
+                            const canvas = document.createElement('canvas');
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            canvas.toBlob(
+                                (blob) => {
+                                    if (blob) resolve(blob);
+                                    else reject(new Error('Không thể tạo Blob từ canvas.'));
+                                }, 'image/jpeg', 0.75
+                            );
+                        };
+                        img.onerror = reject;
+                        img.src = e.target.result;
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
             
             async function handleSaveAvatar() {
-                if (!selectedAvatarUrl) { showToast('Bạn chưa chọn ảnh đại diện nào.', 'info'); return; }
-                showToast('Đang cập nhật ảnh đại diện...', 'info');
+                if (!uploadedAvatarFile) {
+                    showToast('Bạn chưa chọn tệp ảnh nào để tải lên.', 'info');
+                    return;
+                }
+
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) return;
-                const { data: updatedUser, error: userUpdateError } = await supabase.auth.updateUser({ data: { avatar_url: selectedAvatarUrl } });
-                if (userUpdateError) { showToast(`Lỗi cập nhật tài khoản: ${userUpdateError.message}`, 'danger'); return; }
-                const { error: profileUpdateError } = await supabase.from('profiles').update({ avatar_url: selectedAvatarUrl }).eq('id', user.id);
+                
+                showToast('Đang tối ưu và tải ảnh lên...', 'info');
+                
+                let finalAvatarUrl;
+                try {
+                    const optimizedBlob = await optimizeImage(uploadedAvatarFile);
+                    // SỬA ĐỔI: Đường dẫn tệp an toàn hơn
+                    const filePath = `${user.id}/${Date.now()}.jpg`;
+                    const { error: uploadError } = await supabase.storage
+                        .from('avatars')
+                        .upload(filePath, optimizedBlob, { cacheControl: '3600', upsert: true });
+
+                    if (uploadError) throw uploadError;
+
+                    const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(filePath);
+                    finalAvatarUrl = urlData.publicUrl;
+
+                } catch (error) {
+                    showToast(`Lỗi xử lý ảnh: ${error.message}`, 'danger');
+                    return;
+                }
+                
+                showToast('Đang cập nhật ảnh đại diện...', 'info');
+
+                const { data: updatedUser, error: userUpdateError } = await supabase.auth.updateUser({
+                    data: { avatar_url: finalAvatarUrl }
+                });
+
+                if (userUpdateError) {
+                    showToast(`Lỗi cập nhật tài khoản: ${userUpdateError.message}`, 'danger');
+                    return;
+                }
+
+                const { error: profileUpdateError } = await supabase.from('profiles')
+                    .update({ avatar_url: finalAvatarUrl })
+                    .eq('id', user.id);
+
                 if (profileUpdateError) {
                     showToast(`Lỗi cập nhật hồ sơ: ${profileUpdateError.message}`, 'danger');
                 } else {
@@ -1290,6 +1395,28 @@
                     const modalInstance = bootstrap.Modal.getInstance(avatarSelectionModalEl);
                     if (modalInstance) modalInstance.hide();
                 }
+            }
+
+            function handleAvatarFileSelect(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                    showToast('Chỉ chấp nhận tệp ảnh JPG hoặc PNG.', 'danger');
+                    return;
+                }
+
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast('Kích thước tệp quá lớn, vui lòng chọn ảnh dưới 2MB.', 'danger');
+                    return;
+                }
+
+                uploadedAvatarFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    avatarUploadPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
             
             async function loadWebsiteSettings() {
@@ -1302,29 +1429,8 @@
                     if (footerLogo && data.footer_logo_url) footerLogo.src = data.footer_logo_url;
                 }
             }
-            
-            function populateAvatarModal() {
-                if (!avatarGrid) return;
-                avatarGrid.innerHTML = '';
-                const avatarStyles = ['adventurer', 'avataaars', 'big-ears', 'big-smile', 'bottts', 'croodles', 'fun-emoji', 'icons', 'identicon', 'initials', 'lorelei', 'micah', 'miniavs', 'open-peeps', 'personas', 'pixel-art'];
-                const avatarSeeds = ['Felix', 'Milo', 'Luna', 'Simba', 'Zoe', 'Leo', 'Cleo', 'Rocky', 'Coco', 'Toby', 'Penny', 'Gizmo', 'Oreo', 'Tiger', 'Shadow', 'Bella'];
-                avatarSeeds.forEach(seed => {
-                    const style = avatarStyles[Math.floor(Math.random() * avatarStyles.length)];
-                    const avatarUrl = `https://api.dicebear.com/8.x/${style}/svg?seed=${seed}&radius=50`;
-                    const img = document.createElement('img');
-                    img.src = avatarUrl;
-                    img.alt = `Avatar ${seed}`;
-                    img.className = 'avatar-option';
-                    img.dataset.avatarUrl = avatarUrl;
-                    img.addEventListener('click', () => {
-                        const currentSelected = avatarGrid.querySelector('.selected');
-                        if (currentSelected) currentSelected.classList.remove('selected');
-                        img.classList.add('selected');
-                        selectedAvatarUrl = img.dataset.avatarUrl;
-                    });
-                    avatarGrid.appendChild(img);
-                });
-            }
+
+            // ======================= SAVED DOCUMENTS LOGIC =======================
 
             async function loadSavedDocuments() {
                 if (!myDocumentsContent) return;
@@ -1542,23 +1648,19 @@
 
             // ======================= INITIALIZATION =======================
             
-            // SỬA: Sử dụng onAuthStateChange để khởi tạo trang
             supabase.auth.onAuthStateChange(async (event, session) => {
                 const user = session ? session.user : null;
 
                 if (user) {
-                    // Người dùng đã đăng nhập
                     updateHeaderUI(user);
                     updateProfilePageUI(user);
                     initializeRealtimePresence(user);
 
-                    // Chỉ chạy các hàm thiết lập một lần
                     if (!document.body.dataset.initialized) {
                         document.body.dataset.initialized = "true";
                         
                         loadWebsiteSettings();
                         updateAllNotifications();
-                        populateAvatarModal();
                         setupPasswordToggles();
 
                         if (profileLogoutButton) profileLogoutButton.addEventListener('click', handleLogout);
@@ -1566,6 +1668,7 @@
                         if (updatePasswordForm) updatePasswordForm.addEventListener('submit', handleUpdatePassword);
                         if (profileNavMenu) profileNavMenu.addEventListener('click', handleNavClick);
                         if (saveAvatarButton) saveAvatarButton.addEventListener('click', handleSaveAvatar);
+                        if (avatarUploadInput) avatarUploadInput.addEventListener('change', handleAvatarFileSelect);
                         
                         confirmDeleteBtn.addEventListener('click', async function() {
                             const savedId = this.dataset.savedId;
@@ -1592,7 +1695,6 @@
                         });
                     }
                 } else {
-                    // Người dùng đã đăng xuất hoặc chưa đăng nhập
                     leavePresenceChannel();
                     const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
                     window.location.replace(baseUrl + 'index.html');
@@ -1603,4 +1705,3 @@
 </body>
 
 </html>
-
