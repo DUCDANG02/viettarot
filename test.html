@@ -403,10 +403,9 @@
         .leaderboard-footer { padding: 0.75rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; }
         .leaderboard-item.current-user { background-color: #f5f0ff; border-radius: 0.5rem; box-shadow: 0 0 0 2px var(--primary-purple); }
 
-        /* === CSS CHO NÚT TIỆN ÍCH MỚI (TỪ INDEX.HTML) === */
+        /* === CSS CHO NÚT TIỆN ÍCH CỘNG ĐỒNG === */
         .community-widget-container {
             position: fixed;
-            /* Đặt vị trí phía trên bảng xếp hạng */
             bottom: 100px; 
             right: 25px;
             z-index: 1050;
@@ -417,133 +416,56 @@
         }
 
         .community-widget-container.collapsed .community-text-bubble,
-        .community-widget-container.collapsed .community-close-btn {
-            transform: scale(0);
-            opacity: 0;
-            pointer-events: none;
-        }
+        .community-widget-container.collapsed .community-close-btn { transform: scale(0); opacity: 0; pointer-events: none; }
+        .community-widget-container.collapsed .community-text-bubble { width: 0; padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; }
+        .community-widget-container.collapsed { gap: 0; }
+        .community-widget-container.collapsed .community-fab-icon { transform: scale(0.85); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); cursor: pointer; }
+        .community-widget-container.collapsed .community-fab-icon:hover { transform: scale(1); }
+        .community-icon-wrapper { position: relative; flex-shrink: 0; }
+        .community-fab-icon { width: 60px; height: 60px; background: var(--gradient-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; text-decoration: none; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; }
+        .community-fab-icon:hover { color: white; transform: scale(1.1); box-shadow: 0 8px 25px rgba(120, 73, 242, 0.5); }
+        .community-text-bubble { background-color: var(--bg-white); padding: 12px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); color: var(--text-primary); font-weight: 500; font-size: 0.9rem; max-width: 220px; margin-bottom: 5px; animation: pop-in 0.5s 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; transform: scale(0); transform-origin: right bottom; transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease, padding 0.3s ease, margin 0.3s ease; white-space: nowrap; overflow: hidden; }
+        .community-close-btn { position: absolute; top: -5px; right: -5px; width: 26px; height: 26px; background-color: var(--text-primary); color: white; border: 2px solid white; border-radius: 50%; font-size: 16px; line-height: 22px; text-align: center; cursor: pointer; z-index: 12; transition: all 0.3s ease; padding: 0; }
+        .community-close-btn:hover { transform: scale(1.15) rotate(180deg); background-color: var(--danger-color); }
+        
+        /* === CSS CHO WIDGET FACEBOOK (MỚI) === */
+        .messenger-widget-container { position: fixed; bottom: 25px; z-index: 1050; display: flex; align-items: flex-end; gap: 15px; transition: gap 0.3s ease; }
+        .widget-left { left: 25px; flex-direction: row; }
+        .widget-left .messenger-text-bubble { transform-origin: left bottom; }
+        .widget-left .messenger-close-btn { right: auto; left: -5px; }
+        .messenger-widget-container.collapsed .messenger-text-bubble,
+        .messenger-widget-container.collapsed .messenger-close-btn { transform: scale(0); opacity: 0; pointer-events: none; }
+        .messenger-widget-container.collapsed .messenger-text-bubble { width: 0; padding: 0; margin: 0; }
+        .messenger-widget-container.collapsed { gap: 0; }
+        .messenger-widget-container.collapsed .messenger-fab-icon { transform: scale(0.85); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); cursor: pointer; }
+        .messenger-widget-container.collapsed .messenger-fab-icon:hover { transform: scale(1); }
+        .messenger-icon-wrapper { position: relative; flex-shrink: 0; }
+        .messenger-fab-icon { width: 60px; height: 60px; background: var(--gradient-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; text-decoration: none; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; }
+        .messenger-fab-icon:hover { color: white; transform: scale(1.1); box-shadow: 0 8px 25px rgba(120, 73, 242, 0.5); }
+        .messenger-text-bubble { background-color: var(--bg-white); padding: 12px 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); color: var(--text-primary); font-weight: 500; font-size: 0.9rem; max-width: 220px; margin-bottom: 5px; animation: pop-in 0.5s 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; transform: scale(0); transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease, padding 0.3s ease, margin 0.3s ease; white-space: nowrap; overflow: hidden; }
+        .messenger-close-btn { position: absolute; top: -5px; width: 26px; height: 26px; background-color: var(--text-primary); color: white; border: 2px solid white; border-radius: 50%; font-size: 16px; line-height: 22px; text-align: center; cursor: pointer; z-index: 12; transition: all 0.3s ease; padding: 0; }
+        .messenger-close-btn:hover { transform: scale(1.15) rotate(180deg); background-color: var(--danger-color); }
 
-        .community-widget-container.collapsed .community-text-bubble {
-            width: 0;
-            padding-left: 0;
-            padding-right: 0;
-            margin-left: 0;
-            margin-right: 0;
-        }
-
-        .community-widget-container.collapsed {
-            gap: 0;
-        }
-
-        .community-widget-container.collapsed .community-fab-icon {
-            transform: scale(0.85);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-        }
-
-        .community-widget-container.collapsed .community-fab-icon:hover {
-            transform: scale(1);
-        }
-
-        .community-icon-wrapper {
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .community-fab-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--gradient-primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            text-decoration: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .community-fab-icon:hover {
-            color: white;
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(120, 73, 242, 0.5);
-        }
-
-        .community-text-bubble {
-            background-color: var(--bg-white);
-            padding: 12px 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-            color: var(--text-primary);
-            font-weight: 500;
-            font-size: 0.9rem;
-            max-width: 220px;
-            margin-bottom: 5px;
-            animation: pop-in 0.5s 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
-            transform: scale(0);
-            transform-origin: right bottom;
-            transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease, padding 0.3s ease, margin 0.3s ease;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .community-close-btn {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 26px;
-            height: 26px;
-            background-color: var(--text-primary);
-            color: white;
-            border: 2px solid white;
-            border-radius: 50%;
-            font-size: 16px;
-            line-height: 22px;
-            text-align: center;
-            cursor: pointer;
-            z-index: 12;
-            transition: all 0.3s ease;
-            padding: 0;
-        }
-
-        .community-close-btn:hover {
-            transform: scale(1.15) rotate(180deg);
-            background-color: var(--danger-color);
-        }
-
-        @keyframes pop-in {
-            from { opacity: 0; transform: scale(0.5); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        @keyframes pop-in { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
 
         @media (max-width: 767.98px) {
-            .community-widget-container {
-                right: 15px;
-                bottom: 90px;
-                gap: 10px;
-            }
-            .leaderboard-widget-container {
-                right: 15px;
-                bottom: 15px;
-            }
-            .community-fab-icon, .leaderboard-fab-icon {
-                width: 55px;
-                height: 55px;
-                font-size: 24px;
-            }
-            .community-close-btn, .leaderboard-close-btn {
-                width: 24px;
-                height: 24px;
-                font-size: 14px;
-                line-height: 20px;
-            }
+            .community-widget-container { right: 15px; bottom: 90px; gap: 10px; }
+            .leaderboard-widget-container { right: 15px; bottom: 15px; }
+            .messenger-widget-container { left: 15px; bottom: 15px; gap: 10px; }
+            .community-fab-icon, .leaderboard-fab-icon, .messenger-fab-icon { width: 55px; height: 55px; font-size: 24px; }
+            .community-close-btn, .leaderboard-close-btn, .messenger-close-btn { width: 24px; height: 24px; font-size: 14px; line-height: 20px; }
         }
+        
+        /* === Hiệu ứng cờ rơi mừng Quốc Khánh (MỚI) === */
+        #flag-fall-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
+        .falling-flag { position: absolute; top: -5%; height: 0; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600"><rect fill="%23da251d" width="900" height="600"/><path fill="%23ffff00" d="M450 150l47.2 145.3h152.8l-123.6 89.8 47.2 145.3L450 440.6l-123.6 89.8 47.2-145.3-123.6-89.8h152.8z"/></svg>'); background-size: cover; background-repeat: no-repeat; animation: fall-effect linear infinite; will-change: transform, opacity; }
+        @keyframes fall-effect { 0% { transform: translateY(0) translateX(0) rotateZ(5deg); opacity: 1; } 25% { transform: translateY(25vh) translateX(20px) rotateZ(-5deg); } 50% { transform: translateY(50vh) translateX(-20px) rotateZ(5deg); } 75% { transform: translateY(75vh) translateX(20px) rotateZ(-5deg); } 100% { transform: translateY(105vh) translateX(0) rotateZ(5deg); opacity: 0; } }
     </style>
 </head>
 
 <body>
+    <div id="flag-fall-container"></div>
+
     <!-- ======================= HEADER (ĐÃ CẬP NHẬT) ======================= -->
     <header>
         <nav class="navbar navbar-expand-lg">
@@ -697,8 +619,20 @@
         <div class="footer-bottom"><div class="container text-center"><p class="mb-0">&copy; 2025 được phát triển bởi hệ thống VietTarot</p></div></div>
     </footer>
 
+    <!-- ======================= WIDGET FACEBOOK (MỚI) ======================= -->
+    <div class="messenger-widget-container widget-left" id="facebook-widget-container">
+         <div class="messenger-icon-wrapper">
+            <button class="messenger-close-btn" id="facebook-close-btn" title="Ẩn">&times;</button>
+            <a href="https://www.facebook.com/viettarotacademy/" class="messenger-fab-icon" target="_blank" title="Truy cập trang Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+        </div>
+        <div class="messenger-text-bubble">
+            <p class="mb-0">Liên hệ hỗ trợ</p>
+        </div>
+    </div>
 
-     <!-- ======================= WIDGET CỘNG ĐỒNG (MỚI) ======================= -->
+     <!-- ======================= WIDGET CỘNG ĐỒNG ======================= -->
     <div class="community-widget-container" id="community-widget-container">
         <div class="community-text-bubble">
             <p class="mb-0">Tham gia nhóm cộng đồng</p>
@@ -710,7 +644,6 @@
             </a>
         </div>
     </div>
-
 
     <!-- ======================= WIDGET BẢNG XẾP HẠNG ======================= -->
     <div class="leaderboard-widget-container collapsed" id="leaderboard-widget-container">
@@ -737,7 +670,7 @@
    
 
     <!-- ======================= CÁC MODALS ======================= -->
-    <!-- Modal Login/Register (Mới) -->
+    <!-- Modal Login/Register -->
     <div id="fullscreen-success-overlay" class="fullscreen-overlay">
         <div class="success-notification">
             <div class="success-icon"><i class="fas fa-check-circle"></i></div>
@@ -880,9 +813,6 @@
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrem50ZXViY3dsYWRxa3h5YXFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjcwODksImV4cCI6MjA2NzgwMzA4OX0.7P4-H_ujbLG2KLEFiVtlGIs8o515OkqNw9MVPDF7sCY';
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
-            // =====================================================================
-            // ===== BẮT ĐẦU: CODE THEO DÕI KHÁCH TRUY CẬP (ĐÃ THÊM) =====
-            // =====================================================================
             async function trackAnonymousVisitor(supabase) {
                 const VISITOR_ID_KEY = 'anonymous_visitor_id';
                 let visitorId = localStorage.getItem(VISITOR_ID_KEY);
@@ -907,9 +837,6 @@
                 }
             }
             trackAnonymousVisitor(supabase);
-            // =====================================================================
-            // ===== KẾT THÚC: CODE THEO DÕI KHÁCH TRUY CẬP =====
-            // =====================================================================
 
             // --- Các biến và DOM elements cho Auth & UI chung ---
             const authContainer = document.getElementById('auth-container');
@@ -922,7 +849,7 @@
             let currentUser = null;
             let currentUserRole = 'guest';
 
-            // --- Các hàm xử lý Auth & UI chung (ĐÃ THÊM/CẬP NHẬT) ---
+            // --- Các hàm xử lý Auth & UI chung ---
             function initializeRealtimePresence(user) {
                 if (presenceChannel && presenceChannel.state === 'joined') return;
                 const userChannel = supabase.channel('online-users', { config: { presence: { key: user.id } } });
@@ -1089,50 +1016,21 @@
             let currentQuiz, currentQuestionIndex, userAnswers, mainTimerInterval, quizEndTime;
             let tabSwitchCount = 0, tabSwitchWarningModal, autoSubmitModal, notificationModal;
             const MAX_TAB_SWITCH = 3;
-
-            // =====================================================================
-            // ===== BẮT ĐẦU: CÁC HÀM LƯU VÀ TẢI TRẠNG THÁI BÀI LÀM (ĐÃ THÊM) =====
-            // =====================================================================
             
-            /**
-             * Lưu trạng thái hiện tại của bài kiểm tra vào sessionStorage.
-             * Bao gồm: dữ liệu bài kiểm tra, câu hỏi hiện tại, câu trả lời của người dùng, và thời gian kết thúc.
-             */
             function saveQuizState() {
-                if (!currentQuiz) return; // Không lưu nếu không có bài kiểm tra nào đang hoạt động
-                const state = {
-                    currentQuiz,
-                    currentQuestionIndex,
-                    userAnswers,
-                    quizEndTime
-                };
+                if (!currentQuiz) return;
+                const state = { currentQuiz, currentQuestionIndex, userAnswers, quizEndTime };
                 sessionStorage.setItem('quizState', JSON.stringify(state));
             }
 
-            /**
-             * Tải trạng thái bài kiểm tra từ sessionStorage.
-             * @returns {object|null} Trả về đối tượng trạng thái nếu có, ngược lại trả về null.
-             */
             function loadQuizState() {
                 const savedState = sessionStorage.getItem('quizState');
-                if (savedState) {
-                    return JSON.parse(savedState);
-                }
-                return null;
+                return savedState ? JSON.parse(savedState) : null;
             }
 
-            /**
-             * Xóa trạng thái bài kiểm tra đã lưu khỏi sessionStorage.
-             * Được gọi khi người dùng nộp bài hoặc bắt đầu lại.
-             */
             function clearQuizState() {
                 sessionStorage.removeItem('quizState');
             }
-
-            // =====================================================================
-            // ===== KẾT THÚC: CÁC HÀM LƯU VÀ TẢI TRẠNG THÁI BÀI LÀM =====
-            // =====================================================================
-
 
             function showNotification(title, message) {
                 document.getElementById('notificationModalLabel').innerText = title;
@@ -1203,7 +1101,7 @@
                     }
                     if (target.closest('#prev-btn')) showPreviousQuestion();
                     if (target.closest('#next-btn')) handleNextButton();
-                    if (target.closest('#restart-btn')) { clearQuizState(); resultScreen.classList.add('d-none'); topicScreen.classList.remove('d-none'); renderTopicSelection(); } // Đã thêm clearQuizState()
+                    if (target.closest('#restart-btn')) { clearQuizState(); resultScreen.classList.add('d-none'); topicScreen.classList.remove('d-none'); renderTopicSelection(); }
                     if (target.closest('#review-answers-btn')) showReviewModal();
                     if (target.closest('#confirm-submit-btn')) { bootstrap.Modal.getInstance(document.getElementById('confirmSubmitModal'))?.hide(); await showResult(); }
                     
@@ -1211,10 +1109,6 @@
                     const leaderboardWidget = document.getElementById('leaderboard-widget-container');
                     if (target.closest('.leaderboard-fab-icon')) leaderboardWidget.classList.remove('collapsed');
                     if (target.closest('.leaderboard-close-btn')) leaderboardWidget.classList.add('collapsed');
-
-                    const communityWidget = document.getElementById('community-widget-container');
-                    if (target.closest('.community-fab-icon')) { if (communityWidget.classList.contains('collapsed')) { e.preventDefault(); communityWidget.classList.remove('collapsed'); sessionStorage.removeItem('communityCollapsed'); } }
-                    if (target.closest('#community-close-btn')) { e.stopPropagation(); communityWidget.classList.add('collapsed'); sessionStorage.setItem('communityCollapsed', 'true'); }
                 });
             }
 
@@ -1297,38 +1191,28 @@
                 }
             }
 
-            function startQuiz(quizData, isRestoring = false) { // Thêm tham số isRestoring
+            function startQuiz(quizData, isRestoring = false) {
                 currentQuiz = quizData;
-                
-                // Chỉ khởi tạo lại nếu không phải là khôi phục
                 if (!isRestoring) {
                     currentQuestionIndex = 0;
                     userAnswers = new Array(currentQuiz.questions.length).fill(null);
                     quizEndTime = new Date().getTime() + currentQuiz.duration_seconds * 1000;
                 }
-                
                 quizListScreen.classList.add('d-none');
                 resultScreen.classList.add('d-none');
-                topicScreen.classList.add('d-none'); // Đảm bảo màn hình topic cũng bị ẩn
+                topicScreen.classList.add('d-none');
                 quizScreen.classList.remove('d-none');
-
                 document.getElementById('quiz-title').innerText = currentQuiz.title;
                 document.getElementById('total-questions-indicator').innerText = currentQuiz.questions.length;
-                
-                if (!isRestoring) {
-                    tabSwitchCount = 0;
-                }
-                
+                if (!isRestoring) { tabSwitchCount = 0; }
                 document.addEventListener('visibilitychange', handleVisibilityChange);
-                
                 renderTracker();
                 showQuestion();
                 startMainTimer();
-                saveQuizState(); // Lưu trạng thái ngay khi bắt đầu hoặc khôi phục
+                saveQuizState();
             }
             
             function startMainTimer() {
-                // quizEndTime đã được thiết lập trong startQuiz hoặc loadQuizState
                 clearInterval(mainTimerInterval);
                 const updateTimer = async () => {
                     const timeLeft = Math.round((quizEndTime - new Date().getTime()) / 1000);
@@ -1386,7 +1270,7 @@
                     });
                 }
                 updateUIComponents();
-                saveQuizState(); // Lưu trạng thái mỗi khi chuyển câu hỏi
+                saveQuizState();
             }
             
             function saveAnswer(e) {
@@ -1399,7 +1283,7 @@
                     userAnswers[currentQuestionIndex] = target.value;
                 }
                 updateTracker();
-                saveQuizState(); // Lưu trạng thái ngay khi người dùng trả lời
+                saveQuizState();
             }
 
             function updateUIComponents() {
@@ -1418,169 +1302,62 @@
             function showPreviousQuestion() { if (currentQuestionIndex > 0) { currentQuestionIndex--; showQuestion(); } }
             function goToQuestion(index) { currentQuestionIndex = index; showQuestion(); }
 
-            // =====================================================================
-            // ===== BẮT ĐẦU: HÀM HIỂN THỊ KẾT QUẢ ĐÃ SỬA LỖI =====
-            // =====================================================================
             async function showResult(isAutoSubmittedByCheat = false, isAutoSubmittedByTime = false) {
-                // 1. Guard clause: Ngăn hàm chạy lại nếu đã ở màn hình kết quả
-                if (!resultScreen.classList.contains('d-none')) {
-                    return;
-                }
-
-                // 2. Dừng ngay lập tức mọi hoạt động của bài thi
+                if (!resultScreen.classList.contains('d-none')) return;
                 clearInterval(mainTimerInterval);
                 document.removeEventListener('visibilitychange', handleVisibilityChange);
-
-                // 3. Ẩn các modal đang mở để tránh xung đột
                 bootstrap.Modal.getInstance(document.getElementById('confirmSubmitModal'))?.hide();
                 bootstrap.Modal.getInstance(document.getElementById('tabSwitchWarningModal'))?.hide();
-
-                // 4. Tính điểm
-                let score = 0;
-                let multipleChoiceCount = 0;
+                let score = 0, multipleChoiceCount = 0;
                 try {
                     currentQuiz.questions.forEach((q, i) => {
                         if (q.question_type === 'multiple_choice') {
                             multipleChoiceCount++;
                             const correctAnswer = q.quiz_answers.find(a => a.is_correct);
-                            if (correctAnswer && userAnswers[i] === correctAnswer.id) {
-                                score++;
-                            }
+                            if (correctAnswer && userAnswers[i] === correctAnswer.id) score++;
                         }
                     });
-                } catch (error) {
-                    console.error("Lỗi khi tính điểm:", error);
-                    // Xử lý nếu có lỗi (ví dụ: dữ liệu bài thi không hợp lệ)
-                }
-
-                // 5. Lưu kết quả (fire-and-forget, không await để không chặn UI)
-                if (currentUser) {
-                    saveQuizAttempt(score, multipleChoiceCount);
-                }
-
-                // 6. Chuyển sang màn hình kết quả (quan trọng nhất)
+                } catch (error) { console.error("Lỗi khi tính điểm:", error); }
+                if (currentUser) saveQuizAttempt(score, multipleChoiceCount);
                 quizScreen.classList.add('d-none');
                 resultScreen.classList.remove('d-none');
-
-                // 7. Điền thông tin vào màn hình kết quả
                 document.getElementById('score').innerText = score;
                 document.getElementById('total-score').innerText = multipleChoiceCount;
-
                 const percentage = multipleChoiceCount > 0 ? (score / multipleChoiceCount) * 100 : 100;
-                const resultIconEl = document.getElementById('result-icon');
-                const resultMessageEl = document.getElementById('result-message');
-                resultMessageEl.className = 'lead fw-bold mb-3'; // Reset class
-
-                // 8. Hiển thị thông báo phù hợp
+                const resultIconEl = document.getElementById('result-icon'), resultMessageEl = document.getElementById('result-message');
+                resultMessageEl.className = 'lead fw-bold mb-3';
                 if (isAutoSubmittedByCheat) {
                     resultIconEl.innerHTML = '<i class="fas fa-gavel text-danger"></i>';
                     resultMessageEl.innerText = "Bài thi đã nộp tự động do vi phạm quy chế!";
                     resultMessageEl.classList.add('text-danger');
-                    // Hiển thị modal xử phạt chồng lên màn hình kết quả
                     autoSubmitModal.show();
                     setTimeout(() => bootstrap.Modal.getInstance(document.getElementById('autoSubmitModal'))?.hide(), 3000);
                 } else if (isAutoSubmittedByTime) {
                     resultIconEl.innerHTML = '<i class="fas fa-clock text-info"></i>';
                     resultMessageEl.innerText = "Hết giờ! Bài thi của bạn đã được nộp tự động.";
                 } else {
-                    if (percentage >= 80) {
-                        resultIconEl.innerHTML = '<i class="fas fa-trophy"></i>';
-                        resultMessageEl.innerText = "Xuất sắc! Bạn là một chuyên gia thực thụ!";
-                    } else if (percentage >= 50) {
-                        resultIconEl.innerHTML = '<i class="fas fa-thumbs-up text-success"></i>';
-                        resultMessageEl.innerText = "Khá lắm! Kiến thức nền tảng của bạn rất tốt.";
-                    } else {
-                        resultIconEl.innerHTML = '<i class="fas fa-face-sad-tear"></i>';
-                        resultMessageEl.innerText = "Cần cố gắng hơn! Hãy tiếp tục học hỏi nhé.";
-                    }
+                    resultIconEl.innerHTML = percentage >= 80 ? '<i class="fas fa-trophy"></i>' : (percentage >= 50 ? '<i class="fas fa-thumbs-up text-success"></i>' : '<i class="fas fa-face-sad-tear"></i>');
+                    resultMessageEl.innerText = percentage >= 80 ? "Xuất sắc! Bạn là một chuyên gia thực thụ!" : (percentage >= 50 ? "Khá lắm! Kiến thức nền tảng của bạn rất tốt." : "Cần cố gắng hơn! Hãy tiếp tục học hỏi nhé.");
                 }
-
-                // 9. Dọn dẹp trạng thái bài làm ở bước cuối cùng
                 clearQuizState();
             }
-            // =====================================================================
-            // ===== KẾT THÚC: HÀM HIỂN THỊ KẾT QUẢ ĐÃ SỬA LỖI =====
-            // =====================================================================
-
 
             async function saveQuizAttempt(score, totalPossibleScore) {
                 if (!currentUser) return;
                 try {
-                    const { count } = await supabase
-                        .from('quiz_attempts')
-                        .select('id', { count: 'exact' })
-                        .eq('user_id', currentUser.id)
-                        .eq('quiz_id', currentQuiz.id);
-
-                    if (count > 0) {
-                        console.log("Bài làm đã tồn tại. Sẽ không lưu kết quả mới.");
-                        return;
-                    }
-
-                    const { data: oldProfile, error: profileError } = await supabase
-                        .from('profiles')
-                        .select('total_quiz_score')
-                        .eq('id', currentUser.id)
-                        .single();
-
-                    if (profileError) {
-                        console.error('Lỗi khi lấy điểm cũ:', profileError);
-                    }
-                    const oldTotalScore = oldProfile ? oldProfile.total_quiz_score : 0;
-
-                    const { data: attemptData, error: attemptError } = await supabase
-                        .from('quiz_attempts')
-                        .insert({ 
-                            user_id: currentUser.id, 
-                            quiz_id: currentQuiz.id, 
-                            completed_at: new Date().toISOString(), 
-                            score, 
-                            total_possible_score: totalPossibleScore 
-                        })
-                        .select()
-                        .single();
-
-                    if (attemptError) {
-                        console.error('Lỗi khi lưu kết quả bài làm:', attemptError);
-                        showNotification('Lỗi', 'Không thể lưu kết quả bài làm.'); 
-                        return; 
-                    }
-
-                    const answersToSave = userAnswers
-                        .map((answer, index) => ({ 
-                            attempt_id: attemptData.id, 
-                            question_id: currentQuiz.questions[index].id, 
-                            selected_answer_id: currentQuiz.questions[index].question_type === 'multiple_choice' ? answer : null, 
-                            essay_answer_text: currentQuiz.questions[index].question_type === 'essay' ? answer : null 
-                        }))
-                        .filter(a => a.selected_answer_id !== null || (a.essay_answer_text && a.essay_answer_text.trim() !== ''));
-
-                    if (answersToSave.length > 0) {
-                        const { error: answerError } = await supabase.from('quiz_attempt_answers').insert(answersToSave);
-                        if(answerError){
-                             console.error('Lỗi khi lưu chi tiết câu trả lời:', answerError);
-                        }
-                    }
-                    
-                    const newTotalScore = (oldTotalScore || 0) + score;
-                    const { error: rpcError } = await supabase
-                        .from('profiles')
-                        .update({ total_quiz_score: newTotalScore })
-                        .eq('id', currentUser.id);
-
-                    if (rpcError) {
-                        console.error('Lỗi khi cập nhật tổng điểm:', rpcError);
-                        showNotification('Lỗi', 'Không thể cập nhật tổng điểm của bạn.');
-                    } else {
-                        await renderLeaderboard();
-                    }
-
-                } catch (error) { 
-                    console.error('Lỗi hệ thống khi lưu kết quả:', error);
-                    showNotification('Lỗi Hệ Thống', 'Đã có lỗi xảy ra khi lưu kết quả.'); 
-                }
+                    const { count } = await supabase.from('quiz_attempts').select('id', { count: 'exact' }).eq('user_id', currentUser.id).eq('quiz_id', currentQuiz.id);
+                    if (count > 0) { console.log("Bài làm đã tồn tại."); return; }
+                    const { data: oldProfile, error: profileError } = await supabase.from('profiles').select('total_quiz_score').eq('id', currentUser.id).single();
+                    if (profileError) console.error('Lỗi khi lấy điểm cũ:', profileError);
+                    const { data: attemptData, error: attemptError } = await supabase.from('quiz_attempts').insert({ user_id: currentUser.id, quiz_id: currentQuiz.id, completed_at: new Date().toISOString(), score, total_possible_score: totalPossibleScore }).select().single();
+                    if (attemptError) { console.error('Lỗi khi lưu kết quả:', attemptError); showNotification('Lỗi', 'Không thể lưu kết quả.'); return; }
+                    const answersToSave = userAnswers.map((answer, index) => ({ attempt_id: attemptData.id, question_id: currentQuiz.questions[index].id, selected_answer_id: currentQuiz.questions[index].question_type === 'multiple_choice' ? answer : null, essay_answer_text: currentQuiz.questions[index].question_type === 'essay' ? answer : null })).filter(a => a.selected_answer_id !== null || (a.essay_answer_text && a.essay_answer_text.trim() !== ''));
+                    if (answersToSave.length > 0) { const { error: answerError } = await supabase.from('quiz_attempt_answers').insert(answersToSave); if(answerError) console.error('Lỗi khi lưu chi tiết:', answerError); }
+                    const newTotalScore = (oldProfile ? oldProfile.total_quiz_score : 0 || 0) + score;
+                    const { error: rpcError } = await supabase.from('profiles').update({ total_quiz_score: newTotalScore }).eq('id', currentUser.id);
+                    if (rpcError) { console.error('Lỗi cập nhật điểm:', rpcError); showNotification('Lỗi', 'Không thể cập nhật tổng điểm.'); } else await renderLeaderboard();
+                } catch (error) { console.error('Lỗi hệ thống:', error); showNotification('Lỗi Hệ Thống', 'Đã có lỗi xảy ra.'); }
             }
-
 
             function showReviewModal() {
                 const modalBody = document.getElementById('review-modal-body');
@@ -1593,9 +1370,7 @@
                         content += `<div><h6 class="text-muted small">Câu trả lời của bạn:</h6><p class="fst-italic bg-light p-2 rounded">${userAnswers[index] || 'Chưa trả lời'}</p></div><div class="teacher-comment-box mt-3"><h6 class="text-muted small"><i class="fas fa-comment-dots me-2"></i>Nhận xét:</h6><textarea class="form-control" rows="2" placeholder="Giáo viên sẽ nhận xét ở đây..." disabled></textarea></div>`;
                     } else {
                         const correctAnswerId = q.quiz_answers.find(a => a.is_correct)?.id;
-                        const shuffledAnswers = [...q.quiz_answers]; 
-                        shuffledAnswers.sort((a, b) => a.id - b.id);
-                        
+                        const shuffledAnswers = [...q.quiz_answers].sort((a, b) => a.id - b.id);
                         shuffledAnswers.forEach((answer, i) => {
                             let classes = 'btn answer-option review-answer-option';
                             if (answer.id === correctAnswerId) classes += ' correct-answer';
@@ -1649,18 +1424,63 @@
                 }
             }
 
+            // === HÀM THIẾT LẬP WIDGET (MỚI) ===
+            function setupFloatingWidget(containerId, closeBtnId, storageKey) {
+                const widgetContainer = document.getElementById(containerId);
+                if (!widgetContainer) return;
+                const closeBtn = document.getElementById(closeBtnId);
+                const fabIcon = widgetContainer.querySelector('.messenger-fab-icon, .community-fab-icon');
+
+                if (closeBtn && fabIcon) {
+                    const collapseWidget = () => {
+                        widgetContainer.classList.add('collapsed');
+                        sessionStorage.setItem(storageKey, 'true');
+                    };
+                    const expandWidget = (e) => {
+                        if (widgetContainer.classList.contains('collapsed')) {
+                            e.preventDefault();
+                            widgetContainer.classList.remove('collapsed');
+                            sessionStorage.removeItem(storageKey);
+                        }
+                    };
+
+                    if (sessionStorage.getItem(storageKey) === 'true') collapseWidget();
+                    closeBtn.addEventListener('click', (e) => { e.stopPropagation(); collapseWidget(); });
+                    fabIcon.addEventListener('click', expandWidget);
+                }
+            }
+
+            // === HÀM TẠO HIỆU ỨNG CỜ RƠI (MỚI) ===
+            function createFallingFlags() {
+                const container = document.getElementById('flag-fall-container');
+                if (!container) return;
+                const numberOfFlags = 50; 
+                for (let i = 0; i < numberOfFlags; i++) {
+                    const flag = document.createElement('div');
+                    flag.className = 'falling-flag';
+                    const size = Math.random() * 15 + 10;
+                    const duration = Math.random() * 8 + 7;
+                    const delay = Math.random() * 15;
+                    const startPosition = Math.random() * 100;
+                    flag.style.width = `${size}px`;
+                    flag.style.paddingTop = `${size * 2 / 3}px`;
+                    flag.style.left = `${startPosition}vw`;
+                    flag.style.animationDuration = `${duration}s`;
+                    flag.style.animationDelay = `${delay}s`;
+                    container.appendChild(flag);
+                }
+            }
+
             async function main() {
                 tabSwitchWarningModal = new bootstrap.Modal(document.getElementById('tabSwitchWarningModal'));
                 autoSubmitModal = new bootstrap.Modal(document.getElementById('autoSubmitModal'));
                 notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
 
-                // Lấy trạng thái đăng nhập ban đầu
                 const { data: { session } } = await supabase.auth.getSession();
                 updateUI(session ? session.user : null);
                 await fetchUserProfile(session ? session.user : null);
                 if (session?.user) initializeRealtimePresence(session.user);
                 
-                // Lắng nghe thay đổi trạng thái đăng nhập
                 supabase.auth.onAuthStateChange(async (_event, session) => {
                     const wasLoggedIn = !!currentUser;
                     const isLoggedIn = !!(session?.user);
@@ -1674,37 +1494,29 @@
                 });
                 
                 setupEventListeners();
-                const communityWidget = document.getElementById('community-widget-container');
-                if (sessionStorage.getItem('communityCollapsed') === 'true') communityWidget.classList.add('collapsed');
+                
+                // Thiết lập các widget
+                setupFloatingWidget('community-widget-container', 'community-close-btn', 'communityCollapsed');
+                setupFloatingWidget('facebook-widget-container', 'facebook-close-btn', 'facebookWidgetCollapsed');
 
-                // =====================================================================
-                // ===== BẮT ĐẦU: LOGIC KHÔI PHỤC TRẠNG THÁI BÀI LÀM (ĐÃ THÊM) =====
-                // =====================================================================
                 const savedState = loadQuizState();
                 if (savedState && savedState.currentQuiz) {
-                    // Nếu có bài làm đang dang dở, khôi phục lại
                     currentQuiz = savedState.currentQuiz;
                     currentQuestionIndex = savedState.currentQuestionIndex;
                     userAnswers = savedState.userAnswers;
                     quizEndTime = savedState.quizEndTime;
-
                     if (new Date().getTime() > quizEndTime) {
-                        // Nếu hết giờ trong lúc người dùng thoát ra
                         await showResult(false, true);
                     } else {
-                        // Khôi phục lại giao diện làm bài
                         startQuiz(currentQuiz, true);
                     }
                 } else {
-                    // Nếu không, hiển thị màn hình chọn chủ đề như bình thường
                     await renderTopicSelection();
                 }
-                // =====================================================================
-                // ===== KẾT THÚC: LOGIC KHÔI PHỤC TRẠNG THÁI BÀI LÀM =====
-                // =====================================================================
 
                 await renderLeaderboard();
                 await loadWebsiteSettings();
+                createFallingFlags(); // Khởi chạy hiệu ứng cờ rơi
             }
 
             main();
