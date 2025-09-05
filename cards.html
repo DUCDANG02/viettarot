@@ -16,7 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* General Body Styles (can be moved to a global CSS if preferred) */
+        /* CSS giữ nguyên như cũ, không thay đổi */
         :root {
             --primary-blue: #4A6CF3;
             --primary-purple: #9B49F2;
@@ -36,7 +36,6 @@
             color: var(--text-primary);
         }
 
-        /* Preloader Styles */
         #preloader {
             position: fixed;
             top: 0;
@@ -86,7 +85,6 @@
             }
         }
         
-        /* Styles specific to the Cards page */
         .page-header {
             background: var(--gradient-primary);
             color: var(--bg-white);
@@ -259,7 +257,6 @@
             color: var(--text-secondary);
         }
         
-        /* Card Detail Modal Styles */
         #cardDetailModal .modal-dialog {
             max-width: 1200px;
             animation: zoomIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
@@ -309,7 +306,7 @@
             width: 26px;
             height: 26px;
             border-radius: 50%;
-            background: var(--gradient-primary) !important; /* Override bootstrap */
+            background: var(--gradient-primary) !important;
             opacity: 1;
             display: flex;
             align-items: center;
@@ -318,7 +315,7 @@
             border: 2px solid white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
-            filter: invert(1); /* Make the X icon visible */
+            filter: invert(1);
         }
         
         #cardDetailModal .btn-close:hover {
@@ -341,7 +338,7 @@
         .card-detail-content {
             max-height: 75vh;
             overflow-y: auto;
-            padding-right: 1rem; /* for scrollbar */
+            padding-right: 1rem;
         }
         
         .card-detail-title {
@@ -424,7 +421,6 @@
         .card-group-grid {
             display: grid;
             gap: 1rem;
-            /* Responsive grid columns */
             grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
         }
 
@@ -432,7 +428,6 @@
         @media (min-width: 768px) { .card-group-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); } }
         @media (min-width: 1200px) { .card-group-grid { grid-template-columns: repeat(8, 1fr); } }
         
-        /* Promotion Popup */
         .promo-popup-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -493,7 +488,6 @@
         .promo-popup-close:hover {
             background-color: rgba(0, 0, 0, 0.8);
         }
-        
     </style>
 </head>
 
@@ -530,9 +524,9 @@
                         <div class="col-lg-7 col-md-12">
                             <div class="filter-buttons" id="filter-buttons">
                                 <div class="filter-slider" id="filter-slider"></div>
-                                <button class="btn active" data-filter="tarot">Bài Tarot</button>
-                                <button class="btn" data-filter="oracle">Bài Oracle</button>
-                                <button class="btn" data-filter="lenormand">Bài Lenormand</button>
+                                <button class="btn active" data-filter="Tarot">Bài Tarot</button>
+                                <button class="btn" data-filter="Oracle">Bài Oracle</button>
+                                <button class="btn" data-filter="Lenormand">Bài Lenormand</button>
                             </div>
                         </div>
                     </div>
@@ -546,8 +540,7 @@
                 </div>
                 
                 <div id="card-grid">
-                    <!-- Card content will be rendered here by JavaScript -->
-                </div>
+                    </div>
                 
                 <div id="no-results-message">
                     <i class="fas fa-exclamation-circle fa-2x mb-3"></i>
@@ -612,131 +605,10 @@
     <script src="components.js"></script>
 
     <script>
-        // --- START: DỮ LIỆU TĨNH ---
-        const defaultCardData = {
-            card_group: 'N/A',
-            dharma_name: '',
-            card_number: 'N/A',
-            element: 'N/A',
-            polarity: 'N/A',
-            zodiac: 'N/A',
-            description_original: 'Nội dung mô tả chi tiết của lá bài đang được cập nhật.',
-            symbolism: 'Nội dung ý nghĩa biểu tượng đang được cập nhật.',
-            meaning_general: 'Nội dung ý nghĩa tổng quan đang được cập nhật.',
-            meaning_upright: 'Nội dung ý nghĩa xuôi đang được cập nhật.',
-            meaning_reversed: 'Nội dung ý nghĩa ngược đang được cập nhật.',
-            theme_love: 'Nội dung chủ đề tình yêu đang được cập nhật.',
-            theme_study: 'Nội dung chủ đề học tập đang được cập nhật.',
-            theme_career: 'Nội dung chủ đề sự nghiệp đang được cập nhật.',
-        };
-
-        const tarotCardData = [
-            // Major Arcana
-            { id: 1, name: "The Fool", dharma_name: "Kẻ Khờ", rank_order: 0, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Fool" },
-            { id: 2, name: "The Magician", dharma_name: "Pháp Sư", rank_order: 1, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Magician" },
-            { id: 3, name: "The High Priestess", dharma_name: "Nữ Tu", rank_order: 2, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=High+Priestess" },
-            { id: 4, name: "The Empress", dharma_name: "Nữ Hoàng", rank_order: 3, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Empress" },
-            { id: 5, name: "The Emperor", dharma_name: "Hoàng Đế", rank_order: 4, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Emperor" },
-            { id: 6, name: "The Hierophant", dharma_name: "Giáo Hoàng", rank_order: 5, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Hierophant" },
-            { id: 7, name: "The Lovers", dharma_name: "Người Yêu", rank_order: 6, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Lovers" },
-            { id: 8, name: "The Chariot", dharma_name: "Cỗ Xe", rank_order: 7, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Chariot" },
-            { id: 9, name: "Strength", dharma_name: "Sức Mạnh", rank_order: 8, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=Strength" },
-            { id: 10, name: "The Hermit", dharma_name: "Ẩn Sĩ", rank_order: 9, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Hermit" },
-            { id: 11, name: "Wheel of Fortune", dharma_name: "Bánh Xe Số Phận", rank_order: 10, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=Wheel+of+Fortune" },
-            { id: 12, name: "Justice", dharma_name: "Công Lý", rank_order: 11, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=Justice" },
-            { id: 13, name: "The Hanged Man", dharma_name: "Người Treo Ngược", rank_order: 12, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=Hanged+Man" },
-            { id: 14, name: "Death", dharma_name: "Cái Chết", rank_order: 13, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=Death" },
-            { id: 15, name: "Temperance", dharma_name: "Sự Điều Độ", rank_order: 14, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=Temperance" },
-            { id: 16, name: "The Devil", dharma_name: "Ác Quỷ", rank_order: 15, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Devil" },
-            { id: 17, name: "The Tower", dharma_name: "Tòa Tháp", rank_order: 16, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Tower" },
-            { id: 18, name: "The Star", dharma_name: "Ngôi Sao", rank_order: 17, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Star" },
-            { id: 19, name: "The Moon", dharma_name: "Mặt Trăng", rank_order: 18, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Moon" },
-            { id: 20, name: "The Sun", dharma_name: "Mặt Trời", rank_order: 19, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+Sun" },
-            { id: 21, name: "Judgement", dharma_name: "Sự Phán Xét", rank_order: 20, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=Judgement" },
-            { id: 22, name: "The World", dharma_name: "Thế Giới", rank_order: 21, sub_type: "major_arcana", suit: null, image_url: "https://placehold.co/300x525/A7C7E7/FFFFFF?text=The+World" },
-            { id: 23, name: "Ace of Wands", rank_order: 22, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Ace+of+Wands" },
-            { id: 24, name: "Two of Wands", rank_order: 23, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Two+of+Wands" },
-            { id: 25, name: "Three of Wands", rank_order: 24, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Three+of+Wands" },
-            { id: 26, name: "Four of Wands", rank_order: 25, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Four+of+Wands" },
-            { id: 27, name: "Five of Wands", rank_order: 26, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Five+of+Wands" },
-            { id: 28, name: "Six of Wands", rank_order: 27, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Six+of+Wands" },
-            { id: 29, name: "Seven of Wands", rank_order: 28, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Seven+of+Wands" },
-            { id: 30, name: "Eight of Wands", rank_order: 29, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Eight+of+Wands" },
-            { id: 31, name: "Nine of Wands", rank_order: 30, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Nine+of+Wands" },
-            { id: 32, name: "Ten of Wands", rank_order: 31, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Ten+of+Wands" },
-            { id: 33, name: "Page of Wands", rank_order: 32, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Page+of+Wands" },
-            { id: 34, name: "Knight of Wands", rank_order: 33, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Knight+of+Wands" },
-            { id: 35, name: "Queen of Wands", rank_order: 34, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=Queen+of+Wands" },
-            { id: 36, name: "King of Wands", rank_order: 35, sub_type: "minor_arcana", suit: "Wands", image_url: "https://placehold.co/300x525/FFDAB9/FFFFFF?text=King+of+Wands" },
-            { id: 37, name: "Ace of Cups", rank_order: 36, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Ace+of+Cups" },
-            { id: 38, name: "Two of Cups", rank_order: 37, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Two+of+Cups" },
-            { id: 39, name: "Three of Cups", rank_order: 38, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Three+of+Cups" },
-            { id: 40, name: "Four of Cups", rank_order: 39, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Four+of+Cups" },
-            { id: 41, name: "Five of Cups", rank_order: 40, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Five+of+Cups" },
-            { id: 42, name: "Six of Cups", rank_order: 41, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Six+of+Cups" },
-            { id: 43, name: "Seven of Cups", rank_order: 42, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Seven+of+Cups" },
-            { id: 44, name: "Eight of Cups", rank_order: 43, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Eight+of+Cups" },
-            { id: 45, name: "Nine of Cups", rank_order: 44, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Nine+of+Cups" },
-            { id: 46, name: "Ten of Cups", rank_order: 45, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Ten+of+Cups" },
-            { id: 47, name: "Page of Cups", rank_order: 46, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Page+of+Cups" },
-            { id: 48, name: "Knight of Cups", rank_order: 47, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Knight+of+Cups" },
-            { id: 49, name: "Queen of Cups", rank_order: 48, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=Queen+of+Cups" },
-            { id: 50, name: "King of Cups", rank_order: 49, sub_type: "minor_arcana", suit: "Cups", image_url: "https://placehold.co/300x525/ADD8E6/FFFFFF?text=King+of+Cups" },
-            { id: 51, name: "Ace of Swords", rank_order: 50, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Ace+of+Swords" },
-            { id: 52, name: "Two of Swords", rank_order: 51, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Two+of+Swords" },
-            { id: 53, name: "Three of Swords", rank_order: 52, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Three+of+Swords" },
-            { id: 54, name: "Four of Swords", rank_order: 53, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Four+of+Swords" },
-            { id: 55, name: "Five of Swords", rank_order: 54, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Five+of+Swords" },
-            { id: 56, name: "Six of Swords", rank_order: 55, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Six+of+Swords" },
-            { id: 57, name: "Seven of Swords", rank_order: 56, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Seven+of+Swords" },
-            { id: 58, name: "Eight of Swords", rank_order: 57, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Eight+of+Swords" },
-            { id: 59, name: "Nine of Swords", rank_order: 58, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Nine+of+Swords" },
-            { id: 60, name: "Ten of Swords", rank_order: 59, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Ten+of+Swords" },
-            { id: 61, name: "Page of Swords", rank_order: 60, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Page+of+Swords" },
-            { id: 62, name: "Knight of Swords", rank_order: 61, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Knight+of+Swords" },
-            { id: 63, name: "Queen of Swords", rank_order: 62, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=Queen+of+Swords" },
-            { id: 64, name: "King of Swords", rank_order: 63, sub_type: "minor_arcana", suit: "Swords", image_url: "https://placehold.co/300x525/D3D3D3/FFFFFF?text=King+of+Swords" },
-            { id: 65, name: "Ace of Pentacles", rank_order: 64, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Ace+of+Pentacles" },
-            { id: 66, name: "Two of Pentacles", rank_order: 65, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Two+of+Pentacles" },
-            { id: 67, name: "Three of Pentacles", rank_order: 66, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Three+of+Pentacles" },
-            { id: 68, name: "Four of Pentacles", rank_order: 67, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Four+of+Pentacles" },
-            { id: 69, name: "Five of Pentacles", rank_order: 68, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Five+of+Pentacles" },
-            { id: 70, name: "Six of Pentacles", rank_order: 69, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Six+of+Pentacles" },
-            { id: 71, name: "Seven of Pentacles", rank_order: 70, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Seven+of+Pentacles" },
-            { id: 72, name: "Eight of Pentacles", rank_order: 71, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Eight+of+Pentacles" },
-            { id: 73, name: "Nine of Pentacles", rank_order: 72, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Nine+of+Pentacles" },
-            { id: 74, name: "Ten of Pentacles", rank_order: 73, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Ten+of+Pentacles" },
-            { id: 75, name: "Page of Pentacles", rank_order: 74, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Page+of+Pentacles" },
-            { id: 76, name: "Knight of Pentacles", rank_order: 75, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Knight+of+Pentacles" },
-            { id: 77, name: "Queen of Pentacles", rank_order: 76, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=Queen+of+Pentacles" },
-            { id: 78, name: "King of Pentacles", rank_order: 77, sub_type: "minor_arcana", suit: "Pentacles", image_url: "https://placehold.co/300x525/90EE90/FFFFFF?text=King+of+Pentacles" },
-        ].map(card => ({...defaultCardData, ...card, card_group: 'Tarot', card_number: card.rank_order }));
-        
-        const oracleCardData = Array.from({ length: 44 }, (_, i) => ({
-            ...defaultCardData,
-            id: 101 + i,
-            name: `Oracle Card ${i + 1}`,
-            rank_order: i + 1,
-            image_url: `https://placehold.co/300x525/E6E6FA/000000?text=Oracle+${i + 1}`,
-            card_group: 'Oracle',
-        }));
-
-        const lenormandCardData = Array.from({ length: 36 }, (_, i) => ({
-            ...defaultCardData,
-            id: 201 + i,
-            name: `Lenormand Card ${i + 1}`,
-            rank_order: i + 1,
-            image_url: `https://placehold.co/300x525/F0E68C/000000?text=Lenormand+${i + 1}`,
-            card_group: 'Lenormand',
-        }));
-        // --- END: DỮ LIỆU TĨNH ---
-
-
-        // This event ensures the page logic runs AFTER components.js has initialized.
+        // ================= START: CODE ĐÃ SỬA =================
         document.addEventListener('DOMContentLoaded', initializePageLogic);
 
         function initializePageLogic() {
-            // Lấy các element trên trang
             const cardGrid = document.getElementById('card-grid');
             const searchInput = document.getElementById('search-input');
             const filterButtonsContainer = document.getElementById('filter-buttons');
@@ -747,8 +619,8 @@
 
             let allCardsData = [];
             let filteredCards = [];
+            let supabase = window.viettarotApp.supabase;
 
-            // Hàm tải dữ liệu các lá bài (từ dữ liệu tĩnh)
             async function fetchAllCards() {
                 loadingIndicator.style.display = 'block';
                 cardGrid.innerHTML = '';
@@ -756,21 +628,41 @@
 
                 const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
                 
-                // Simulate loading
-                await new Promise(resolve => setTimeout(resolve, 300));
-                
-                if (activeFilter === 'tarot') {
-                    allCardsData = tarotCardData;
-                } else if (activeFilter === 'oracle') {
-                    allCardsData = oracleCardData;
-                } else if (activeFilter === 'lenormand') {
-                    allCardsData = lenormandCardData;
-                } else {
-                    allCardsData = [];
+                // ** LOGIC MỚI: Chọn bảng dựa trên filter **
+                let tableName = '';
+                switch (activeFilter) {
+                    case 'Tarot':
+                        tableName = 'tarot_cards';
+                        break;
+                    case 'Oracle':
+                        tableName = 'oracle_cards';
+                        break;
+                    case 'Lenormand':
+                        tableName = 'lenormand_cards';
+                        break;
+                    default:
+                        console.error('Bộ bài không hợp lệ:', activeFilter);
+                        loadingIndicator.style.display = 'none';
+                        return;
                 }
-                
-                handleFilterAndSearch();
-                loadingIndicator.style.display = 'none';
+
+                try {
+                    const { data, error } = await supabase
+                        .from(tableName) // Sử dụng tên bảng động
+                        .select('*')
+                        .order('rank_order', { ascending: true });
+
+                    if (error) throw error;
+                    allCardsData = data || [];
+                } catch (error) {
+                    console.error('Lỗi khi tải dữ liệu lá bài:', error);
+                    allCardsData = [];
+                    noResultsMessage.innerHTML = '<i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p class="mb-0">Không thể tải dữ liệu. Vui lòng thử lại sau.</p>';
+                    noResultsMessage.style.display = 'block';
+                } finally {
+                    handleFilterAndSearch();
+                    loadingIndicator.style.display = 'none';
+                }
             }
             
             function createGroupHeader(title, level = 'h4', customClass = 'card-group-title') {
@@ -808,16 +700,20 @@
                 const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
                 
                 if (filteredCards.length === 0) {
-                     if (allCardsData.length > 0 || searchInput.value) { 
+                     if (searchInput.value || allCardsData.length > 0) { 
                         noResultsMessage.innerHTML = '<i class="fas fa-exclamation-circle fa-2x mb-3"></i><p class="mb-0">Không tìm thấy lá bài nào phù hợp.</p>';
+                        noResultsMessage.style.display = 'block';
+                    } else {
+                        noResultsMessage.innerHTML = '<i class="fas fa-info-circle fa-2x mb-3"></i><p class="mb-0">Chưa có dữ liệu cho bộ bài này.</p>';
                         noResultsMessage.style.display = 'block';
                     }
                     return;
                 }
 
-                if (activeFilter !== 'tarot') {
+                if (activeFilter !== 'Tarot') {
                     cardGrid.appendChild(createCardGridForGroup(filteredCards));
                 } else {
+                    // Logic hiển thị cho Tarot vẫn giữ nguyên
                     const groups = {
                         major_arcana: { title: 'Bộ Ẩn Chính', cards: [] },
                         minor_arcana: { 
@@ -882,28 +778,54 @@
             }
             
             function showCardDetails(cardId) {
-                const allDecks = [...tarotCardData, ...oracleCardData, ...lenormandCardData];
-                const card = allDecks.find(c => c.id === parseInt(cardId));
+                const card = allCardsData.find(c => c.id === parseInt(cardId));
                 if (!card) return;
 
-                const safeText = (text) => text || 'Chưa có thông tin.';
+                const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
+                const safeText = (text, fallback = 'Chưa có thông tin') => text || fallback;
+                const formatHtml = (text) => (text || '').replace(/\n/g, '<br>');
                 
+                // ** Cập nhật để hiển thị phù hợp với từng loại bài **
+                const isTarot = activeFilter === 'Tarot';
+
                 document.getElementById('modalCardImage').src = card.image_url || 'https://placehold.co/300x525/cccccc/ffffff?text=No+Image';
-                document.getElementById('modalCardName').textContent = safeText(card.name);
-                document.getElementById('modalDharmaName').textContent = safeText(card.dharma_name);
-                document.getElementById('modalCardGroup').textContent = safeText(card.card_group);
-                document.getElementById('modalCardNumber').textContent = card.card_number !== null ? card.card_number : 'N/A';
-                document.getElementById('modalCardElement').textContent = safeText(card.element);
-                document.getElementById('modalCardPolarity').textContent = safeText(card.polarity);
-                document.getElementById('modalCardZodiac').textContent = safeText(card.zodiac);
-                document.getElementById('modalDescriptionOriginal').innerHTML = safeText(card.description_original);
-                document.getElementById('modalSymbolism').innerHTML = safeText(card.symbolism);
-                document.getElementById('modalMeaningGeneral').innerHTML = safeText(card.meaning_general);
-                document.getElementById('modalMeaningUpright').innerHTML = safeText(card.meaning_upright);
-                document.getElementById('modalMeaningReversed').innerHTML = safeText(card.meaning_reversed);
-                document.getElementById('modalThemeLove').innerHTML = safeText(card.theme_love);
-                document.getElementById('modalThemeStudy').innerHTML = safeText(card.theme_study);
-                document.getElementById('modalThemeCareer').innerHTML = safeText(card.theme_career);
+                document.getElementById('modalCardName').textContent = safeText(card.name, 'Tên lá bài');
+                document.getElementById('modalDharmaName').textContent = safeText(card.dharma_name, '');
+                
+                // ** Cập nhật logic lấy tên nhóm **
+                document.getElementById('modalCardGroup').textContent = safeText(activeFilter);
+                document.getElementById('modalCardNumber').textContent = safeText(card.card_number, 'N/A');
+                
+                // Ẩn/hiện các trường thông tin chi tiết tùy theo loại bài
+                document.getElementById('modalCardElement').closest('.info-item').style.display = isTarot ? 'block' : 'none';
+                document.getElementById('modalCardPolarity').closest('.info-item').style.display = isTarot ? 'block' : 'none';
+                document.getElementById('modalCardZodiac').closest('.info-item').style.display = isTarot ? 'block' : 'none';
+
+                if(isTarot) {
+                    document.getElementById('modalCardElement').textContent = safeText(card.element);
+                    document.getElementById('modalCardPolarity').textContent = safeText(card.polarity);
+                    document.getElementById('modalCardZodiac').textContent = safeText(card.zodiac);
+                    document.getElementById('modalDescriptionOriginal').innerHTML = formatHtml(safeText(card.description_original));
+                    document.getElementById('modalSymbolism').innerHTML = formatHtml(safeText(card.symbolism));
+                    document.getElementById('modalMeaningGeneral').innerHTML = formatHtml(safeText(card.meaning_general));
+                    document.getElementById('modalMeaningUpright').innerHTML = formatHtml(safeText(card.meaning_upright));
+                    document.getElementById('modalMeaningReversed').innerHTML = formatHtml(safeText(card.meaning_reversed));
+                    document.getElementById('modalThemeLove').innerHTML = formatHtml(safeText(card.theme_love));
+                    document.getElementById('modalThemeStudy').innerHTML = formatHtml(safeText(card.theme_study));
+                    document.getElementById('modalThemeCareer').innerHTML = formatHtml(safeText(card.theme_career));
+                } else {
+                    // Với Oracle và Lenormand, sử dụng các trường đơn giản hơn
+                    document.getElementById('modalDescriptionOriginal').innerHTML = formatHtml(safeText(card.description));
+                    document.getElementById('modalMeaningGeneral').innerHTML = formatHtml(safeText(card.meaning));
+                    document.getElementById('modalSymbolism').innerHTML = `<b>Keywords:</b> ${safeText(card.keywords)}`;
+
+                    // Ẩn các trường không dùng
+                    document.getElementById('modalMeaningUpright').closest('.detail-section').style.display = 'none';
+                    document.getElementById('modalMeaningReversed').closest('.detail-section').style.display = 'none';
+                    document.getElementById('modalThemeLove').closest('.detail-section').style.display = 'none';
+                    document.getElementById('modalThemeStudy').closest('.detail-section').style.display = 'none';
+                    document.getElementById('modalThemeCareer').closest('.detail-section').style.display = 'none';
+                }
                 
                 cardDetailModal.show();
             }
@@ -936,6 +858,10 @@
             });
 
             async function initializePage() {
+                if (!supabase) {
+                    console.error("Supabase client chưa được khởi tạo.");
+                    return;
+                }
                 await fetchAllCards();
                 updateFilterSlider(filterButtonsContainer.querySelector('.btn.active'));
             }
@@ -950,6 +876,7 @@
 
             initializePage();
         }
+        // ================= END: CODE ĐÃ SỬA =================
 
         window.addEventListener('load', function() {
             const preloader = document.getElementById('preloader');
@@ -976,4 +903,3 @@
     </script>
 </body>
 </html>
-
