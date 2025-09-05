@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ Của Tôi - VietTarot</title>
+
+    <link rel="icon" type="image/png" href="https://lkznteubcwladqkxyaqo.supabase.co/storage/v1/object/public/website-assets//logotab.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+
+    <style>
+        /* CSS dùng chung đã được chuyển vào components.js */
+        /* Giữ lại các CSS chỉ dành riêng cho trang hồ sơ này */
+        :root {
+            --primary-blue: #4A6CF3;
+            --primary-purple: #9B49F2;
+            --text-primary: #1A1229;
+            --text-secondary: #5A6474;
+            --bg-white: #FFFFFF;
+            --bg-off-white: #F8F7FA;
+            --border-color: #E5E7EB;
+            --danger-color: #dc3545;
+            --success-color: #198754;
+            --gradient-primary: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-off-white);
+            color: var(--text-primary);
+        }
+
+        .profile-section { padding: 4rem 0; }
+        .profile-sidebar {
+            background-color: var(--bg-white);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            height: 100%;
+        }
+        .profile-user-info {
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .profile-avatar-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            cursor: pointer;
+        }
+        .profile-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-purple);
+        }
+        .profile-avatar-wrapper .edit-avatar-icon {
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 36px; height: 36px;
+            background-color: var(--primary-purple);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        .profile-avatar-wrapper:hover .edit-avatar-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .profile-user-info .user-name {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+        .profile-user-info .user-email {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .profile-nav .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .profile-nav .nav-link .nav-icon {
+            width: 20px;
+            margin-right: 1rem;
+            text-align: center;
+        }
+        .profile-nav .nav-link:hover {
+            background-color: var(--bg-off-white);
+            color: var(--text-primary);
+        }
+        .profile-nav .nav-link.active {
+            background: var(--gradient-primary);
+            color: var(--bg-white);
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(74, 108, 243, 0.3);
+        }
+        .profile-content-panel { display: none; }
+        .profile-content-panel.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .card-header {
+            background-color: var(--bg-white);
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+        }
+        .card-header h5 { margin: 0; font-weight: 600; }
+        .card-body { padding: 1.5rem; }
+        .form-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .form-control {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            height: calc(1.5em + 1.6rem + 2px);
+        }
+        .form-control:focus {
+            background-color: var(--bg-white);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(74, 108, 243, 0.2);
+        }
+        .form-control:disabled {
+            background-color: var(--bg-off-white);
+            color: var(--text-secondary);
+        }
+        .password-wrapper { 
+            position: relative;
+        }
+        .password-toggle-icon {
+            position: absolute;
+            right: 1rem;
+            top: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        .password-match-feedback {
+            font-size: 0.875em;
+            font-weight: 500;
+            min-height: 1.2em; /* Prevent layout shift */
+        }
+        .password-match { color: var(--success-color); }
+        .password-mismatch { color: var(--danger-color); }
+        .placeholder-content {
+            text-align: center;
+            padding: 3rem;
+            border: 2px dashed var(--border-color);
+            border-radius: 0.75rem;
+        }
+        .placeholder-content .icon {
+            font-size: 3rem;
+            color: var(--border-color);
+            margin-bottom: 1rem;
+        }
+        .placeholder-content h6 {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .placeholder-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .avatar-upload-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            border: 2px dashed var(--border-color);
+            border-radius: 0.75rem;
+            background-color: var(--bg-off-white);
+        }
+        #avatar-upload-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--border-color);
+            background-color: var(--bg-white);
+        }
+        .avatar-upload-controls p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        .btn-upload {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+        .saved-document-list { list-style: none; padding: 0; }
+        .saved-document-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        .saved-document-item:not(:last-child) { border-bottom: 1px solid var(--border-color); }
+        .saved-document-thumbnail {
+            width: 80px;
+            height: 110px;
+            border-radius: 0.5rem;
+            object-fit: cover;
+            flex-shrink: 0;
+            background-color: var(--border-color);
+        }
+        .saved-document-info { flex-grow: 1; }
+        .saved-document-info h6 { 
+            font-weight: 600; 
+            margin-bottom: 0.25rem; 
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .saved-document-info p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .saved-document-actions { display: flex; gap: 0.5rem; }
+        .btn-action {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+        }
+        .pagination .page-link {
+            border-radius: 50% !important;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .pagination .page-item.active .page-link {
+             background: var(--gradient-primary);
+             border-color: transparent;
+             color: white;
+        }
+        
+        /* PDF Viewer Styles */
+        #pdf-loader-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-off-white); z-index: 10;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            padding: 2rem; opacity: 1; visibility: visible;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        #pdf-loader-overlay.hidden { opacity: 0; visibility: hidden; }
+        #pdf-loader-overlay .progress-bar {
+            background: var(--gradient-primary);
+            transition: width 0.1s linear;
+        }
+        #pdf-iframe { border: none; opacity: 0; transition: opacity 0.5s ease; }
+        #pdf-iframe.loaded { opacity: 1; }
+        #pdf-viewer-custom-header {
+            position: absolute; top: 0; left: 0; width: 100%; height: 48px;
+            background-color: var(--bg-white); z-index: 5;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 1rem 0 1.5rem; border-bottom: 1px solid var(--border-color);
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        #pdf-viewer-title-placeholder {
+            font-weight: 600; overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap; max-width: 60%;
+        }
+
+        .profile-nav .nav-link .notification-badge {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            min-width: 20px;
+            height: 20px;
+            font-size: 11px;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #deleteConfirmModal .delete-icon {
+            font-size: 3rem;
+            color: var(--danger-color);
+            margin-bottom: 1rem;
+        }
+        
+        .toast {
+            border-radius: .75rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .toast-header {
+            border-top-left-radius: .75rem;
+            border-top-right-radius: .75rem;
+        }
+        .toast-body {
+            font-weight: 500;
+        }
+        .toast-header .fas, .toast-header .fa-solid { margin-right: 0.5rem; }
+        .toast.bg-success { color: white; }
+        .toast.bg-danger { color: white; }
+        .toast.bg-success .btn-close, .toast.bg-danger .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+
+        @media (max-width: 767.98px) {
+            .profile-section { padding: 2rem 0; }
+        }
+        
+        @media (max-width: 576px) {
+            .saved-document-thumbnail { width: 60px; height: 85px; }
+            .saved-document-info h6 { font-size: 0.9rem; }
+            .saved-document-info p { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main>
+        <section class="profile-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 mb-4 mb-lg-0">
+                        <div class="profile-sidebar">
+                            <div class="profile-user-info">
+                                <div class="profile-avatar-wrapper" data-bs-toggle="modal" data-bs-target="#avatarSelectionModal" title="Nhấp để thay đổi ảnh đại diện">
+                                    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='50' fill='%23E5E7EB'/%3E%3Cpath d='M66.95 66.78a25.02 25.02 0 00-33.9 0C24.4 71.3 20 79.95 20 90h60c0-10.05-4.4-18.7-13.05-23.22zM50 55c-10.33 0-18.7-8.37-18.7-18.7S39.67 17.6 50 17.6s18.7 8.37 18.7 18.7-8.37 18.7-18.7 18.7z' fill='%23A0AEC0'/%3E%3C/svg%3E" alt="User Avatar" class="profile-avatar" id="profile-avatar-img">
+                                    <span class="edit-avatar-icon"><i class="fas fa-camera"></i></span>
+                                </div>
+                                <h5 class="user-name" id="profile-user-name">Đang tải...</h5>
+                                <p class="user-email" id="profile-user-email">email@example.com</p>
+                            </div>
+                            <nav class="nav flex-column profile-nav" id="profile-nav-menu">
+                                <a class="nav-link active" href="#personal-info" data-target="personal-info-panel">
+                                    <i class="fas fa-user-edit nav-icon"></i> Thông tin cá nhân
+                                </a>
+                                <a class="nav-link" href="#my-courses" data-target="my-courses-panel">
+                                    <i class="fas fa-graduation-cap nav-icon"></i> Khoá học của tôi
+                                </a>
+                                <a class="nav-link" href="#my-documents" data-target="my-documents-panel">
+                                    <i class="fas fa-file-alt nav-icon"></i> Tài liệu đã lưu
+                                </a>
+                                <a class="nav-link" href="#order-history" data-target="order-history-panel">
+                                    <i class="fas fa-history nav-icon"></i> Lịch sử giao dịch
+                                </a>
+                                <a class="nav-link" href="#" id="profile-logout-button">
+                                    <i class="fas fa-sign-out-alt nav-icon"></i> Đăng xuất
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8">
+                        <div id="personal-info-panel" class="profile-content-panel active">
+                            <div class="card mb-4">
+                                <div class="card-header"><h5>Thông tin cá nhân</h5></div>
+                                <div class="card-body">
+                                    <form id="update-profile-form">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="profileFullName" class="form-label">Họ và tên</label>
+                                                <input type="text" class="form-control" id="profileFullName" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="profilePhone" class="form-label">Số điện thoại</label>
+                                                <input type="tel" class="form-control" id="profilePhone" placeholder="Thêm số điện thoại" pattern="\d{10}" title="Số điện thoại phải bao gồm 10 chữ số.">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="profileEmail" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="profileEmail" disabled>
+                                        </div>
+                                        <button type="submit" class="btn btn-gradient">
+                                            <span class="spinner-border spinner-border-sm me-2 d-none"></span>
+                                            <i class="fas fa-save me-2"></i>Lưu thay đổi
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header"><h5>Thay đổi mật khẩu</h5></div>
+                                <div class="card-body">
+                                    <form id="update-password-form">
+                                        <div class="mb-3">
+                                            <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
+                                            <div class="password-wrapper">
+                                                <input type="password" class="form-control" id="currentPassword" placeholder="Nhập mật khẩu hiện tại của bạn" required>
+                                                <i class="fas fa-eye password-toggle-icon" data-target="currentPassword"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                                            <div class="password-wrapper">
+                                                <input type="password" class="form-control" id="newPassword" placeholder="Nhập mật khẩu mới (ít nhất 6 ký tự)" required>
+                                                <i class="fas fa-eye password-toggle-icon" data-target="newPassword"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="confirmNewPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                                            <div class="password-wrapper">
+                                                <input type="password" class="form-control" id="confirmNewPassword" required>
+                                                <i class="fas fa-eye password-toggle-icon" data-target="confirmNewPassword"></i>
+                                            </div>
+                                            <div id="password-match-feedback" class="mt-2 password-match-feedback"></div>
+                                        </div>
+                                        <button type="submit" class="btn btn-gradient">
+                                             <span class="spinner-border spinner-border-sm me-2 d-none"></span>
+                                            <i class="fas fa-key me-2"></i>Cập nhật mật khẩu
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="my-courses-panel" class="profile-content-panel">
+                            <div class="card">
+                                <div class="card-header"><h5>Khoá học của tôi</h5></div>
+                                <div class="card-body">
+                                    <div class="placeholder-content">
+                                        <div class="icon"><i class="fas fa-book-open"></i></div>
+                                        <h6>Bạn chưa tham gia khóa học nào</h6>
+                                        <a href="test.html" class="btn btn-gradient mt-2">Xem khóa học</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="my-documents-panel" class="profile-content-panel">
+                            <div class="card">
+                                <div class="card-header"><h5>Tài liệu đã lưu</h5></div>
+                                <div class="card-body" id="my-documents-content">
+                                    <div class="text-center py-5"><div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div></div>
+                                </div>
+                                <nav class="d-flex justify-content-center pb-4 mt-3">
+                                    <ul class="pagination" id="saved-documents-pagination"></ul>
+                                </nav>
+                            </div>
+                        </div>
+                        
+                        <div id="order-history-panel" class="profile-content-panel">
+                             <div class="card">
+                                <div class="card-header"><h5>Lịch sử giao dịch</h5></div>
+                                <div class="card-body">
+                                    <div class="placeholder-content">
+                                        <div class="icon"><i class="fas fa-receipt"></i></div>
+                                        <h6>Không có giao dịch nào</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div id="footer-placeholder"></div>
+
+    <div class="modal fade" id="avatarSelectionModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cập nhật ảnh đại diện</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="avatar-upload-section">
+                        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='50' fill='%23E5E7EB'/%3E%3Cpath d='M66.95 66.78a25.02 25.02 0 00-33.9 0C24.4 71.3 20 79.95 20 90h60c0-10.05-4.4-18.7-13.05-23.22zM50 55c-10.33 0-18.7-8.37-18.7-18.7S39.67 17.6 50 17.6s18.7 8.37 18.7 18.7-8.37 18.7-18.7 18.7z' fill='%23A0AEC0'/%3E%3C/svg%3E" alt="Avatar Preview" id="avatar-upload-preview">
+                        <div class="text-center">
+                            <p>Chọn ảnh mới. Ảnh lớn sẽ được tự động nén.</p>
+                            <label for="avatar-upload-input" class="btn btn-upload">Chọn tệp...</label>
+                            <input type="file" id="avatar-upload-input" accept="image/png, image/jpeg" class="d-none">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-gradient" id="save-avatar-button" disabled>
+                        <span class="spinner-border spinner-border-sm me-2 d-none"></span>
+                        Lưu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="pdfViewerModal" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-body p-0 position-relative">
+                    <div id="pdf-loader-overlay">
+                        <div class="pdf-loader-content w-25">
+                            <div class="progress mb-3" style="height: 10px;">
+                                <div id="pdf-progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <p class="mb-0 fw-bold text-center"><span id="pdf-progress-text">Đang tải tài liệu: 0%</span></p>
+                        </div>
+                    </div>
+                    <div id="pdf-viewer-custom-header">
+                        <span id="pdf-viewer-title-placeholder" class="gradient-text"></span>
+                        <button type="button" class="btn btn-sm btn-gradient rounded-pill" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-sm-1"></i><span class="d-none d-sm-inline">Đóng trình xem</span>
+                        </button>
+                    </div>
+                    <iframe id="pdf-iframe" src="" width="100%" height="100%"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Xác nhận Xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="delete-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <p>Bạn có chắc muốn xóa tài liệu này khỏi danh sách đã lưu không?</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete-btn">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100"></div>
+    <div id="modals-placeholder"></div>
+    <div id="floating-widgets-placeholder"></div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="components.js"></script>
+    
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', () => {
+            // Biến toàn cục và hằng số
+            const supabase = window.viettarotApp.supabase;
+            let currentUser = null;
+            let currentSavedDocToDeleteId = null;
+            const SAVED_DOCS_PER_PAGE = 5;
+            let compressedFileForUpload = null; 
+
+            // Khởi tạo các Modal
+            const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+            const pdfViewerModal = new bootstrap.Modal(document.getElementById('pdfViewerModal'));
+
+            // DOM Elements
+            const profileNavMenu = document.getElementById('profile-nav-menu');
+            const contentPanels = document.querySelectorAll('.profile-content-panel');
+            const profileLogoutBtn = document.getElementById('profile-logout-button');
+            const updateProfileForm = document.getElementById('update-profile-form');
+            const updatePasswordForm = document.getElementById('update-password-form');
+            const avatarUploadInput = document.getElementById('avatar-upload-input');
+            const saveAvatarButton = document.getElementById('save-avatar-button');
+            const myDocumentsContent = document.getElementById('my-documents-content');
+            const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+            
+            // --- HÀM TIỆN ÍCH ---
+            const showToast = (message, type = 'success') => {
+                const iconClass = type === 'success' ? 'fa-solid fa-check-circle' : 'fa-solid fa-times-circle';
+                const toastHTML = `
+                    <div class="toast align-items-center bg-${type}" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <i class="${iconClass}"></i> ${message}
+                            </div>
+                            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                    </div>`;
+                const toastContainer = document.getElementById('toast-container');
+                toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+                const toastEl = toastContainer.lastElementChild;
+                const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+                toast.show();
+                toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+            };
+            
+            const toggleSpinner = (button, show) => {
+                const spinner = button.querySelector('.spinner-border');
+                const icon = button.querySelector('i');
+                if (show) {
+                    button.disabled = true;
+                    if(spinner) spinner.classList.remove('d-none');
+                    if(icon) icon.classList.add('d-none');
+                } else {
+                    button.disabled = false;
+                    if(spinner) spinner.classList.add('d-none');
+                    if(icon) icon.classList.remove('d-none');
+                }
+            };
+            
+            // --- HÀM LẤY DỮ LIỆU ---
+            const fetchUserProfile = async (user) => {
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('full_name, avatar_url, phone_number')
+                    .eq('id', user.id)
+                    .single();
+
+                if (error) {
+                    console.error('Lỗi khi lấy thông tin hồ sơ:', error);
+                    return;
+                }
+                
+                if (data) {
+                    const defaultAvatar = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='50' fill='%23E5E7EB'/%3E%3Cpath d='M66.95 66.78a25.02 25.02 0 00-33.9 0C24.4 71.3 20 79.95 20 90h60c0-10.05-4.4-18.7-13.05-23.22zM50 55c-10.33 0-18.7-8.37-18.7-18.7S39.67 17.6 50 17.6s18.7 8.37 18.7 18.7-8.37 18.7-18.7 18.7z' fill='%23A0AEC0'/%3E%3C/svg%3E";
+                    document.getElementById('profile-avatar-img').src = data.avatar_url || defaultAvatar;
+                    document.getElementById('avatar-upload-preview').src = data.avatar_url || defaultAvatar;
+                    document.getElementById('profile-user-name').textContent = data.full_name || user.email;
+                    document.getElementById('profile-user-email').textContent = user.email;
+                    document.getElementById('profileFullName').value = data.full_name || '';
+                    document.getElementById('profileEmail').value = user.email;
+
+                    const phoneInput = document.getElementById('profilePhone');
+                    phoneInput.value = data.phone_number || '';
+                    if (data.phone_number) {
+                        phoneInput.disabled = true;
+                    } else {
+                        phoneInput.disabled = false;
+                    }
+                }
+            };
+
+            const fetchSavedDocuments = async (page = 1) => {
+                if (!currentUser) return;
+                
+                myDocumentsContent.innerHTML = `<div class="text-center py-5"><div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div></div>`;
+                
+                const { count, error: countError } = await supabase
+                    .from('saved_documents')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('user_id', currentUser.id);
+
+                if (countError) {
+                    console.error('Lỗi khi đếm tài liệu:', countError);
+                    myDocumentsContent.innerHTML = `<div class="placeholder-content"><div class="icon"><i class="fas fa-exclamation-triangle"></i></div><h6>Không thể tải tài liệu</h6></div>`;
+                    return;
+                }
+
+                if (count === 0) {
+                    myDocumentsContent.innerHTML = `<div class="placeholder-content"><div class="icon"><i class="fas fa-file-alt"></i></div><h6>Bạn chưa lưu tài liệu nào</h6><p>Hãy khám phá và lưu lại những tài liệu hữu ích nhé!</p><a href="document.html" class="btn btn-gradient mt-2">Khám phá tài liệu</a></div>`;
+                    renderPagination(0, 0, 0);
+                    return;
+                }
+
+                const totalPages = Math.ceil(count / SAVED_DOCS_PER_PAGE);
+                const from = (page - 1) * SAVED_DOCS_PER_PAGE;
+                const to = from + SAVED_DOCS_PER_PAGE - 1;
+
+                const { data, error } = await supabase
+                    .from('saved_documents')
+                    .select(`
+                        id,
+                        documents (
+                            id,
+                            title,
+                            author_name,
+                            image_url,
+                            document_url
+                        )
+                    `)
+                    .eq('user_id', currentUser.id)
+                    .order('saved_at', { ascending: false })
+                    .range(from, to);
+
+                if (error) {
+                    console.error('Lỗi khi lấy tài liệu đã lưu:', error);
+                    myDocumentsContent.innerHTML = `<div class="placeholder-content"><div class="icon"><i class="fas fa-exclamation-triangle"></i></div><h6>Không thể tải tài liệu</h6></div>`;
+                    return;
+                }
+                
+                renderDocuments(data);
+                renderPagination(page, totalPages, count);
+            };
+
+            // --- HÀM RENDER ---
+            const renderDocuments = (savedDocs) => {
+                if (!savedDocs || savedDocs.length === 0) {
+                     myDocumentsContent.innerHTML = `<div class="placeholder-content"><div class="icon"><i class="fas fa-file-alt"></i></div><h6>Bạn chưa lưu tài liệu nào</h6><p>Hãy khám phá và lưu lại những tài liệu hữu ích nhé!</p><a href="document.html" class="btn btn-gradient mt-2">Khám phá tài liệu</a></div>`;
+                    return;
+                }
+
+                const listHTML = savedDocs.map(item => {
+                    const doc = item.documents;
+                    if (!doc) return '';
+                    return `
+                    <div class="saved-document-item">
+                        <img src="${doc.image_url || 'https://placehold.co/80x110/E5E7EB/A0AEC0?text=PDF'}" alt="${doc.title}" class="saved-document-thumbnail">
+                        <div class="saved-document-info">
+                            <h6>${doc.title}</h6>
+                            <p>Tác giả: ${doc.author_name || 'N/A'}</p>
+                            <div class="saved-document-actions">
+                                <button class="btn btn-sm btn-outline-primary btn-action view-doc-btn" data-doc-url="${doc.document_url}" data-doc-title="${doc.title}">
+                                    <i class="fas fa-eye me-1"></i>Xem
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger btn-action delete-doc-btn" data-saved-doc-id="${item.id}">
+                                    <i class="fas fa-trash-alt me-1"></i>Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+                
+                myDocumentsContent.innerHTML = `<div class="saved-document-list">${listHTML}</div>`;
+            };
+
+            const renderPagination = (currentPage, totalPages) => {
+                const paginationEl = document.getElementById('saved-documents-pagination');
+                if (totalPages <= 1) {
+                    paginationEl.innerHTML = '';
+                    return;
+                }
+                
+                let paginationHTML = '';
+                paginationHTML += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="#" data-page="${currentPage - 1}">&laquo;</a></li>`;
+                for (let i = 1; i <= totalPages; i++) {
+                    paginationHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+                }
+                paginationHTML += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}"><a class="page-link" href="#" data-page="${currentPage + 1}">&raquo;</a></li>`;
+                paginationEl.innerHTML = paginationHTML;
+            };
+
+            // --- HÀM XỬ LÝ SỰ KIỆN ---
+            const handleProfileNavClick = (e) => {
+                e.preventDefault();
+                const targetLink = e.target.closest('a.nav-link');
+                if (!targetLink) return;
+
+                const targetPanelId = targetLink.dataset.target;
+                if (!targetPanelId) return;
+                
+                profileNavMenu.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                targetLink.classList.add('active');
+                
+                contentPanels.forEach(panel => {
+                    panel.classList.remove('active');
+                    if (panel.id === targetPanelId) {
+                        panel.classList.add('active');
+                    }
+                });
+                
+                if(targetPanelId === 'my-documents-panel') {
+                    fetchSavedDocuments();
+                }
+            };
+            
+            const handleProfileUpdate = async (e) => {
+                e.preventDefault();
+                const button = e.submitter;
+                const fullName = document.getElementById('profileFullName').value;
+                const phoneInput = document.getElementById('profilePhone');
+                const phone = phoneInput.value.trim();
+
+                // 1. Validation (only if field is editable and has content)
+                if (!phoneInput.disabled && phone) {
+                    const phoneRegex = /^\d{10}$/;
+                    if (!phoneRegex.test(phone)) {
+                        showToast('Số điện thoại không hợp lệ. Vui lòng nhập đúng 10 chữ số.', 'danger');
+                        return;
+                    }
+                }
+
+                toggleSpinner(button, true);
+
+                // 2. Prepare data for update. Always update full_name.
+                const profileUpdateData = { full_name: fullName };
+                // Only add phone number if it's being set for the first time.
+                if (!phoneInput.disabled && phone) {
+                    profileUpdateData.phone_number = phone;
+                }
+
+                // 3. Update database
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .update(profileUpdateData)
+                    .eq('id', currentUser.id);
+                    
+                // We only update auth metadata if profile update succeeded
+                let authError = null;
+                if (!profileError) {
+                     const { error } = await supabase.auth.updateUser({ data: { full_name: fullName } });
+                     authError = error;
+                }
+
+                // 4. Handle response and update UI
+                if (profileError) {
+                    if (profileError.code === '23505' && profileError.message.includes('phone_number')) {
+                         showToast('Số điện thoại này đã được sử dụng.', 'danger');
+                    } else {
+                        showToast('Cập nhật thông tin thất bại!', 'danger');
+                        console.error('Lỗi cập nhật hồ sơ:', profileError);
+                    }
+                } else if (authError) {
+                    showToast('Cập nhật thông tin thất bại!', 'danger');
+                    console.error('Lỗi cập nhật auth:', authError);
+                } else {
+                    // SUCCESS
+                    showToast('Cập nhật thông tin thành công!');
+                    document.getElementById('profile-user-name').textContent = fullName || currentUser.email;
+                    // Disable the input if a phone number was successfully set
+                    if (!phoneInput.disabled && phone) {
+                        phoneInput.disabled = true;
+                    }
+                }
+                
+                toggleSpinner(button, false);
+            };
+
+            const handlePasswordUpdate = async (e) => {
+                e.preventDefault();
+                const button = e.submitter;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmNewPassword').value;
+
+                if (newPassword !== confirmPassword) {
+                    showToast('Mật khẩu xác nhận không khớp!', 'danger');
+                    return;
+                }
+
+                toggleSpinner(button, true);
+
+                const { error } = await supabase.auth.updateUser({ password: newPassword });
+
+                if (error) {
+                    showToast('Cập nhật mật khẩu thất bại! ' + error.message, 'danger');
+                } else {
+                    showToast('Cập nhật mật khẩu thành công!');
+                    updatePasswordForm.reset();
+                    document.getElementById('password-match-feedback').textContent = '';
+                }
+                toggleSpinner(button, false);
+            };
+            
+            const handleAvatarUpload = async () => {
+                const file = compressedFileForUpload;
+                if (!file) {
+                    showToast('Vui lòng chọn một tệp ảnh.', 'danger');
+                    return;
+                }
+                
+                toggleSpinner(saveAvatarButton, true);
+
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}.${fileExt}`;
+                
+                // SỬA LỖI: Thêm ID người dùng vào đường dẫn để tuân thủ RLS
+                const filePath = `${currentUser.id}/${fileName}`;
+
+                const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file);
+
+                if (uploadError) {
+                    showToast('Tải ảnh lên thất bại!', 'danger');
+                    console.error('Lỗi upload:', uploadError);
+                    toggleSpinner(saveAvatarButton, false);
+                    return;
+                }
+
+                const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+                const publicURL = data.publicUrl;
+
+                const { error: profileError } = await supabase.from('profiles').update({ avatar_url: publicURL }).eq('id', currentUser.id);
+                const { error: authError } = await supabase.auth.updateUser({ data: { avatar_url: publicURL } });
+                
+                if (profileError || authError) {
+                    showToast('Cập nhật ảnh đại diện thất bại!', 'danger');
+                } else {
+                    showToast('Cập nhật ảnh đại diện thành công!');
+                    document.getElementById('profile-avatar-img').src = publicURL;
+                    setTimeout(() => location.reload(), 1000);
+                }
+                toggleSpinner(saveAvatarButton, false);
+            };
+
+            const handleDeleteDocument = async () => {
+                if (!currentSavedDocToDeleteId) return;
+                const { error } = await supabase.from('saved_documents').delete().eq('id', currentSavedDocToDeleteId);
+                
+                if (error) {
+                    showToast('Xóa tài liệu thất bại!', 'danger');
+                } else {
+                    showToast('Đã xóa tài liệu khỏi danh sách.');
+                    fetchSavedDocuments();
+                }
+                deleteConfirmModal.hide();
+                currentSavedDocToDeleteId = null;
+            };
+
+            // --- KHỞI TẠO ---
+            const init = async () => {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                currentUser = session.user;
+                fetchUserProfile(currentUser);
+
+                // Gắn sự kiện
+                profileNavMenu.addEventListener('click', handleProfileNavClick);
+                profileLogoutBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    await supabase.auth.signOut();
+                    window.location.href = 'index.html';
+                });
+                updateProfileForm.addEventListener('submit', handleProfileUpdate);
+                updatePasswordForm.addEventListener('submit', handlePasswordUpdate);
+
+                const newPasswordInput = document.getElementById('newPassword');
+                const confirmNewPasswordInput = document.getElementById('confirmNewPassword');
+                const passwordFeedback = document.getElementById('password-match-feedback');
+                const handlePasswordInput = () => {
+                    if (confirmNewPasswordInput.value === '' && newPasswordInput.value === '') {
+                        passwordFeedback.textContent = ''; return;
+                    }
+                    if (newPasswordInput.value === confirmNewPasswordInput.value) {
+                        passwordFeedback.textContent = '✓ Mật khẩu đã khớp!';
+                        passwordFeedback.className = 'mt-2 password-match-feedback password-match';
+                    } else {
+                        passwordFeedback.textContent = '✗ Mật khẩu không khớp!';
+                        passwordFeedback.className = 'mt-2 password-match-feedback password-mismatch';
+                    }
+                };
+                newPasswordInput.addEventListener('input', handlePasswordInput);
+                confirmNewPasswordInput.addEventListener('input', handlePasswordInput);
+
+                // Logic chọn và nén ảnh
+                avatarUploadInput.addEventListener('change', async () => {
+                    const file = avatarUploadInput.files[0];
+                    if (!file) {
+                        saveAvatarButton.disabled = true;
+                        compressedFileForUpload = null;
+                        return;
+                    }
+
+                    saveAvatarButton.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Đang xử lý...`;
+                    saveAvatarButton.disabled = true;
+
+                    try {
+                        const options = {
+                            maxSizeMB: 0.5,
+                            maxWidthOrHeight: 800,
+                            useWebWorker: true,
+                        };
+                        
+                        const compressedFile = await imageCompression(file, options);
+                        compressedFileForUpload = compressedFile;
+
+                        const reader = new FileReader();
+                        reader.onload = e => {
+                            document.getElementById('avatar-upload-preview').src = e.target.result;
+                        };
+                        reader.readAsDataURL(compressedFile);
+
+                        saveAvatarButton.disabled = false;
+                        saveAvatarButton.innerHTML = 'Lưu';
+
+                    } catch (error) {
+                        console.error('Image compression error:', error);
+                        showToast('Không thể xử lý ảnh. Vui lòng thử lại.', 'danger');
+                        avatarUploadInput.value = '';
+                        compressedFileForUpload = null;
+                        saveAvatarButton.disabled = true;
+                        saveAvatarButton.innerHTML = 'Lưu';
+                    }
+                });
+
+
+                saveAvatarButton.addEventListener('click', handleAvatarUpload);
+                confirmDeleteBtn.addEventListener('click', handleDeleteDocument);
+                
+                document.querySelectorAll('.password-toggle-icon').forEach(icon => {
+                    icon.addEventListener('click', () => {
+                        const targetInput = document.getElementById(icon.dataset.target);
+                        if (targetInput.type === 'password') {
+                            targetInput.type = 'text';
+                            icon.classList.replace('fa-eye', 'fa-eye-slash');
+                        } else {
+                            targetInput.type = 'password';
+                            icon.classList.replace('fa-eye-slash', 'fa-eye');
+                        }
+                    });
+                });
+                
+                myDocumentsContent.addEventListener('click', (e) => {
+                    const viewBtn = e.target.closest('.view-doc-btn');
+                    const deleteBtn = e.target.closest('.delete-doc-btn');
+                    
+                    if (viewBtn) {
+                        const docUrl = viewBtn.dataset.docUrl;
+                        const docTitle = viewBtn.dataset.docTitle;
+                        
+                        document.getElementById('pdf-viewer-title-placeholder').textContent = docTitle;
+                        const iframe = document.getElementById('pdf-iframe');
+                        const loader = document.getElementById('pdf-loader-overlay');
+                        const customHeader = document.getElementById('pdf-viewer-custom-header');
+                        const progressBar = document.getElementById('pdf-progress-bar');
+                        const progressText = document.getElementById('pdf-progress-text');
+
+                        pdfViewerModal.show();
+                        
+                        let progress = 0;
+                        progressBar.style.width = '0%';
+                        progressText.textContent = `Đang tải tài liệu: 0%`;
+                        loader.classList.remove('hidden');
+                        iframe.classList.remove('loaded');
+                        customHeader.style.opacity = '0';
+                        customHeader.style.visibility = 'hidden';
+
+                        if (docUrl) {
+                            iframe.src = docUrl.replace("/view", "/preview");
+                        } else {
+                            iframe.src = '';
+                        }
+                        
+                        const interval = setInterval(() => {
+                            progress = Math.min(100, progress + Math.random() * 10);
+                            progressBar.style.width = progress + '%';
+                            progressText.textContent = `Đang tải tài liệu: ${Math.round(progress)}%`;
+                            if (progress >= 100) clearInterval(interval);
+                        }, 150);
+                        
+                        iframe.onload = () => {
+                             clearInterval(interval);
+                             progressBar.style.width = '100%';
+                             progressText.textContent = `Đang tải tài liệu: 100%`;
+                             setTimeout(() => {
+                                loader.classList.add('hidden');
+                                iframe.classList.add('loaded');
+                                customHeader.style.opacity = '1';
+                                customHeader.style.visibility = 'visible';
+                             }, 500);
+                        };
+                    }
+                    
+                    if (deleteBtn) {
+                        currentSavedDocToDeleteId = deleteBtn.dataset.savedDocId;
+                        deleteConfirmModal.show();
+                    }
+                });
+
+                document.getElementById('saved-documents-pagination').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageLink = e.target.closest('a.page-link');
+                    if (pageLink && !pageLink.closest('.page-item.disabled')) {
+                        const page = parseInt(pageLink.dataset.page, 10);
+                        fetchSavedDocuments(page);
+                    }
+                });
+                
+                document.getElementById('pdfViewerModal').addEventListener('hidden.bs.modal', function() {
+                    document.getElementById('pdf-iframe').src = '';
+                });
+
+            };
+
+            init();
+        });
+    </script>
+</body>
+</html>
