@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VietTarot - Ý Nghĩa Các Loại Bài</title>
 
-    <link rel="icon" type="image/png" href="/image/iconlogo.png">
+    <link rel="icon" type="image/png" href="https://lkznteubcwladqkxyaqo.supabase.co/storage/v1/object/public/website-assets//logotab.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -368,6 +368,7 @@
         
         .info-item {
             font-size: 0.9rem;
+            text-align: center;
         }
         
         .info-item .info-label {
@@ -431,7 +432,6 @@
         @media (min-width: 768px) { .card-group-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); } }
         @media (min-width: 1200px) { .card-group-grid { grid-template-columns: repeat(8, 1fr); } }
         
-        /* ================= START: CODE MỚI ================= */
         #related-cards-grid {
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         }
@@ -440,7 +440,21 @@
                 grid-template-columns: repeat(5, 1fr);
             }
         }
-        /* ================= END: CODE MỚI ================= */
+        
+        .btn-gradient-primary {
+            background: var(--gradient-primary);
+            border: none;
+            font-weight: 600;
+            color: var(--bg-white);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(120, 73, 242, 0.25);
+        }
+
+        .btn-gradient-primary:hover {
+            color: var(--bg-white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(120, 73, 242, 0.4);
+        }
         
         .promo-popup-overlay {
             position: fixed;
@@ -579,37 +593,65 @@
                     <div class="row g-4">
                         <div class="col-lg-4 text-center">
                             <img src="https://placehold.co/300x525/cccccc/ffffff?text=Image" alt="Hình ảnh lá bài" id="modalCardImage" class="card-detail-image">
+                            
+                            <a href="#" id="exampleReadingBtn" class="btn btn-gradient-primary mt-4 w-100" data-view="details">
+                                <i class="fas fa-eye me-2"></i>Ví dụ trong trải bài
+                            </a>
                         </div>
                         <div class="col-lg-8">
                             <div class="card-detail-content">
                                 <h2 class="card-detail-title" id="modalCardName">Tên lá bài</h2>
                                 <h4 class="card-detail-subtitle" id="modalDharmaName">Tên pháp danh</h4>
-
-                                <div class="card-detail-info-grid">
-                                    <div class="info-item"><span class="info-label"><i class="fas fa-layer-group me-2" style="color: #9B49F2;"></i>Nhóm</span><span class="info-value" id="modalCardGroup"></span></div>
-                                    <div class="info-item"><span class="info-label"><i class="fas fa-hashtag me-2" style="color: #4A6CF3;"></i>Số thứ tự</span><span class="info-value" id="modalCardNumber"></span></div>
-                                    <div class="info-item"><span class="info-label"><i class="fas fa-atom me-2" style="color: #10B981;"></i>Nguyên tố</span><span class="info-value" id="modalCardElement"></span></div>
-                                    <div class="info-item"><span class="info-label"><i class="fas fa-yin-yang me-2" style="color: #EF4444;"></i>Tính chất</span><span class="info-value" id="modalCardPolarity"></span></div>
-                                    <div class="info-item"><span class="info-label"><i class="fas fa-star-of-david me-2" style="color: #F59E0B;"></i>Cung hoàng đạo</span><span class="info-value" id="modalCardZodiac"></span></div>
+                                
+                                <div id="modalCardDetailsContent">
+                                    <div class="card-detail-info-grid">
+                                        <div class="info-item"><span class="info-label"><i class="fas fa-hashtag me-2" style="color: #4A6CF3;"></i>Số thứ tự</span><span class="info-value" id="modalCardNumber"></span></div>
+                                        <div class="info-item"><span class="info-label"><i class="fas fa-atom me-2" style="color: #10B981;"></i>Nguyên tố</span><span class="info-value" id="modalCardElement"></span></div>
+                                        <div class="info-item"><span class="info-label"><i class="fas fa-yin-yang me-2" style="color: #EF4444;"></i>Tính chất</span><span class="info-value" id="modalCardPolarity"></span></div>
+                                        <div class="info-item"><span class="info-label"><i class="fas fa-star-of-david me-2" style="color: #F59E0B;"></i>Cung hoàng đạo</span><span class="info-value" id="modalCardZodiac"></span></div>
+                                    </div>
+                                    <div class="detail-section mt-4"><h5><i class="fas fa-book-open me-2" style="color: #6366F1;"></i>Mô tả sách gốc</h5><p id="modalDescriptionOriginal"></p></div>
+                                    <div class="detail-section mt-4"><h5><i class="fas fa-gem me-2" style="color: #0EA5E9;"></i>Ý nghĩa biểu tượng</h5><div id="modalSymbolism"></div></div>
+                                    <div class="detail-section mt-4"><h5><i class="fas fa-key me-2" style="color: #8B5CF6;"></i>Ý nghĩa tổng quan</h5><p id="modalMeaningGeneral"></p></div>
+                                    <div class="detail-section mt-4"><h5><i class="fas fa-arrow-up me-2" style="color: var(--success-color);"></i>Nghĩa xuôi</h5><div id="modalMeaningUpright"></div></div>
+                                    <div class="detail-section mt-4"><h5><i class="fas fa-arrow-down me-2" style="color: var(--danger-color);"></i>Nghĩa ngược</h5><div id="modalMeaningReversed"></div></div>
+                                    <div class="detail-section mt-4"><h5><i class="fas fa-heart me-2" style="color: #EC4899;"></i>Chủ đề Tình yêu</h5><p id="modalThemeLove"></p></div>
+                                    <div class="detail-section mt-4"><h5><i class="fas fa-book-reader me-2" style="color: #F97316;"></i>Chủ đề Học tập</h5><p id="modalThemeStudy"></p></div>
+                                    <div class="detail-section mt-4"><h5><i class="fas fa-briefcase me-2" style="color: #3B82F6;"></i>Chủ đề Sự nghiệp</h5><p id="modalThemeCareer"></p></div>
                                 </div>
-                                <div class="detail-section mt-4"><h5><i class="fas fa-book-open me-2" style="color: #6366F1;"></i>Mô tả sách gốc</h5><p id="modalDescriptionOriginal"></p></div>
-                                <div class="detail-section mt-4"><h5><i class="fas fa-gem me-2" style="color: #0EA5E9;"></i>Ý nghĩa biểu tượng</h5><div id="modalSymbolism"></div></div>
-                                <div class="detail-section mt-4"><h5><i class="fas fa-key me-2" style="color: #8B5CF6;"></i>Ý nghĩa tổng quan</h5><p id="modalMeaningGeneral"></p></div>
-                                <div class="detail-section mt-4"><h5><i class="fas fa-arrow-up me-2" style="color: var(--success-color);"></i>Nghĩa xuôi</h5><div id="modalMeaningUpright"></div></div>
-                                <div class="detail-section mt-4"><h5><i class="fas fa-arrow-down me-2" style="color: var(--danger-color);"></i>Nghĩa ngược</h5><div id="modalMeaningReversed"></div></div>
-                                <div class="detail-section mt-4"><h5><i class="fas fa-heart me-2" style="color: #EC4899;"></i>Chủ đề Tình yêu</h5><p id="modalThemeLove"></p></div>
-                                <div class="detail-section mt-4"><h5><i class="fas fa-book-reader me-2" style="color: #F97316;"></i>Chủ đề Học tập</h5><p id="modalThemeStudy"></p></div>
-                                <div class="detail-section mt-4"><h5><i class="fas fa-briefcase me-2" style="color: #3B82F6;"></i>Chủ đề Sự nghiệp</h5><p id="modalThemeCareer"></p></div>
+
+                                <div id="modalExampleReadingContent" style="display: none;">
+                                    <div class="detail-section">
+                                        <h5><i class="fas fa-comments me-2" style="color: #8B5CF6;"></i>Ví dụ Giải Nghĩa Lá The Fool</h5>
+                                        <p>Dưới đây là các ví dụ về cách lá <strong>The Fool</strong> có thể được diễn giải trong các bối cảnh khác nhau của một trải bài.</p>
+                                    </div>
+
+                                    <div class="detail-section mt-4">
+                                        <h5><i class="fas fa-heart me-2" style="color: #EC4899;"></i>Trong Trải Bài Tình Yêu</h5>
+                                        <p>Khi The Fool xuất hiện, nó báo hiệu một sự khởi đầu mới mẻ và đầy hứng khởi trong chuyện tình cảm. Bạn có thể sắp bước vào một mối quan hệ mới với một tâm hồn tự do, không bị ràng buộc bởi những tổn thương trong quá khứ. Lá bài khuyến khích bạn hãy mở lòng, đón nhận tình yêu một cách ngây thơ và tin tưởng. Đây là lúc để "nhảy một bước nhảy của niềm tin" và xem cuộc phiêu lưu này sẽ dẫn bạn đến đâu.</p>
+                                        <p><em>Ví dụ: Nếu bạn đang độc thân và hỏi về tình yêu sắp tới, The Fool cho thấy một mối quan hệ bất ngờ, có thể hơi khác thường nhưng sẽ mang lại cho bạn rất nhiều niềm vui và sự tự do. Hãy cứ là chính mình và đừng ngại thể hiện sự độc đáo của bản thân.</em></p>
+                                    </div>
+                                    
+                                    <div class="detail-section mt-4">
+                                        <h5><i class="fas fa-briefcase me-2" style="color: #3B82F6;"></i>Trong Trải Bài Sự Nghiệp</h5>
+                                        <p>Về sự nghiệp, The Fool là lời kêu gọi cho một khởi đầu mới. Đây có thể là một công việc mới, một dự án kinh doanh táo bạo, hoặc thậm chí là một sự thay đổi hoàn toàn về con đường sự nghiệp. Lá bài này khuyên bạn nên can đảm nắm bắt các cơ hội, ngay cả khi bạn chưa có tất cả các câu trả lời. Sự lạc quan và sẵn sàng học hỏi sẽ là chìa khóa thành công. Đừng ngại trở thành "người mới" và bắt đầu lại từ đầu.</p>
+                                        <p><em>Ví dụ: Bạn đang phân vân không biết có nên nghỉ việc để khởi nghiệp hay không? The Fool xuất hiện như một sự ủng hộ mạnh mẽ. Nó nói rằng, mặc dù con đường phía trước có thể không chắc chắn (giống như vực thẳm), tiềm năng thành công là rất lớn nếu bạn dám bước đi.</em></p>
+                                    </div>
+
+                                    <div class="detail-section mt-4">
+                                        <h5><i class="fas fa-lightbulb me-2" style="color: #F59E0B;"></i>Lời Khuyên & Hướng Dẫn</h5>
+                                        <p>Ở vị trí lời khuyên, The Fool nhắc nhở bạn hãy sống trọn vẹn trong khoảnh khắc hiện tại. Hãy giải phóng bản thân khỏi những nỗi sợ hãi và những kỳ vọng của người khác. Đây là thời điểm để khám phá, để sáng tạo, và để tin tưởng vào vũ trụ. Hãy tự hỏi: "Điều gì sẽ xảy ra nếu mình không sợ hãi?" Câu trả lời sẽ dẫn lối cho bạn. Hãy đón nhận sự ngây thơ và trí tò mò của một đứa trẻ, bởi vì đó là nơi sức mạnh và tiềm năng vô hạn của bạn đang ẩn giấu.</p>
+                                    </div>
+                                </div>
                                 
                                 <div id="related-cards-section" class="mt-5" style="display: none;">
                                     <h5 class="card-group-subtitle" style="border-left-color: var(--primary-purple); font-size: 1.25rem;">
                                         <i class="fas fa-random me-2"></i>Các lá bài liên quan
                                     </h5>
                                     <div id="related-cards-grid" class="card-group-grid">
-                                        </div>
+                                    </div>
                                 </div>
-
-                            </div>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -617,6 +659,21 @@
         </div>
     </div>
     
+    <div class="modal fade" id="permissionDeniedModal" tabindex="-1" aria-labelledby="permissionDeniedModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="permissionDeniedModalLabel"><i class="fas fa-lock me-2 text-warning"></i>Yêu Cầu Quyền Truy Cập</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center" id="permissionDeniedModalBody">
+                    </div>
+                <div class="modal-footer justify-content-center border-top-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đã hiểu</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="promotionPopup" class="promo-popup-overlay">
         <div class="promo-popup-content">
             <button id="closePromoPopup" class="promo-popup-close" title="Đóng">&times;</button>
@@ -642,9 +699,38 @@
             const cardDetailModal = new bootstrap.Modal(document.getElementById('cardDetailModal'));
             const relatedCardsGrid = document.getElementById('related-cards-grid');
 
+            // START: CODE SỬA ĐỔI - Khởi tạo modal và các biến liên quan
+            const permissionModal = new bootstrap.Modal(document.getElementById('permissionDeniedModal'));
+            const exampleReadingBtn = document.getElementById('exampleReadingBtn');
+            const detailsContent = document.getElementById('modalCardDetailsContent');
+            const exampleContent = document.getElementById('modalExampleReadingContent');
+
             let allCardsData = [];
             let filteredCards = [];
             let supabase = window.viettarotApp.supabase;
+            let currentUserRole = 'guest'; // Biến lưu trữ vai trò người dùng
+            // END: CODE SỬA ĐỔI
+
+            // START: CODE MỚI - Hàm lấy vai trò người dùng
+            async function fetchUserRole() {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    const { data: profile, error } = await supabase
+                        .from('profiles')
+                        .select('role')
+                        .eq('id', user.id)
+                        .single();
+                    if (error) {
+                        console.error("Lỗi khi lấy vai trò người dùng:", error);
+                        currentUserRole = 'user'; // Mặc định là 'user' nếu không lấy được profile
+                    } else {
+                        currentUserRole = profile ? profile.role : 'user';
+                    }
+                } else {
+                    currentUserRole = 'guest';
+                }
+            }
+            // END: CODE MỚI
 
             async function fetchAllCards() {
                 loadingIndicator.style.display = 'block';
@@ -823,9 +909,7 @@
                 }
 
                 relatedCards.sort(() => 0.5 - Math.random());
-                // ================= START: CODE ĐÃ SỬA =================
                 const cardsToShow = relatedCards.slice(0, 5);
-                // ================= END: CODE ĐÃ SỬA =================
 
                 const fragment = document.createDocumentFragment();
                 cardsToShow.forEach(card => {
@@ -851,17 +935,25 @@
                 const card = allCardsData.find(c => c.id === parseInt(cardId));
                 if (!card) return;
 
+                detailsContent.style.display = 'block';
+                exampleContent.style.display = 'none';
+                exampleReadingBtn.dataset.view = 'details';
+                exampleReadingBtn.innerHTML = '<i class="fas fa-eye me-2"></i>Ví dụ trong trải bài';
+
                 const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
                 const safeText = (text, fallback = 'Chưa có thông tin') => text || fallback;
                 const formatHtml = (text) => (text || '').replace(/\n/g, '<br>');
                 
                 const isTarot = activeFilter === 'Tarot';
+                
+                // START: CODE SỬA ĐỔI - Ẩn/hiện nút "Ví dụ"
+                exampleReadingBtn.style.display = isTarot ? 'block' : 'none';
+                // END: CODE SỬA ĐỔI
 
                 document.getElementById('modalCardImage').src = card.image_url || 'https://placehold.co/300x525/cccccc/ffffff?text=No+Image';
                 document.getElementById('modalCardName').textContent = safeText(card.name, 'Tên lá bài');
                 document.getElementById('modalDharmaName').textContent = safeText(card.dharma_name, '');
                 
-                document.getElementById('modalCardGroup').textContent = safeText(activeFilter);
                 document.getElementById('modalCardNumber').textContent = safeText(card.card_number, 'N/A');
                 
                 document.getElementById('modalCardElement').closest('.info-item').style.display = isTarot ? 'block' : 'none';
@@ -947,12 +1039,45 @@
                     }, 300);
                 }
             });
+            
+            // START: CODE SỬA ĐỔI - Logic xử lý nút "Ví dụ" với kiểm tra quyền
+            exampleReadingBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const allowedRoles = ['student', 'membership', 'admin']; // 'admin' để quản trị viên có thể xem
+                
+                if (allowedRoles.includes(currentUserRole)) {
+                    // Nếu có quyền, thực hiện chức năng như cũ
+                    const currentView = this.dataset.view;
+                    if (currentView === 'details') {
+                        detailsContent.style.display = 'none';
+                        exampleContent.style.display = 'block';
+                        this.dataset.view = 'examples';
+                        this.innerHTML = '<i class="fas fa-info-circle me-2"></i>Xem Chi Tiết Lá Bài';
+                    } else {
+                        detailsContent.style.display = 'block';
+                        exampleContent.style.display = 'none';
+                        this.dataset.view = 'details';
+                        this.innerHTML = '<i class="fas fa-eye me-2"></i>Ví dụ trong trải bài';
+                    }
+                } else {
+                    // Nếu không có quyền, hiển thị popup thông báo
+                    const permissionModalBody = document.getElementById('permissionDeniedModalBody');
+                    permissionModalBody.innerHTML = `
+                        <p class="fs-5 mb-1">Bạn cần là <strong>Học viên</strong> hoặc <strong>Member</strong> để xem nội dung này.</p>
+                        <p class="text-secondary">Vui lòng đăng nhập hoặc nâng cấp tài khoản của bạn để truy cập tính năng này.</p>
+                    `;
+                    permissionModal.show();
+                }
+            });
+            // END: CODE SỬA ĐỔI
 
             async function initializePage() {
                 if (!supabase) {
                     console.error("Supabase client chưa được khởi tạo.");
                     return;
                 }
+                await fetchUserRole(); // Lấy vai trò người dùng khi tải trang
                 await fetchAllCards();
                 updateFilterSlider(filterButtonsContainer.querySelector('.btn.active'));
             }
@@ -992,5 +1117,4 @@
         });
     </script>
 </body>
-
 </html>
