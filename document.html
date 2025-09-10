@@ -6,10 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tài Liệu - VietTarot</title>
 
-    <link rel="icon" type="image/png" sizes="16x16" href="https://www.viettarot.com/image/iconlogo.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://www.viettarot.com/image/iconlogo.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://www.viettarot.com/image/iconlogo.png">
-
+    <link rel="icon" type="image/png" href="/image/iconlogo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -239,31 +236,31 @@
             -webkit-box-orient: vertical;
             color: #1A1229;
         }
-
-        .document-card-price {
-            margin-bottom: 0.3rem;
-            display: flex;
-            align-items: baseline;
-            gap: 0.75rem;
-            flex-wrap: nowrap;
+        
+        .document-card-access {
+            margin-bottom: 0.75rem;
         }
 
-        .price-sale {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #dc3545;
-        }
-
-        .price-original {
-            font-size: 0.7rem;
-            color: #5A6474;
-            text-decoration: line-through;
+        .price-badge {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
         }
 
         .price-free {
-            font-size: 1.25rem;
-            font-weight: 600;
             color: #198754;
+            background-color: rgba(25, 135, 84, 0.1);
+        }
+        
+        .price-member {
+            color: #4A6CF3;
+            background-color: rgba(74, 108, 243, 0.1);
+        }
+        
+        .price-student {
+            color: #ff9800;
+            background-color: rgba(255, 152, 0, 0.1);
         }
 
         .document-card-footer {
@@ -419,6 +416,23 @@
             box-shadow: 0 4px 15px rgba(120, 73, 242, 0.3);
         }
         
+        .filter-btn.filter-btn-student {
+            background: linear-gradient(90deg, #ffc107, #ff9800);
+            color: #212529;
+            border-color: transparent;
+            font-weight: 600;
+        }
+        .filter-btn.filter-btn-student:hover:not(.active) {
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+            transform: translateY(-2px) scale(1.05);
+            background: linear-gradient(90deg, #ffca2c, #ffa726);
+        }
+        .filter-btn.filter-btn-student.active {
+             background: linear-gradient(90deg, #4A6CF3 0%, #9B49F2 100%);
+             color: #FFFFFF;
+             box-shadow: 0 4px 15px rgba(120, 73, 242, 0.3);
+        }
+
         .filter-dropdown {
             background-color: #FFFFFF !important;
             border: 1px solid #E5E7EB !important;
@@ -492,14 +506,8 @@
             font-size: 1.5rem;
             margin-bottom: 1rem;
         }
-        #documentDetailInfo .price-section {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #dc3545;
-            margin: 1rem 0;
-        }
-        #documentDetailInfo .price-section .price-free {
-            color: #198754;
+        #documentDetailInfo .access-section {
+            margin: 1.5rem 0;
         }
         #documentDetailInfo .meta-info {
             font-size: 0.9rem;
@@ -605,9 +613,9 @@
             line-height: 1;
         }
         
-        #deleteConfirmModal .modal-header {
+        #deleteConfirmModal .modal-header,
+        #permissionDeniedModal .modal-header {
             border-bottom: none;
-            padding-bottom: 0;
         }
         #deleteConfirmModal .modal-body {
             text-align: center;
@@ -721,6 +729,8 @@
                             <div class="d-flex flex-wrap align-items-center gap-2 mb-4" id="document-filters">
                                 <button class="btn filter-btn active" data-filter-type="all">Tất cả</button>
                                 <button class="btn filter-btn" data-filter-type="free">Miễn phí</button>
+                                <button class="btn filter-btn" data-filter-type="member">Member</button>
+                                <button class="btn filter-btn filter-btn-student" data-filter-type="student">Học viên</button>
                                 <div class="dropdown ms-md-auto">
                                     <button class="btn filter-dropdown dropdown-toggle" type="button" id="category-filter-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                         Tất cả danh mục
@@ -841,14 +851,27 @@
         </div>
     </div>
 
-    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100"></div>
+    <div class="modal fade" id="permissionDeniedModal" tabindex="-1" aria-labelledby="permissionDeniedModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="permissionDeniedModalLabel"><i class="fas fa-lock me-2 text-warning"></i>Yêu Cầu Quyền Truy Cập</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center" id="permissionDeniedModalBody">
+                    </div>
+                <div class="modal-footer justify-content-center border-top-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đã hiểu</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script src="components.js" defer></script>
 
     <script>
-        // Logic Preloader
         window.addEventListener('load', function() {
             const preloader = document.getElementById('preloader');
             if (preloader) {
@@ -860,25 +883,22 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Đảm bảo supabase client từ components.js đã được khởi tạo
-            // Dùng một khoảng chờ nhỏ để components.js kịp chạy và tạo window.viettarotApp
             setTimeout(initializeDocumentPage, 100); 
         });
 
         function initializeDocumentPage() {
-             // Sử dụng supabase client toàn cục từ components.js
             if (!window.viettarotApp || !window.viettarotApp.supabase) {
-                console.error("Supabase client không được khởi tạo. Tệp components.js có thể chưa được tải.");
+                console.error("Supabase client không được khởi tạo.");
                 return;
             }
             const supabase = window.viettarotApp.supabase;
             
-            // Khai báo các biến và hằng số
             let allDocuments = [];
             let currentDocuments = [];
             let currentPage = 1;
             const itemsPerPage = 6;
             let activeFilters = { type: 'all', category: 'all' };
+            let userRole = 'guest';
 
             const documentsListContainer = document.getElementById('documents-list');
             const searchInput = document.getElementById('document-search');
@@ -889,12 +909,10 @@
             const filtersContainer = document.getElementById('document-filters');
             const categoryFilterList = document.getElementById('category-filter-list');
             const categoryFilterDropdown = document.getElementById('category-filter-dropdown');
-            
             const detailModalEl = document.getElementById('documentDetailModal');
             const detailModalBody = document.getElementById('documentDetailBody');
             const modalViewButton = document.getElementById('modal-view-button');
             const modalSaveButton = document.getElementById('modal-save-button'); 
-
             const pdfViewerModalEl = document.getElementById('pdfViewerModal');
             const pdfIframe = document.getElementById('pdf-iframe');
             const pdfLoaderOverlay = document.getElementById('pdf-loader-overlay');
@@ -903,52 +921,28 @@
             const pdfCustomHeader = document.getElementById('pdf-viewer-custom-header');
             const pdfTitlePlaceholder = document.getElementById('pdf-viewer-title-placeholder');
             const updatingOverlay = document.getElementById('updating-document-overlay');
-
             const unsaveConfirmModalEl = document.getElementById('unsaveConfirmModal');
             const confirmUnsaveBtn = document.getElementById('confirm-unsave-btn');
             const unsaveConfirmModal = new bootstrap.Modal(unsaveConfirmModalEl);
 
-            // Các hàm tiện ích
+            // NEW: Khởi tạo modal thông báo quyền truy cập
+            const permissionModalEl = document.getElementById('permissionDeniedModal');
+            const permissionModal = new bootstrap.Modal(permissionModalEl);
+            const permissionModalBody = document.getElementById('permissionDeniedModalBody');
+
             const formatDate = (dateString) => {
                 if (!dateString) return 'Không rõ ngày';
-                return new Date(dateString).toLocaleDateString('vi-VN', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                });
-            };
-
-            const formatCurrency = (number) => {
-                if (typeof number !== 'number' || isNaN(number)) return 'N/A';
-                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
-            };
-
-            const shuffleArray = (array) => {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-                return array;
+                return new Date(dateString).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
             };
             
-            function showToast(message, type = 'success') {
-                const toastContainer = document.getElementById('toast-container');
-                if (!toastContainer) return;
-                const iconClass = type === 'success' ? 'fa-check-circle' : (type === 'danger' ? 'fa-times-circle' : 'fa-info-circle');
-                const bgClass = `text-bg-${type}`;
-                const toastId = 'toast-' + Math.random().toString(36).substring(2, 9);
-                const toastHTML = `
-                    <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="d-flex"><div class="toast-body"><i class="fas ${iconClass} me-2"></i>${message}</div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>
-                    </div>`;
-                toastContainer.insertAdjacentHTML('beforeend', toastHTML);
-                const toast = new bootstrap.Toast(document.getElementById(toastId), { delay: 3000 });
-                toast.show();
-                document.getElementById(toastId).addEventListener('hidden.bs.toast', (e) => e.target.remove());
+            // NEW: Hàm hiển thị popup thông báo quyền
+            function showPermissionModal(requiredRole) {
+                if (permissionModalBody) {
+                    permissionModalBody.innerHTML = `<p class="fs-5 mb-1">Bạn cần là <strong>${requiredRole}</strong> để xem nội dung này.</p><p class="text-secondary">Vui lòng đăng nhập hoặc nâng cấp tài khoản của bạn.</p>`;
+                }
+                permissionModal.show();
             }
 
-            // Các hàm render giao diện
             function renderDocuments(docs) {
                 if (!documentsListContainer) return;
                 documentsListContainer.innerHTML = ''; 
@@ -957,15 +951,21 @@
                     return;
                 }
                 docs.forEach(doc => {
-                    let priceHTML = `<span class="price-free">Miễn phí</span>`;
-                    if (typeof doc.price_sale === 'number' && doc.price_sale > 0) {
-                        priceHTML = `<span class="price-sale">${formatCurrency(doc.price_sale)}</span>`;
-                        if (typeof doc.price_original === 'number' && doc.price_original > doc.price_sale) {
-                            priceHTML += `<span class="price-original">${formatCurrency(doc.price_original)}</span>`;
-                        }
-                    } else if (typeof doc.price_original === 'number' && doc.price_original > 0) {
-                        priceHTML = `<span class="price-sale">${formatCurrency(doc.price_original)}</span>`;
+                    let accessLevelHTML = '';
+                    switch (doc.access_level) {
+                        case 'free':
+                            accessLevelHTML = `<span class="price-badge price-free">Miễn phí</span>`;
+                            break;
+                        case 'member':
+                            accessLevelHTML = `<span class="price-badge price-member">Dành cho Member</span>`;
+                            break;
+                        case 'student':
+                             accessLevelHTML = `<span class="price-badge price-student">Dành cho Học viên</span>`;
+                            break;
+                        default:
+                             accessLevelHTML = `<span class="price-badge price-free">Công khai</span>`;
                     }
+
                     const cardHTML = `
                         <div class="col-lg-4 col-md-6 col-6 d-flex"> 
                             <div class="document-card" data-doc-id="${doc.id}">
@@ -975,7 +975,7 @@
                                 </div>
                                 <div class="document-card-body">
                                     <h3 class="document-card-title">${doc.title}</h3>
-                                    <div class="document-card-price">${priceHTML}</div>
+                                    <div class="document-card-access">${accessLevelHTML}</div>
                                     <div class="document-card-footer">
                                         <span class="info-item"><i class="fas fa-user-edit"></i><span class="author-name-text">${doc.author_name || 'Tác giả'}</span></span>
                                         <span class="info-item"><i class="fas fa-calendar-alt"></i><span>${formatDate(doc.published_at)}</span></span>
@@ -996,7 +996,6 @@
                     return;
                 }
                 paginationControls.parentElement.style.display = 'flex';
-                
                 const createPageItem = (page, text) => {
                     const li = document.createElement('li');
                     li.className = `page-item ${page === currentPage ? 'active' : ''} ${page === '...' || (text==='&laquo;' && currentPage===1) || (text==='&raquo;' && currentPage===pageCount) ? 'disabled' : ''}`;
@@ -1011,7 +1010,6 @@
                     }
                     return li;
                 }
-
                 if (currentPage > 1) paginationControls.appendChild(createPageItem(currentPage - 1, '&laquo;'));
                 for (let i = 1; i <= pageCount; i++) {
                      if (i === 1 || i === pageCount || (i >= currentPage - 1 && i <= currentPage + 1)) {
@@ -1033,19 +1031,31 @@
                 displayPage(currentDocuments);
                 setupPagination(currentDocuments);
             }
-
+            
             function applyFilters() {
                 let filtered = [...allDocuments];
                 const searchTerm = searchInput.value.toLowerCase().trim();
 
-                if (activeFilters.type === 'free') {
-                    filtered = filtered.filter(doc => (doc.price_sale === 0 || doc.price_original === 0) && doc.price_sale !== null);
+                if (searchTerm) {
+                    filtered = filtered.filter(doc => doc.title.toLowerCase().includes(searchTerm));
                 }
                 if (activeFilters.category !== 'all') {
                     filtered = filtered.filter(doc => doc.category === activeFilters.category);
                 }
-                if (searchTerm) {
-                    filtered = filtered.filter(doc => doc.title.toLowerCase().includes(searchTerm));
+                
+                const filterType = activeFilters.type;
+                
+                if (filterType === 'free') {
+                    filtered = filtered.filter(doc => doc.access_level === 'free');
+                } else if (filterType === 'member') {
+                    filtered = filtered.filter(doc => doc.access_level === 'member');
+                } else if (filterType === 'student') {
+                    filtered = filtered.filter(doc => doc.access_level === 'student');
+                } else if (filterType === 'all') {
+                    // **CODE ĐÃ SỬA**
+                    // Khi chọn "Tất cả", không lọc theo quyền truy cập ở đây nữa.
+                    // Tất cả tài liệu sẽ được hiển thị.
+                    // Việc kiểm tra quyền sẽ được thực hiện khi người dùng nhấn vào xem.
                 }
 
                 currentDocuments = filtered;
@@ -1069,15 +1079,14 @@
 
             function populateModal(doc) {
                 if (!doc) return;
-                let priceHTML = `<span class="price-free">Miễn phí</span>`;
-                 if (typeof doc.price_sale === 'number' && doc.price_sale > 0) {
-                        priceHTML = `${formatCurrency(doc.price_sale)}`;
-                        if (typeof doc.price_original === 'number' && doc.price_original > doc.price_sale) {
-                            priceHTML += ` <s class="price-original ms-2" style="font-size: 1rem;">${formatCurrency(doc.price_original)}</s>`;
-                        }
-                    } else if (typeof doc.price_original === 'number' && doc.price_original > 0) {
-                        priceHTML = `${formatCurrency(doc.price_original)}`;
-                    }
+                let accessLevelHTML = '';
+                switch (doc.access_level) {
+                    case 'free': accessLevelHTML = `<span class="price-badge price-free">Miễn phí</span>`; break;
+                    case 'member': accessLevelHTML = `<span class="price-badge price-member">Dành cho Member</span>`; break;
+                    case 'student': accessLevelHTML = `<span class="price-badge price-student">Dành cho Học viên</span>`; break;
+                    default: accessLevelHTML = `<span class="price-badge price-free">Công khai</span>`;
+                }
+                
                 detailModalBody.innerHTML = `
                     <img src="${doc.image_url || 'https://placehold.co/400x600/e5e7eb/5a6474?text=Doc'}" alt="${doc.title}">
                     <div id="documentDetailInfo">
@@ -1085,7 +1094,7 @@
                         <div class="meta-info"><i class="fas fa-user-edit"></i><span><strong>Tác giả:</strong> ${doc.author_name || 'N/A'}</span></div>
                         <div class="meta-info"><i class="fas fa-calendar-alt"></i><span><strong>Ngày XB:</strong> ${formatDate(doc.published_at)}</span></div>
                         <div class="meta-info"><i class="fas fa-tags"></i><span><strong>Danh mục:</strong> ${doc.category || 'N/A'}</span></div>
-                        <div class="price-section">${priceHTML}</div>
+                        <div class="access-section">${accessLevelHTML}</div>
                         <div class="description"><p>${doc.description || 'Không có mô tả.'}</p></div>
                     </div>`;
                 modalViewButton.dataset.docUrl = doc.document_url || '#';
@@ -1103,19 +1112,27 @@
                 if (!modalSaveButton) return;
                 modalSaveButton.dataset.savedState = state;
                 if (state === 'saved') {
-                    modalSaveButton.disabled = false;
                     modalSaveButton.className = 'btn btn-success';
                     modalSaveButton.innerHTML = '<i class="fas fa-check me-2"></i>Đã lưu';
                 } else {
-                    modalSaveButton.disabled = false;
                     modalSaveButton.className = 'btn btn-outline-primary';
                     modalSaveButton.innerHTML = '<i class="fas fa-bookmark me-2"></i>Lưu vào sổ tay';
                 }
             }
+            
+            async function fetchUserRole() {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+                    if (profile) userRole = profile.role; else userRole = 'user';
+                } else {
+                    userRole = 'guest';
+                }
+            }
 
-            // Các hàm fetch dữ liệu
             async function loadInitialData() {
                 if(documentsLoader) documentsLoader.style.display = 'block';
+                await fetchUserRole();
                 const [docsRes, catsRes, latestRes, popularRes] = await Promise.all([
                     supabase.from('documents').select('*').order('published_at', { ascending: false }),
                     supabase.from('documents').select('category'),
@@ -1124,11 +1141,10 @@
                 ]);
                 
                 if(documentsLoader) documentsLoader.style.display = 'none';
-
                 if (docsRes.error) return console.error("Lỗi tải tài liệu:", docsRes.error);
                 allDocuments = docsRes.data || [];
-                currentDocuments = allDocuments;
-                updatePage();
+                
+                applyFilters();
 
                 if (!catsRes.error) {
                     const categories = [...new Set(catsRes.data.map(item => item.category).filter(Boolean))];
@@ -1137,48 +1153,66 @@
                 }
                 
                 if (!latestRes.error) renderSidebarDocs(latestDocumentsContainer, latestRes.data);
-                
-                if (!popularRes.error && popularRes.data) {
-                    const shuffledPopular = shuffleArray([...popularRes.data]).slice(0, 4);
-                    renderSidebarDocs(popularDocumentsContainer, shuffledPopular);
-                }
+                if (!popularRes.error && popularRes.data) renderSidebarDocs(popularDocumentsContainer, popularRes.data.slice(0, 4));
             }
 
-            // Gắn sự kiện
             filtersContainer?.addEventListener('click', (e) => {
-                const target = e.target;
-                if (target.matches('.filter-btn')) {
+                const targetBtn = e.target.closest('.filter-btn');
+                const targetDropdown = e.target.closest('.dropdown-item');
+
+                if (targetBtn) {
                     filtersContainer.querySelector('.filter-btn.active')?.classList.remove('active');
-                    target.classList.add('active');
-                    activeFilters.type = target.dataset.filterType;
+                    targetBtn.classList.add('active');
+                    activeFilters.type = targetBtn.dataset.filterType;
                     applyFilters();
                 }
-                if (target.matches('.dropdown-item')) {
-                    const category = target.dataset.category;
+
+                if (targetDropdown) {
+                    const category = targetDropdown.dataset.category;
                     activeFilters.category = category;
-                    if(categoryFilterDropdown) categoryFilterDropdown.textContent = category === 'all' ? 'Tất cả danh mục' : target.textContent;
+                    if(categoryFilterDropdown) categoryFilterDropdown.textContent = category === 'all' ? 'Tất cả danh mục' : targetDropdown.textContent;
                     applyFilters();
                 }
             });
 
             searchInput?.addEventListener('input', applyFilters);
             
-            documentsListContainer?.addEventListener('click', (e) => {
-                const card = e.target.closest('.document-card');
-                const link = e.target.closest('a');
-                if (card || link) {
-                    const docId = card?.dataset.docId || link?.dataset.docId;
-                    if(docId) {
-                        const detailModal = new bootstrap.Modal(detailModalEl);
-                        detailModalEl.dataset.docId = docId;
-                        const doc = allDocuments.find(d => d.id == docId);
-                        if (doc) {
+            document.body.addEventListener('click', (e) => {
+                 const trigger = e.target.closest('.document-card, .widget-post-thumbnail, .widget-post-content h6 a');
+                 if(trigger && trigger.dataset.docId) {
+                     const docId = trigger.dataset.docId;
+                     const doc = allDocuments.find(d => d.id == docId);
+                     
+                     if (doc) {
+                        const requiredLevel = doc.access_level;
+                        let hasPermission = false;
+
+                        // Kiểm tra quyền truy cập của người dùng
+                        if (requiredLevel === 'free') {
+                            hasPermission = true;
+                        } else if (requiredLevel === 'member' && (userRole === 'membership' || userRole === 'student')) {
+                            hasPermission = true;
+                        } else if (requiredLevel === 'student' && userRole === 'student') {
+                            hasPermission = true;
+                        }
+                        
+                        // Nếu có quyền, hiển thị chi tiết tài liệu
+                        if(hasPermission) {
+                            const detailModal = new bootstrap.Modal(detailModalEl);
+                            detailModalEl.dataset.docId = docId;
                             populateModal(doc);
                             checkIfDocIsSaved(docId);
+                            detailModal.show();
+                        } else {
+                            // Nếu không có quyền, hiển thị thông báo
+                             let requiredRoleText = 'Member'; // Mặc định
+                             if (requiredLevel === 'student') {
+                                 requiredRoleText = 'Học viên';
+                             }
+                             showPermissionModal(requiredRoleText);
                         }
-                        detailModal.show();
-                    }
-                }
+                     }
+                 }
             });
 
             modalSaveButton?.addEventListener('click', async function() {
@@ -1191,7 +1225,6 @@
                 const docId = detailModalEl.dataset.docId;
                 if (this.dataset.savedState === 'unsaved') {
                     const { error } = await supabase.from('saved_documents').insert({ user_id: user.id, document_id: docId });
-                    showToast(error ? 'Lỗi lưu tài liệu' : 'Đã lưu tài liệu!', error ? 'danger' : 'success');
                     if (!error) setSaveButtonState('saved');
                 } else {
                     confirmUnsaveBtn.dataset.docId = docId;
@@ -1204,7 +1237,6 @@
                 const docId = this.dataset.docId;
                 const { error } = await supabase.from('saved_documents').delete().match({ user_id: user.id, document_id: docId });
                 unsaveConfirmModal.hide();
-                showToast(error ? 'Lỗi bỏ lưu' : 'Đã bỏ lưu tài liệu.', error ? 'danger' : 'info');
                 if (!error) setSaveButtonState('unsaved');
             });
 
@@ -1223,7 +1255,6 @@
                 const docTitle = modalViewButton.dataset.docTitle;
                 if(pdfTitlePlaceholder) pdfTitlePlaceholder.textContent = docTitle;
                 if(pdfIframe) pdfIframe.src = docUrl.replace("/view", "/preview");
-                // Fake progress bar for better UX
                 let progress = 0;
                 pdfProgressBar.style.width = '0%';
                 pdfProgressText.textContent = `Đang tải tài liệu: 0%`;
@@ -1249,19 +1280,12 @@
                 if(pdfIframe) pdfIframe.src = '';
                 pdfCustomHeader.style.opacity = '0';
                 pdfCustomHeader.style.visibility = 'hidden';
-
-                const detailModalInstance = bootstrap.Modal.getInstance(detailModalEl);
-                if (detailModalInstance) {
-                    detailModalInstance.hide();
-                }
+                bootstrap.Modal.getInstance(detailModalEl)?.hide();
             });
 
-            // Khởi chạy
             loadInitialData();
         }
     </script>
 </body>
 
-
 </html>
-
