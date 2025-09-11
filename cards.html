@@ -145,18 +145,20 @@
         
         .filter-buttons .btn {
             margin: 0;
-            font-weight: 500;
+            font-weight: 600; /* [SỬA] Tăng độ đậm */
             border-radius: 50px;
             border: 1px solid transparent;
-            color: var(--text-secondary);
+            color: var(--text-primary); /* [SỬA] Đổi màu chữ đậm hơn */
             transition: all 0.3s ease;
             background-color: transparent;
             z-index: 2;
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1.3rem; /* [SỬA] Tăng padding cho lớn hơn */
+            font-size: 0.95rem; /* [SỬA] Tăng cỡ chữ */
+            letter-spacing: 0.2px; /* [SỬA] Thêm khoảng cách chữ */
         }
         
         .filter-buttons .btn:hover {
-            color: var(--text-primary);
+            color: var(--primary-blue); /* [SỬA] Đổi màu khi hover */
         }
         
         .filter-slider {
@@ -173,6 +175,7 @@
         
         .filter-buttons .btn.active {
             color: var(--bg-white);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* [SỬA] Thêm hiệu ứng glow cho chữ active */
         }
 
         @media (max-width: 991.98px) {
@@ -336,10 +339,10 @@
 
         #cardDetailModal .modal-body {
             padding: 0 1.5rem 1.5rem 1.5rem;
-            -webkit-user-select: none;
+            /* -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
-            user-select: none;
+            user-select: none; */
         }
         
         .card-detail-image {
@@ -1176,6 +1179,24 @@
                     document.getElementById('modalThemeLoveTarot').innerHTML = formatHtml(safeText(card.theme_love));
                     document.getElementById('modalThemeStudy').innerHTML = formatHtml(safeText(card.theme_study));
                     document.getElementById('modalThemeCareerTarot').innerHTML = formatHtml(safeText(card.theme_career));
+
+                    // [SỬA ĐỔI] Thêm logic hiển thị ví dụ cho bài Tarot
+                    const exampleContentEl = document.getElementById('modalExampleReadingContent');
+                    if (card.example) {
+                        exampleContentEl.innerHTML = `
+                            <div class="detail-section tarot-view">
+                                <h5><i class="fas fa-book-reader me-2" style="color: #F97316;"></i>Ví dụ giải bài</h5>
+                                <div>${formatHtml(safeText(card.example))}</div>
+                            </div>
+                        `;
+                    } else {
+                        exampleContentEl.innerHTML = `
+                            <div class="detail-section tarot-view">
+                                <h5><i class="fas fa-book-reader me-2" style="color: #F97316;"></i>Ví dụ giải bài</h5>
+                                <p>Chưa có ví dụ cho lá bài này.</p>
+                            </div>
+                        `;
+                    }
 
                 } else if (activeFilter === 'Lenormand') {
                     modalContentEl.classList.add('lenormand-view');
