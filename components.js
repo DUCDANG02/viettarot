@@ -23,6 +23,10 @@ class ViettarotComponents {
     // Phương thức trả về CSS cho tất cả các component
     getComponentCSS() {
         return `
+        /* START: NHẬP FONT MONTSERRAT TỪ GOOGLE FONTS */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+        /* END: NHẬP FONT */
+
         :root {
             --primary-blue: #4A6CF3;
             --primary-purple: #9B49F2;
@@ -34,8 +38,17 @@ class ViettarotComponents {
             --danger-color: #dc3545;
             --warning-color: #FFC107;
             --success-color: #198754;
+            --info-color: #0dcaf0;
             --gradient-primary: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
         }
+
+        /* START: ÁP DỤNG FONT CHỮ MỚI CHO TOÀN BỘ TRANG */
+        body {
+            font-family: "Montserrat", sans-serif; /* Sử dụng font mới, có sans-serif dự phòng */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* END: ÁP DỤNG FONT CHỮ MỚI */
 
         /* Header & Navbar */
         header {
@@ -71,7 +84,7 @@ class ViettarotComponents {
         }
         .navbar-nav .nav-link {
             color: var(--text-secondary);
-            font-weight: 500;
+            font-weight: 600; 
             padding: 0.4rem 1.7rem;
             margin: 0 0.6rem;
             border-radius: 20px;
@@ -401,11 +414,6 @@ class ViettarotComponents {
         
         /* START: CSS TÙY CHỈNH CHO BỐ CỤC CHI TIẾT KHÓA HỌC VIÊN */
         @media (min-width: 992px) {
-            /* Mục tiêu: Làm cho 2 card khóa học (1:1 và Nhóm) trông gọn gàng và cân đối hơn 
-               trên màn hình lớn thay vì kéo dài quá rộng.
-               - Sử dụng max-width để giới hạn chiều rộng của mỗi cột.
-               - justify-content-center trên thẻ cha (.row) sẽ tự động căn giữa chúng.
-            */
             #course-details-container > .col-lg-6 {
                 max-width: 450px; /* Giảm chiều rộng tối đa của mỗi cột chứa card */
                 width: 100%;
@@ -845,6 +853,34 @@ class ViettarotComponents {
             from { opacity: 0; transform: scale(0.5); }
             to { opacity: 1; transform: scale(1); }
         }
+        
+        /* START: CSS MỚI CHO TOAST NOTIFICATION */
+        .toast-container {
+            z-index: 1090; /* Đảm bảo toast nổi trên các thành phần khác */
+        }
+        .viettarot-toast {
+            border: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 0.75rem;
+            color: white;
+            min-width: 280px;
+        }
+        .viettarot-toast .toast-header {
+            background-color: rgba(0,0,0,0.2);
+            color: white;
+            font-weight: 600;
+            border-bottom: none;
+        }
+        .viettarot-toast .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        .viettarot-toast.toast-success { background-color: var(--success-color); }
+        .viettarot-toast.toast-danger { background-color: var(--danger-color); }
+        .viettarot-toast.toast-info { background-color: var(--primary-blue); }
+        .viettarot-toast.toast-warning { background-color: var(--warning-color); color: var(--text-primary); }
+        .viettarot-toast.toast-warning .toast-header { color: var(--text-primary); }
+        .viettarot-toast.toast-warning .btn-close { filter: none; }
+        /* END: CSS MỚI CHO TOAST NOTIFICATION */
 
         /* Notification Badge */
         .notification-badge {
@@ -1068,6 +1104,17 @@ class ViettarotComponents {
     // START: HÀM ĐƯỢC CẬP NHẬT
     getModalsHTML() {
         return `
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="viettarot-toast" class="toast viettarot-toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto" id="viettarot-toast-title">Thông báo</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="viettarot-toast-body">
+                    Nội dung thông báo.
+                </div>
+            </div>
+        </div>
         <div id="fullscreen-success-overlay" class="fullscreen-overlay">
             <div class="success-notification">
                 <div class="success-icon"><i class="fas fa-check-circle"></i></div>
@@ -1371,7 +1418,7 @@ class ViettarotComponents {
     // Phương thức trả về HTML của các Widget nổi
     getFloatingWidgetsHTML() {
         return `
-        <div class="messenger-widget-container widget-left" id="facebook-widget-container">
+        <div class="messenger-widget-container widget-right" id="facebook-widget-container">
             <div class="messenger-text-bubble">
                 <p class="mb-0">Liên hệ hỗ trợ</p>
             </div>
@@ -1382,7 +1429,7 @@ class ViettarotComponents {
                 </a>
             </div>
         </div>
-        <div class="messenger-widget-container widget-right" id="community-widget-container">
+        <div class="messenger-widget-container widget-left" id="community-widget-container">
             <div class="messenger-text-bubble">
                 <p class="mb-0">Tham gia nhóm cộng đồng</p>
             </div>
@@ -1400,7 +1447,7 @@ class ViettarotComponents {
     // ===== BẮT ĐẦU: CÁC HÀM LOGIC CHO COMPONENT (AUTH, ETC.) =========
     // =====================================================================
     
-    // START: Các hàm theo dõi trạng thái online
+    // START: CÁC HÀM THEO DÕI TRẠNG THÁI ONLINE
     async initializeRealtimePresence(user) {
         if (this.presenceChannel || !user) return;
         this.presenceChannel = this.supabase.channel('online-users', {
@@ -1439,7 +1486,49 @@ class ViettarotComponents {
             this.lastSeenInterval = null;
         }
     }
-    // END: Các hàm theo dõi trạng thái online
+    // END: CÁC HÀM THEO DÕI TRẠNG THÁI ONLINE
+
+    // START: HÀM MỚI ĐỂ HIỂN THỊ TOAST
+    showToast(message, type = 'info', duration = 4000) {
+        const toastEl = document.getElementById('viettarot-toast');
+        const toastBody = document.getElementById('viettarot-toast-body');
+        const toastTitle = document.getElementById('viettarot-toast-title');
+        
+        if (!toastEl || !toastBody) return;
+
+        toastBody.innerHTML = message;
+        
+        // Cập nhật class và tiêu đề dựa trên loại thông báo
+        toastEl.className = 'toast viettarot-toast'; // Reset class
+        let icon = '';
+        switch(type) {
+            case 'success':
+                toastEl.classList.add('toast-success');
+                icon = '<i class="fas fa-check-circle me-2"></i>';
+                toastTitle.innerHTML = `${icon}Thành công`;
+                break;
+            case 'danger':
+                toastEl.classList.add('toast-danger');
+                icon = '<i class="fas fa-exclamation-triangle me-2"></i>';
+                toastTitle.innerHTML = `${icon}Lỗi`;
+                break;
+            case 'warning':
+                toastEl.classList.add('toast-warning');
+                icon = '<i class="fas fa-exclamation-circle me-2"></i>';
+                toastTitle.innerHTML = `${icon}Cảnh báo`;
+                break;
+            default:
+                toastEl.classList.add('toast-info');
+                icon = '<i class="fas fa-info-circle me-2"></i>';
+                toastTitle.innerHTML = `${icon}Thông báo`;
+        }
+
+        const toast = new bootstrap.Toast(toastEl, {
+            delay: duration
+        });
+        toast.show();
+    }
+    // END: HÀM MỚI ĐỂ HIỂN THỊ TOAST
 
     getNotificationCount() {
         return parseInt(localStorage.getItem(this.NOTIFICATION_KEY) || '0', 10);
@@ -1652,11 +1741,42 @@ class ViettarotComponents {
         }
     }
 
+    // START: HÀM ĐÃ ĐƯỢC CẬP NHẬT VỚI HỆ THỐNG THÔNG BÁO MỚI
     async handleLogout(event) {
         event.preventDefault();
-        await this.leavePresenceChannel(); 
-        await this.supabase.auth.signOut();
+        const logoutButton = event.currentTarget;
+
+        // Vô hiệu hóa nút và hiển thị trạng thái đang xử lý trên nút
+        logoutButton.disabled = true;
+        logoutButton.style.pointerEvents = 'none'; // Chặn click tuyệt đối
+        logoutButton.innerHTML = `<i class="fas fa-spinner fa-spin fa-fw"></i> Đang xử lý...`;
+        
+        // Hiển thị thông báo "Đang đăng xuất"
+        this.showToast('Đang đăng xuất, vui lòng chờ...', 'info', 10000);
+
+        // Đợi một chút để người dùng thấy thông báo
+        setTimeout(async () => {
+            await this.leavePresenceChannel(); 
+            const { error } = await this.supabase.auth.signOut();
+            
+            if (error) {
+                this.showToast(`Lỗi: ${error.message}`, 'danger');
+                // Nếu lỗi, kích hoạt lại nút
+                logoutButton.disabled = false;
+                logoutButton.style.pointerEvents = 'auto';
+                logoutButton.innerHTML = `<i class="fas fa-sign-out-alt fa-fw"></i> Đăng xuất`;
+            } else {
+                // Hiển thị thông báo "Đăng xuất thành công"
+                this.showToast('Đăng xuất thành công! Đang chuyển hướng...', 'success');
+
+                // Chờ 2 giây để người dùng đọc thông báo rồi mới chuyển trang
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            }
+        }, 1000);
     }
+    // END: HÀM ĐÃ ĐƯỢC CẬP NHẬT
     
     setupPasswordToggle(toggleId, passwordId) {
         const toggleIcon = document.getElementById(toggleId);
