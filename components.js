@@ -111,6 +111,7 @@ class ViettarotComponents {
         }
         .navbar-nav .nav-link:hover {
             color: var(--bg-white);
+             text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Thêm: Hiệu ứng chữ phát sáng */
         }
         .navbar-nav .nav-link:hover::before {
             transform: scaleX(1);
@@ -118,6 +119,7 @@ class ViettarotComponents {
         .navbar-nav .nav-link.active {
             color: var(--bg-white);
             font-weight: 600;
+             text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Thêm: Hiệu ứng chữ phát sáng */
         }
         .navbar-nav .nav-link.active::before {
             transform: scaleX(1);
@@ -1257,14 +1259,14 @@ class ViettarotComponents {
                                         <h3>Học Viên</h3>
                                         <p>Đầy đủ quyền lợi và được hỗ trợ chuyên sâu cho học viên.</p>
                                     </div>
-                                    <div class="pricing-card-price">Khóa Học<br>Chuyên Sâu</div>
+                                    <div class="pricing-card-price">Lớp học<br>Tarot</div>
                                     <ul class="pricing-card-features">
                                         <li><i class="fas fa-check-circle"></i>Toàn bộ ưu đãi của gói Membership.</li>
-                                        <li><i class="fas fa-check-circle"></i>Xem toàn bộ video bài giảng khóa học.</li>
+                                        <li><i class="fas fa-check-circle"></i>Lớp học Online, Offine và xem toàn bộ video bài giảng khóa học.</li>
                                         <li><i class="fas fa-check-circle"></i>Tài liệu & bài test độc quyền cho học viên.</li>
                                         <li><i class="fas fa-check-circle"></i>Hỗ trợ chuyên sâu từ giảng viên.</li>
                                         <li><i class="fas fa-check-circle"></i>Tham gia cộng đồng học viên riêng tư.</li>
-                                        <li><i class="fas fa-check-circle"></i>Hỗ trợ Certification & làm việc.</li>
+                                        <li><i class="fas fa-check-circle"></i>Chứng nhận Certificate & làm việc tại Triki Tarot.</li>
                                     </ul>
                                     <button class="btn btn-outline-primary" id="view-courses-btn" data-default-text="Xem chi tiết">Xem chi tiết</button>
                                 </div>
@@ -1288,7 +1290,7 @@ class ViettarotComponents {
                                          <li><i class="fas fa-check-circle"></i>Lộ trình học cá nhân hóa theo mục tiêu.</li>
                                          <li><i class="fas fa-check-circle"></i>Lịch học siêu linh hoạt 1-1 với giảng viên.</li>
                                          <li><i class="fas fa-check-circle"></i>Giải đáp & Chữa bài tập chuyên sâu.</li>
-                                         <li><i class="fas fa-check-circle"></i>Hỗ trợ Certification & làm việc tại VietTarot.</li>
+                                         <li><i class="fas fa-check-circle"></i>Hỗ trợ Certificate & làm việc tại VietTarot.</li>
                                     </ul>
                                      <button class="btn btn-primary" data-default-text="Đăng ký ngay">Đăng ký ngay</button>
                                 </div>
@@ -1348,7 +1350,7 @@ class ViettarotComponents {
                                         <img id="qr-code-image" src="" alt="Mã QR thanh toán VietQR" class="img-fluid" style="display: none;">
                                     </div>
                                     <div class="mt-auto pt-3 d-grid gap-2">
-                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="fas fa-check-circle me-2"></i>Tôi đã hoàn tất thanh toán</button>
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="fas fa-check-circle me-2"></i>Đã thanh toán</button>
                                         <button type="button" class="btn btn-outline-secondary" data-bs-target="#upgradeModal" data-bs-toggle="modal"><i class="fas fa-arrow-left me-2"></i>Quay lại</button>
                                     </div>
                                 </div>
@@ -1393,15 +1395,15 @@ class ViettarotComponents {
                                     <ul class="payment-instructions list-unstyled">
                                         <li>
                                             <span class="step-icon"><i class="fas fa-check"></i></span>
-                                            <div>Chuyển khoản <strong class="text-danger">ĐÚNG</strong> nội dung và số tiền ở trên.</div>
+                                            <div>Chuyển khoản <strong class="text-danger">ĐÚNG</strong> nội dung, số tiền ở trên.</div>
                                         </li>
                                         <li>
                                             <span class="step-icon"><i class="fas fa-hourglass-half"></i></span>
-                                            <div>Hệ thống sẽ tự động kích hoạt tài khoản sau <strong>2-5 phút</strong>.</div>
+                                            <div>Khi giao dịch thành công Hệ thống sẽ tự động nâng cấp tài khoản sau <strong>2-5 phút</strong>.</div>
                                         </li>
                                          <li>
                                             <span class="step-icon"><i class="fas fa-headset"></i></span>
-                                            <div>Nếu cần hỗ trợ, vui lòng liên hệ fanpage <a href="https://www.facebook.com/viettarotacademy/" target="_blank">VietTarot</a>.</div>
+                                            <div>Nếu cần hỗ trợ liên hệ fanpage <a href="https://www.facebook.com/viettarotacademy/" target="_blank">VietTarot</a>.</div>
                                         </li>
                                     </ul>
                                 </div>
