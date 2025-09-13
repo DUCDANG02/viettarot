@@ -33,6 +33,16 @@
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg-off-white);
             color: var(--text-primary);
+            /* [THÊM MỚI] Vô hiệu hoá chọn văn bản */
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Chuẩn */
+        }
+
+        #header-placeholder{
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         #preloader {
@@ -339,10 +349,6 @@
 
         #cardDetailModal .modal-body {
             padding: 0 1.5rem 1.5rem 1.5rem;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
         }
         
         .card-detail-image {
@@ -450,7 +456,6 @@
             color: var(--primary-blue);
         }
 
-
         /* [CẢI TIẾN] Style riêng cho Tarot View để thông thoáng hơn */
         .tarot-view .detail-section {
             margin-top: 2.25rem;
@@ -465,6 +470,81 @@
             font-size: 1rem;
             line-height: 1.8;
         }
+        
+        /* [BẮT ĐẦU SỬA ĐỔI] Style nâng cấp cho các nút Tab Chủ đề và nội dung trong Modal */
+        #modalExampleReadingContent .nav-pills {
+            background-color: var(--bg-off-white);
+            padding: 0.4rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            position: relative; /* Thêm để định vị slider */
+        }
+
+        /* Thêm slider cho hiệu ứng trượt */
+        #modalExampleReadingContent .modal-tab-slider {
+            position: absolute;
+            top: 0.4rem;
+            bottom: 0.4rem;
+            left: 0; /* Sẽ được cập nhật bằng JS */
+            height: calc(100% - 0.8rem);
+            border-radius: 50px;
+            background: var(--gradient-primary);
+            box-shadow: 0 6px 18px -5px rgba(120, 73, 242, 0.6);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 1;
+        }
+
+        #modalExampleReadingContent .nav-pills .nav-link {
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: none;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            position: relative; /* Thêm để nổi lên trên slider */
+            z-index: 2; /* Thêm để nổi lên trên slider */
+        }
+
+        #modalExampleReadingContent .nav-pills .nav-link:hover:not(.active) {
+            color: var(--text-primary);
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        #modalExampleReadingContent .nav-pills .nav-link.active {
+            background: transparent; /* Sửa: Bỏ background vì đã có slider */
+            color: var(--bg-white);
+            box-shadow: none; /* Sửa: Bỏ shadow vì đã có slider */
+            transform: none; /* Sửa: Bỏ transform */
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Thêm: Hiệu ứng chữ phát sáng */
+        }
+
+        #modalExampleReadingContent .nav-link i {
+            transition: transform 0.3s ease;
+        }
+
+        #modalExampleReadingContent .nav-link.active i {
+            transform: scale(1.1);
+        }
+
+        #modalExampleReadingContent .tab-content {
+            margin-top: 1.5rem;
+        }
+
+        #modalExampleReadingContent .tab-pane .content-wrapper {
+            background-color: var(--bg-white);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            text-align: justify;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+        /* [KẾT THÚC SỬA ĐỔI] */
 
         /* [CẢI TIẾN] Style dành riêng cho Lenormand */
         .lenormand-view .detail-section h5 {
@@ -668,7 +748,7 @@
     </style>
     </head>
 
-<body>
+<body oncontextmenu="return false;">
     <div id="preloader">
         <div class="preloader-content">
             <div class="loader"></div>
@@ -840,6 +920,30 @@
         document.addEventListener('DOMContentLoaded', initializePageLogic);
 
         function initializePageLogic() {
+            // [THÊM MỚI] Vô hiệu hoá chuột phải và các phím tắt sao chép
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+
+            document.addEventListener('copy', function(e) {
+                e.preventDefault();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                // Chặn Ctrl+C (sao chép)
+                if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
+                    e.preventDefault();
+                }
+                // Chặn Ctrl+U (xem nguồn trang)
+                if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                    e.preventDefault();
+                }
+                // Chặn F12 (mở công cụ phát triển)
+                if (e.key === 'F12') {
+                    e.preventDefault();
+                }
+            });
+
             const cardGrid = document.getElementById('card-grid');
             const searchInput = document.getElementById('search-input');
             const filterButtonsContainer = document.getElementById('filter-buttons');
@@ -1180,22 +1284,67 @@
                     document.getElementById('modalThemeStudy').innerHTML = formatHtml(safeText(card.theme_study));
                     document.getElementById('modalThemeCareerTarot').innerHTML = formatHtml(safeText(card.theme_career));
 
-                    // [SỬA ĐỔI] Thêm logic hiển thị ví dụ cho bài Tarot
                     const exampleContentEl = document.getElementById('modalExampleReadingContent');
-                    if (card.example) {
+                    
+                    const examples = [
+                        { id: 'love', title: 'Tình yêu', icon: 'fa-heart', content: card.example_love },
+                        { id: 'work', title: 'Sự nghiệp', icon: 'fa-briefcase', content: card.example_work },
+                        { id: 'study', title: 'Học tập', icon: 'fa-book-reader', content: card.example_study }
+                    ];
+
+                    let navHtml = '';
+                    let contentHtml = '';
+                    let isFirstTab = true;
+
+                    for (const ex of examples) {
+                        if (ex.content && ex.content.trim() !== '') {
+                            const activeClass = isFirstTab ? 'active' : '';
+                            const showClass = isFirstTab ? 'show active' : '';
+                            
+                            navHtml += `
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link ${activeClass}" id="pills-${ex.id}-tab" data-bs-toggle="pill" data-bs-target="#pills-${ex.id}" type="button" role="tab" aria-controls="pills-${ex.id}" aria-selected="${isFirstTab}">
+                                        <i class="fas ${ex.icon} me-2"></i>${ex.title}
+                                    </button>
+                                </li>
+                            `;
+
+                            contentHtml += `
+                                <div class="tab-pane fade ${showClass}" id="pills-${ex.id}" role="tabpanel" aria-labelledby="pills-${ex.id}-tab" tabindex="0">
+                                    <div class="content-wrapper">
+                                        ${formatHtml(safeText(ex.content))}
+                                    </div>
+                                </div>
+                            `;
+                            
+                            isFirstTab = false;
+                        }
+                    }
+
+                    if (navHtml.trim() === '') {
                         exampleContentEl.innerHTML = `
-                            <div class="detail-section tarot-view">
-                                <h5><i class="fas fa-book-reader me-2" style="color: #F97316;"></i>Ví dụ giải bài</h5>
-                                <div>${formatHtml(safeText(card.example))}</div>
+                             <div class="p-3 text-center">
+                                <h5><i class="fas fa-info-circle me-2"></i>Chưa có ví dụ</h5>
+                                <p class="text-secondary mb-0">Hiện tại chưa có ví dụ giải bài cho lá bài này.</p>
                             </div>
                         `;
                     } else {
                         exampleContentEl.innerHTML = `
-                            <div class="detail-section tarot-view">
-                                <h5><i class="fas fa-book-reader me-2" style="color: #F97316;"></i>Ví dụ giải bài</h5>
-                                <p>Chưa có ví dụ cho lá bài này.</p>
+                            <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
+                                <div class="modal-tab-slider"></div>
+                                ${navHtml}
+                            </ul>
+                            <div class="tab-content" id="pills-tabContent">
+                                ${contentHtml}
                             </div>
                         `;
+                        
+                        const initialActiveTab = exampleContentEl.querySelector('#pills-tab .nav-link.active');
+                        if (initialActiveTab) {
+                            setTimeout(() => {
+                                updateModalTabSlider(initialActiveTab);
+                            }, 50);
+                        }
                     }
 
                 } else if (activeFilter === 'Lenormand') {
@@ -1276,6 +1425,15 @@
                 filterSlider.style.top = `${activeButton.offsetTop}px`;
                 filterSlider.style.height = `${activeButton.offsetHeight}px`;
             }
+            
+            function updateModalTabSlider(activeButton) {
+                if (!activeButton) return;
+                const slider = activeButton.closest('.nav-pills').querySelector('.modal-tab-slider');
+                if (!slider) return;
+        
+                slider.style.width = `${activeButton.offsetWidth}px`;
+                slider.style.left = `${activeButton.offsetLeft}px`;
+            }
 
             searchInput.addEventListener('input', handleFilterAndSearch);
 
@@ -1308,6 +1466,12 @@
                     }, 300);
                 }
             });
+            
+            cardDetailModalEl.addEventListener('shown.bs.tab', function (event) {
+                if (event.target.closest('#modalExampleReadingContent')) {
+                    updateModalTabSlider(event.target);
+                }
+            });
 
             cardDetailModalEl.addEventListener('click', function (event) {
                 if (event.target.classList.contains('upgrade-text-link')) {
@@ -1334,6 +1498,16 @@
                         exampleContent.style.display = 'block';
                         this.dataset.view = 'examples';
                         this.innerHTML = '<i class="fas fa-info-circle me-2"></i>Xem Chi Tiết Lá Bài';
+
+                        // [BẮT ĐẦU SỬA LỖI] Cập nhật vị trí slider của tab ngay khi hiển thị
+                        const activeTab = exampleContent.querySelector('.nav-link.active');
+                        if (activeTab) {
+                            setTimeout(() => {
+                                updateModalTabSlider(activeTab);
+                            }, 50); // Đợi 1 chút để DOM kịp render kích thước
+                        }
+                        // [KẾT THÚC SỬA LỖI]
+
                     } else {
                         detailsContent.style.display = 'block';
                         exampleContent.style.display = 'none';
@@ -1394,6 +1568,11 @@
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(() => {
                     updateFilterSlider(filterButtonsContainer.querySelector('.btn.active'));
+                    // Cập nhật lại slider trong modal nếu nó đang mở
+                    const activeModalTab = document.querySelector('#modalExampleReadingContent .nav-link.active');
+                    if (cardDetailModalEl.classList.contains('show') && activeModalTab) {
+                         updateModalTabSlider(activeModalTab);
+                    }
                 }, 250);
             });
 
