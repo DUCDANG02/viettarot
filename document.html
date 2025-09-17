@@ -254,13 +254,13 @@
         }
         
         .price-member {
-            color: #4A6CF3;
-            background-color: rgba(74, 108, 243, 0.1);
+            background: linear-gradient(90deg, #a8baff 0%, #d7baff 100%);
+            color: #312e81;
         }
         
         .price-student {
-            color: #ff9800;
-            background-color: rgba(255, 152, 0, 0.1);
+            background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%);
+            color: #212529;
         }
 
         .document-card-footer {
@@ -925,7 +925,6 @@
             const confirmUnsaveBtn = document.getElementById('confirm-unsave-btn');
             const unsaveConfirmModal = new bootstrap.Modal(unsaveConfirmModalEl);
 
-            // NEW: Khởi tạo modal thông báo quyền truy cập
             const permissionModalEl = document.getElementById('permissionDeniedModal');
             const permissionModal = new bootstrap.Modal(permissionModalEl);
             const permissionModalBody = document.getElementById('permissionDeniedModalBody');
@@ -935,7 +934,6 @@
                 return new Date(dateString).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
             };
             
-            // NEW: Hàm hiển thị popup thông báo quyền
             function showPermissionModal(requiredRole) {
                 if (permissionModalBody) {
                     permissionModalBody.innerHTML = `<p class="fs-5 mb-1">Bạn cần là <strong>${requiredRole}</strong> để xem nội dung này.</p><p class="text-secondary">Vui lòng đăng nhập hoặc nâng cấp tài khoản của bạn.</p>`;
@@ -957,10 +955,10 @@
                             accessLevelHTML = `<span class="price-badge price-free">Miễn phí</span>`;
                             break;
                         case 'member':
-                            accessLevelHTML = `<span class="price-badge price-member">Dành cho Member</span>`;
+                            accessLevelHTML = `<span class="price-badge price-member">MemberShip</span>`;
                             break;
                         case 'student':
-                             accessLevelHTML = `<span class="price-badge price-student">Dành cho Học viên</span>`;
+                             accessLevelHTML = `<span class="price-badge price-student">Học viên</span>`;
                             break;
                         default:
                              accessLevelHTML = `<span class="price-badge price-free">Công khai</span>`;
@@ -1052,10 +1050,10 @@
                 } else if (filterType === 'student') {
                     filtered = filtered.filter(doc => doc.access_level === 'student');
                 } else if (filterType === 'all') {
-                    // **CODE ĐÃ SỬA**
-                    // Khi chọn "Tất cả", không lọc theo quyền truy cập ở đây nữa.
-                    // Tất cả tài liệu sẽ được hiển thị.
-                    // Việc kiểm tra quyền sẽ được thực hiện khi người dùng nhấn vào xem.
+                    for (let i = filtered.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+                    }
                 }
 
                 currentDocuments = filtered;
@@ -1082,8 +1080,8 @@
                 let accessLevelHTML = '';
                 switch (doc.access_level) {
                     case 'free': accessLevelHTML = `<span class="price-badge price-free">Miễn phí</span>`; break;
-                    case 'member': accessLevelHTML = `<span class="price-badge price-member">Dành cho Member</span>`; break;
-                    case 'student': accessLevelHTML = `<span class="price-badge price-student">Dành cho Học viên</span>`; break;
+                    case 'member': accessLevelHTML = `<span class="price-badge price-member">MemberShip</span>`; break;
+                    case 'student': accessLevelHTML = `<span class="price-badge price-student">Học viên</span>`; break;
                     default: accessLevelHTML = `<span class="price-badge price-free">Công khai</span>`;
                 }
                 
@@ -1099,6 +1097,8 @@
                     </div>`;
                 modalViewButton.dataset.docUrl = doc.document_url || '#';
                 modalViewButton.dataset.docTitle = doc.title || 'Tài liệu';
+                // === CODE ĐÃ SỬA: Gắn quyền truy cập yêu cầu vào nút "Xem Ngay" ===
+                modalViewButton.dataset.requiredLevel = doc.access_level || 'free';
             }
             
             async function checkIfDocIsSaved(docId) {
@@ -1177,6 +1177,7 @@
 
             searchInput?.addEventListener('input', applyFilters);
             
+            // === CODE ĐÃ SỬA: Bỏ kiểm tra quyền khi click xem chi tiết ===
             document.body.addEventListener('click', (e) => {
                  const trigger = e.target.closest('.document-card, .widget-post-thumbnail, .widget-post-content h6 a');
                  if(trigger && trigger.dataset.docId) {
@@ -1184,33 +1185,12 @@
                      const doc = allDocuments.find(d => d.id == docId);
                      
                      if (doc) {
-                        const requiredLevel = doc.access_level;
-                        let hasPermission = false;
-
-                        // Kiểm tra quyền truy cập của người dùng
-                        if (requiredLevel === 'free') {
-                            hasPermission = true;
-                        } else if (requiredLevel === 'member' && (userRole === 'membership' || userRole === 'student')) {
-                            hasPermission = true;
-                        } else if (requiredLevel === 'student' && userRole === 'student') {
-                            hasPermission = true;
-                        }
-                        
-                        // Nếu có quyền, hiển thị chi tiết tài liệu
-                        if(hasPermission) {
-                            const detailModal = new bootstrap.Modal(detailModalEl);
-                            detailModalEl.dataset.docId = docId;
-                            populateModal(doc);
-                            checkIfDocIsSaved(docId);
-                            detailModal.show();
-                        } else {
-                            // Nếu không có quyền, hiển thị thông báo
-                             let requiredRoleText = 'Member'; // Mặc định
-                             if (requiredLevel === 'student') {
-                                 requiredRoleText = 'Học viên';
-                             }
-                             showPermissionModal(requiredRoleText);
-                        }
+                        // Luôn luôn hiển thị modal chi tiết
+                        const detailModal = new bootstrap.Modal(detailModalEl);
+                        detailModalEl.dataset.docId = docId;
+                        populateModal(doc);
+                        checkIfDocIsSaved(docId);
+                        detailModal.show();
                      }
                  }
             });
@@ -1240,13 +1220,49 @@
                 if (!error) setSaveButtonState('unsaved');
             });
 
+            // === CODE ĐÃ SỬA: Thêm kiểm tra quyền vào nút "Xem Ngay" ===
             modalViewButton?.addEventListener('click', function() {
-                const docUrl = this.dataset.docUrl;
-                if (docUrl && docUrl !== '#') {
-                    new bootstrap.Modal(pdfViewerModalEl).show();
+                const requiredLevel = this.dataset.requiredLevel;
+
+                // Nếu nội dung yêu cầu quyền và người dùng là khách (chưa đăng nhập) -> Mở modal đăng nhập
+                if (requiredLevel !== 'free' && userRole === 'guest') {
+                    const detailModalInstance = bootstrap.Modal.getInstance(detailModalEl);
+                    if (detailModalInstance) detailModalInstance.hide();
+                    
+                    const loginModalEl = document.getElementById('loginModal');
+                    if(loginModalEl) new bootstrap.Modal(loginModalEl).show();
+                    return;
+                }
+
+                let hasPermission = false;
+                // Thực hiện kiểm tra quyền cho người dùng đã đăng nhập
+                if (requiredLevel === 'free') {
+                    hasPermission = true;
+                } else if (requiredLevel === 'member' && (userRole === 'membership' || userRole === 'student')) {
+                    hasPermission = true;
+                } else if (requiredLevel === 'student' && userRole === 'student') {
+                    hasPermission = true;
+                }
+
+                if (hasPermission) {
+                    // Nếu có quyền -> Mở trình xem PDF
+                    const docUrl = this.dataset.docUrl;
+                    if (docUrl && docUrl !== '#') {
+                        new bootstrap.Modal(pdfViewerModalEl).show();
+                    } else {
+                        updatingOverlay?.classList.add('show');
+                        setTimeout(() => updatingOverlay?.classList.remove('show'), 3000);
+                    }
                 } else {
-                    updatingOverlay?.classList.add('show');
-                    setTimeout(() => updatingOverlay?.classList.remove('show'), 3000);
+                    // Nếu không có quyền -> Đóng modal chi tiết và hiển thị thông báo
+                    const detailModalInstance = bootstrap.Modal.getInstance(detailModalEl);
+                    if (detailModalInstance) detailModalInstance.hide();
+
+                    let requiredRoleText = 'MemberShip';
+                    if (requiredLevel === 'student') {
+                        requiredRoleText = 'Học viên';
+                    }
+                    showPermissionModal(requiredRoleText);
                 }
             });
 
