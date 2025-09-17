@@ -751,7 +751,7 @@ class ViettarotComponents {
             display: flex;
             align-items: flex-end;
             gap: 15px;
-            transition: gap 0.3s ease;
+            transition: gap 0.3s ease, bottom 0.3s ease; /* Thêm bottom vào transition */
         }
         .widget-right {
             right: 25px;
@@ -761,6 +761,11 @@ class ViettarotComponents {
             left: 25px;
             flex-direction: row-reverse; /* Đảo ngược thứ tự: icon ở bên phải, text ở bên trái */
         }
+        /* START: CSS CHO TIKTOK WIDGET */
+        #tiktok-widget-container {
+             bottom: 100px; /* Vị trí widget TikTok trên desktop */
+        }
+        /* END: CSS CHO TIKTOK WIDGET */
         .widget-left .messenger-text-bubble {
              transform-origin: left bottom;
         }
@@ -962,10 +967,17 @@ class ViettarotComponents {
             .widget-left {
                 left: auto; 
                 right: 15px;
-                bottom: 80px; 
                 flex-direction: row; 
                 gap: 10px;
             }
+            /* START: ĐIỀU CHỈNH VỊ TRÍ WIDGET TRÊN MOBILE */
+            #community-widget-container.widget-left {
+                bottom: 80px; 
+            }
+            #tiktok-widget-container.widget-left {
+                bottom: 145px; /* Vị trí trên mobile, phía trên widget community */
+            }
+            /* END: ĐIỀU CHỈNH VỊ TRÍ WIDGET TRÊN MOBILE */
             .widget-left .messenger-text-bubble {
                 transform-origin: right bottom;
             }
@@ -1431,6 +1443,19 @@ class ViettarotComponents {
                 </a>
             </div>
         </div>
+
+        <div class="messenger-widget-container widget-left" id="tiktok-widget-container">
+            <div class="messenger-text-bubble">
+                <p class="mb-0">Theo dõi trên TikTok</p>
+            </div>
+            <div class="messenger-icon-wrapper">
+                <button class="messenger-close-btn" id="tiktok-close-btn" title="Ẩn">&times;</button>
+                <a href="https://www.tiktok.com/@viettarotacademy" class="messenger-fab-icon" target="_blank" title="Xem kênh TikTok của chúng tôi">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+            </div>
+        </div>
+        
         <div class="messenger-widget-container widget-left" id="community-widget-container">
             <div class="messenger-text-bubble">
                 <p class="mb-0">Tham gia nhóm cộng đồng</p>
@@ -2139,6 +2164,7 @@ class ViettarotComponents {
         
         this.setupFloatingWidget('community-widget-container', 'community-close-btn', 'communityWidgetCollapsed');
         this.setupFloatingWidget('facebook-widget-container', 'facebook-close-btn', 'facebookWidgetCollapsed');
+        this.setupFloatingWidget('tiktok-widget-container', 'tiktok-close-btn', 'tiktokWidgetCollapsed'); // THÊM MỚI
 
         this.setupUpgradeModal();
         this.setupUpgradeModalViewSwitch(); // Gọi hàm xử lý chuyển đổi view mới
