@@ -18,6 +18,10 @@ class ViettarotComponents {
         this.presenceChannel = null;
         this.lastSeenInterval = null;
         // END: Biến cho chức năng theo dõi online
+
+        // START: Biến cho chức năng ẩn/hiện header
+        this.lastScrollTop = 0;
+        // END: Biến cho chức năng ẩn/hiện header
     }
 
     // Phương thức trả về CSS cho tất cả các component
@@ -44,25 +48,41 @@ class ViettarotComponents {
 
         /* START: ÁP DỤNG FONT CHỮ MỚI CHO TOÀN BỘ TRANG */
         body {
-            font-family: "Montserrat", sans-serif; /* Sử dụng font mới, có sans-serif dự phòng */
+            font-family: "Montserrat", sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            background-color: var(--bg-off-white);
         }
         /* END: ÁP DỤNG FONT CHỮ MỚI */
 
-        /* Header & Navbar */
+        /* START: CSS ĐÃ SỬA CHO HEADER THEO MẪU MỚI */
         header {
-            position: sticky;
-            top: 0;
+            position: fixed; /* SỬA LẠI: 'fixed' để luôn định vị theo màn hình, tốt hơn 'absolute' */
+            width: 100%;
+            left: 0;
+            top: 1rem;
             z-index: 1030;
-            background-color: var(--bg-white);
-            box-shadow: 0 10px 40px -15px rgba(74, 108, 243, 0.25);
-            transition: all 0.3s ease-in-out;
+            /* SỬA LẠI: Thêm opacity và cập nhật transition để mượt mà hơn */
+            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            transform: translateY(0);
+            opacity: 1; /* THÊM MỚI: Trạng thái mặc định */
+            padding: 0;
+            background-color: transparent;
+            box-shadow: none;
         }
+        
+        /* SỬA LẠI: Class để ẩn header với hiệu ứng trượt và mờ dần */
+        header.header-hidden {
+            transform: translateY(-150%);
+            opacity: 0;
+            pointer-events: none; /* Vô hiệu hóa tương tác khi ẩn */
+        }
+
         .navbar {
-            background-color: transparent !important;
-            box-shadow: none !important;
-            padding: 10px 0px;
+            background-color: var(--bg-white) !important;
+            box-shadow: 0 10px 40px -15px rgba(65, 56, 240, 0.49);
+            padding: 7px 20px; 
+            border-radius: 50px;
         }
         .navbar-brand {
             font-weight: 700;
@@ -111,7 +131,7 @@ class ViettarotComponents {
         }
         .navbar-nav .nav-link:hover {
             color: var(--bg-white);
-             text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Thêm: Hiệu ứng chữ phát sáng */
+             text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
         }
         .navbar-nav .nav-link:hover::before {
             transform: scaleX(1);
@@ -119,7 +139,7 @@ class ViettarotComponents {
         .navbar-nav .nav-link.active {
             color: var(--bg-white);
             font-weight: 600;
-             text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Thêm: Hiệu ứng chữ phát sáng */
+             text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
         }
         .navbar-nav .nav-link.active::before {
             transform: scaleX(1);
@@ -127,6 +147,8 @@ class ViettarotComponents {
         .navbar-nav .nav-link.active:hover {
             color: var(--bg-white);
         }
+        /* END: CSS ĐÃ SỬA CHO HEADER */
+
         .dropdown-menu {
             border-radius: 0.75rem;
             border: 1px solid var(--border-color);
@@ -941,6 +963,27 @@ class ViettarotComponents {
 
         /* Responsive */
         @media (max-width: 991.98px) {
+            /* START: CSS RESPONSIVE CHO HEADER MỚI */
+            header {
+                position: static; /* Trả header về trạng thái tĩnh trên mobile */
+                padding: 0;
+                top: 0;
+            }
+            header.header-hidden {
+                 transform: none; /* Vô hiệu hóa hiệu ứng ẩn trên mobile */
+                 opacity: 1;
+            }
+            header .container {
+                max-width: 100%;
+                padding-right: var(--bs-gutter-x, 0.75rem);
+                padding-left: var(--bs-gutter-x, 0.75rem);
+            }
+            .navbar {
+                border-radius: 0;
+                padding: 10px 0px;
+            }
+            /* END: CSS RESPONSIVE CHO HEADER MỚI */
+
             .navbar-nav { padding-top: 1rem; }
             .navbar-nav .nav-item { margin-bottom: 0.5rem; }
             .navbar-nav .nav-item:last-child { margin-bottom: 0; }
@@ -976,7 +1019,6 @@ class ViettarotComponents {
                 gap: 10px;
             }
             /* START: ĐIỀU CHỈNH VỊ TRÍ WIDGET TRÊN MOBILE */
-            /* Trên mobile, tất cả widget đều nằm bên phải và xếp chồng lên nhau */
             #facebook-widget-container.widget-right {
                 bottom: 15px;
             }
@@ -1019,12 +1061,12 @@ class ViettarotComponents {
         document.head.appendChild(style);
     }
 
-    // Phương thức trả về HTML của Header
+    // Phương thức trả về HTML của Header (Không thay đổi)
     getHeaderHTML() {
         return `
         <header>
-            <nav class="navbar navbar-expand-lg">
-                <div class="container">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg">
                     <a class="navbar-brand" href="index.html">
                         <img src="/image/logo.png" alt="VietTarot Logo" id="header-logo">
                     </a>
@@ -1057,12 +1099,12 @@ class ViettarotComponents {
                         </ul>
                         <div id="auth-container" class="d-flex justify-content-center mt-3 mt-lg-0"></div>
                     </div>
-                </div>
-            </nav>
+                </nav>
+            </div>
         </header>`;
     }
 
-    // Phương thức trả về HTML của Footer (ĐÃ ĐƯỢC CẬP NHẬT)
+    // Phương thức trả về HTML của Footer (Không thay đổi)
     getFooterHTML() {
         return `
         <footer class="site-footer">
@@ -1126,6 +1168,9 @@ class ViettarotComponents {
             </div>
         </footer>`;
     }
+
+    // Các hàm modals, widgets... không thay đổi
+    // ... (Toàn bộ các hàm getModalsHTML, getFloatingWidgetsHTML,... được giữ nguyên)
 
     // START: HÀM ĐƯỢC CẬP NHẬT
     getModalsHTML() {
@@ -1439,9 +1484,6 @@ class ViettarotComponents {
         </div>
         `;
     }
-    // END: HÀM ĐƯỢC CẬP NHẬT
-    
-    // Phương thức trả về HTML của các Widget nổi
     getFloatingWidgetsHTML() {
         return `
         <div class="messenger-widget-container widget-right" id="tiktok-widget-container">
@@ -1537,7 +1579,6 @@ class ViettarotComponents {
 
         toastBody.innerHTML = message;
         
-        // Cập nhật class và tiêu đề dựa trên loại thông báo
         toastEl.className = 'toast viettarot-toast'; // Reset class
         let icon = '';
         switch(type) {
@@ -1780,42 +1821,34 @@ class ViettarotComponents {
         }
     }
 
-    // START: HÀM ĐÃ ĐƯỢC CẬP NHẬT VỚI HỆ THỐNG THÔNG BÁO MỚI
     async handleLogout(event) {
         event.preventDefault();
         const logoutButton = event.currentTarget;
 
-        // Vô hiệu hóa nút và hiển thị trạng thái đang xử lý trên nút
         logoutButton.disabled = true;
-        logoutButton.style.pointerEvents = 'none'; // Chặn click tuyệt đối
+        logoutButton.style.pointerEvents = 'none';
         logoutButton.innerHTML = `<i class="fas fa-spinner fa-spin fa-fw"></i> Đang xử lý...`;
         
-        // Hiển thị thông báo "Đang đăng xuất"
         this.showToast('Đang đăng xuất, vui lòng chờ...', 'info', 10000);
 
-        // Đợi một chút để người dùng thấy thông báo
         setTimeout(async () => {
             await this.leavePresenceChannel(); 
             const { error } = await this.supabase.auth.signOut();
             
             if (error) {
                 this.showToast(`Lỗi: ${error.message}`, 'danger');
-                // Nếu lỗi, kích hoạt lại nút
                 logoutButton.disabled = false;
                 logoutButton.style.pointerEvents = 'auto';
                 logoutButton.innerHTML = `<i class="fas fa-sign-out-alt fa-fw"></i> Đăng xuất`;
             } else {
-                // Hiển thị thông báo "Đăng xuất thành công"
                 this.showToast('Đăng xuất thành công! Đang chuyển hướng...', 'success');
 
-                // Chờ 2 giây để người dùng đọc thông báo rồi mới chuyển trang
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 2000);
             }
         }, 1000);
     }
-    // END: HÀM ĐÃ ĐƯỢC CẬP NHẬT
     
     setupPasswordToggle(toggleId, passwordId) {
         const toggleIcon = document.getElementById(toggleId);
@@ -1863,14 +1896,13 @@ class ViettarotComponents {
         }
     }
     
-    // START: HÀM ĐÃ ĐƯỢC CẬP NHẬT LOGIC
     async setupUpgradeModal() {
         const upgradeModalEl = document.getElementById('upgradeModal');
         if (!upgradeModalEl) return;
     
         upgradeModalEl.addEventListener('show.bs.modal', async () => {
             const { data: { user } } = await this.supabase.auth.getUser();
-            let userRole = 'user'; // Mặc định cho khách hoặc người dùng mới
+            let userRole = 'user';
     
             if (user) {
                 const { data: profile } = await this.supabase
@@ -1883,7 +1915,6 @@ class ViettarotComponents {
                 }
             }
             
-            // Dọn dẹp trạng thái cũ của tất cả các card
             document.querySelectorAll('.pricing-card').forEach(card => {
                 card.classList.remove('current');
                 card.querySelector('.current-plan-badge')?.remove();
@@ -1894,7 +1925,6 @@ class ViettarotComponents {
                 }
             });
             
-            // LOGIC MỚI: Nếu người dùng là 'student', vô hiệu hóa gói 'membership'
             if (userRole === 'student') {
                 const membershipCard = document.querySelector(".pricing-card[data-role='membership']");
                 if (membershipCard) {
@@ -1906,7 +1936,6 @@ class ViettarotComponents {
                 }
             }
             
-            // Tìm và làm nổi bật gói hiện tại của người dùng
             const currentPlanCard = document.querySelector(`.pricing-card[data-role='${userRole}']`);
             if (currentPlanCard) {
                 const badge = document.createElement('div');
@@ -1922,9 +1951,7 @@ class ViettarotComponents {
             }
         });
     }
-    // END: HÀM ĐÃ ĐƯỢC CẬP NHẬT LOGIC
 
-    // START: HÀM MỚI ĐỂ XỬ LÝ CHUYỂN ĐỔI VIEW TRONG UPGRADE MODAL
     setupUpgradeModalViewSwitch() {
         const upgradeModalEl = document.getElementById('upgradeModal');
         if (!upgradeModalEl) return;
@@ -1943,7 +1970,7 @@ class ViettarotComponents {
             viewCoursesBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 plansContainer.style.display = 'none';
-                coursesContainer.style.display = 'flex'; // Sử dụng flex vì nó là một .row
+                coursesContainer.style.display = 'flex';
                 modalTitle.textContent = 'Chi Tiết Khoá Học Chuyên Sâu';
                 modalSubtitle.textContent = 'Chọn hình thức học phù hợp với bạn nhất.';
             });
@@ -1953,7 +1980,7 @@ class ViettarotComponents {
             backToPlansBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 coursesContainer.style.display = 'none';
-                plansContainer.style.display = 'flex'; // Sử dụng flex vì nó là một .row
+                plansContainer.style.display = 'flex';
                 modalTitle.textContent = originalTitle;
                 modalSubtitle.textContent = originalSubtitle;
             });
@@ -1975,13 +2002,12 @@ class ViettarotComponents {
             });
         }
     
-        // Reset view khi modal bị đóng
         upgradeModalEl.addEventListener('hidden.bs.modal', () => {
             coursesContainer.style.display = 'none';
             plansContainer.style.display = 'flex';
             modalTitle.textContent = originalTitle;
             modalSubtitle.textContent = originalSubtitle;
-            if(discountCheckbox) discountCheckbox.checked = false; // Bỏ check HSSV
+            if(discountCheckbox) discountCheckbox.checked = false;
             const groupCard = document.querySelector('[data-role="student-group"]');
             if (groupCard) {
                 const basePrice = parseInt(groupCard.dataset.basePrice, 10);
@@ -1989,16 +2015,13 @@ class ViettarotComponents {
             }
         });
     }
-    // END: HÀM MỚI
 
-    // START: HÀM ĐƯỢC CẬP NHẬT
     async setupPaymentLogic() {
         const upgradeModalEl = document.getElementById('upgradeModal');
         if (!upgradeModalEl) return;
 
         upgradeModalEl.addEventListener('click', async (event) => {
             const button = event.target.closest('.pricing-card .btn');
-            // Bỏ qua nếu không phải nút, hoặc nút bị vô hiệu hóa, hoặc là các nút điều hướng view
             if (!button || button.disabled || button.id === 'view-courses-btn' || button.id === 'back-to-plans-btn') {
                 return;
             }
@@ -2018,27 +2041,26 @@ class ViettarotComponents {
             if (role === 'membership') {
                 price = 199000;
                 planName = 'Membership';
-            } else if (role === 'student-1-1') { // Lớp 1:1
+            } else if (role === 'student-1-1') {
                 price = 4890000;
                 planName = 'Lop 1:1';
-            } else if (role === 'student-group') { // Lớp nhóm
+            } else if (role === 'student-group') {
                 planName = 'Lop Nhom';
                 const discountCheckbox = document.getElementById('student-discount-checkbox');
                 if (discountCheckbox && discountCheckbox.checked) {
                     price = parseInt(card.dataset.discountPrice, 10);
-                    planName += ' HSSV'; // Thêm ghi chú cho gói giảm giá
+                    planName += ' HSSV';
                 } else {
                     price = parseInt(card.dataset.basePrice, 10);
                 }
             } else {
-                return; // Không phải nút thanh toán
+                return;
             }
             
             const qrModalEl = document.getElementById('paymentQRModal');
             const qrLoadingEl = document.getElementById('qr-loading-indicator');
             const qrImageEl = document.getElementById('qr-code-image');
 
-            // Cập nhật thông tin giao dịch tĩnh
             document.getElementById('qr-plan-name').textContent = planName.replace('Lop', 'Lớp').replace('HSSV', '(HSSV)');
             document.getElementById('qr-amount').textContent = `${price.toLocaleString('vi-VN')} VNĐ`;
 
@@ -2076,9 +2098,7 @@ class ViettarotComponents {
             };
         });
     }
-    // END: HÀM ĐƯỢC CẬP NHẬT
     
-    // START: HÀM MỚI ĐỂ XỬ LÝ SAO CHÉP
     setupCopyToClipboard() {
         document.body.addEventListener('click', (event) => {
             const copyButton = event.target.closest('[data-copy-target]');
@@ -2102,19 +2122,41 @@ class ViettarotComponents {
             }
         });
     }
-    // END: HÀM MỚI ĐỂ XỬ LÝ SAO CHÉP
 
-    // START: HÀM MỚI ĐỂ TẢI FACEBOOK SDK
     loadFacebookSDK() {
         if (document.getElementById('facebook-jssdk')) return;
         const script = document.createElement('script');
         script.id = 'facebook-jssdk';
         script.src = 'https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v18.0';
         script.crossOrigin = 'anonymous';
-        script.nonce = '5Xf2Yh1z'; // Nonce có thể cần thiết nếu bạn có Chính sách Bảo mật Nội dung (CSP)
+        script.nonce = '5Xf2Yh1z';
         document.head.appendChild(script);
     }
-    // END: HÀM MỚI
+
+    // SỬA LẠI: Hàm ẩn/hiện header khi cuộn
+    setupAutoHidingHeader() {
+        const header = document.querySelector('header');
+        if (!header) return;
+
+        window.addEventListener('scroll', () => {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Logic này sẽ không chạy trên màn hình mobile (nhờ CSS media query)
+            // nhưng thêm check để chắc chắn
+            if (window.innerWidth < 992) {
+                header.classList.remove('header-hidden');
+                return;
+            }
+
+            // Nếu cuộn xuống và đã qua một khoảng nhất định, ẩn header
+            if (scrollTop > this.lastScrollTop && scrollTop > 150) { 
+                header.classList.add('header-hidden');
+            } else { // Nếu cuộn lên, hiện header
+                header.classList.remove('header-hidden');
+            }
+            this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }, false);
+    }
 
     // Phương thức chính để khởi tạo tất cả các thành phần và logic
     init() {
@@ -2129,7 +2171,7 @@ class ViettarotComponents {
             floatingWidgetsPlaceholder.innerHTML = this.getFloatingWidgetsHTML();
         }
         
-        this.loadFacebookSDK(); // Tải SDK của Facebook để hiển thị widget
+        this.loadFacebookSDK();
 
         document.querySelectorAll('.pricing-card .btn').forEach(btn => {
             btn.dataset.originalClass = btn.className;
@@ -2179,9 +2221,10 @@ class ViettarotComponents {
         this.setupFloatingWidget('tiktok-widget-container', 'tiktok-close-btn', 'tiktokWidgetCollapsed');
 
         this.setupUpgradeModal();
-        this.setupUpgradeModalViewSwitch(); // Gọi hàm xử lý chuyển đổi view mới
+        this.setupUpgradeModalViewSwitch();
         this.setupPaymentLogic(); 
         this.setupCopyToClipboard();
+        this.setupAutoHidingHeader(); // Kích hoạt chức năng ẩn/hiện header
 
         document.dispatchEvent(new CustomEvent('viettarot.initialized'));
     }
