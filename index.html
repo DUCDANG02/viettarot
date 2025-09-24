@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VietTarot - Trang Chủ</title>
+    
+    <link rel="icon" type="image/png" sizes="16x16" href="image/iconlogo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="image/iconlogo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="image/iconlogo.png">
 
-    <link rel="icon" type="image/png" sizes="16x16" href="https://www.viettarot.com/image/iconlogo.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://www.viettarot.com/image/iconlogo.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://www.viettarot.com/image/iconlogo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -79,12 +80,6 @@
         
         /* == CSS DÀNH RIÊNG CHO CÁC PHẦN CỦA TRANG CHỦ == */
 
-        /* Hero Slider */
-        #header-placeholder{
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
 
         #heroSlider {
             padding: 0;
@@ -257,6 +252,112 @@
             transform: scale(1.05);
         }
 
+        /* Mission & Vision Section */
+        #mission-vision {
+            background-color: var(--bg-white);
+        }
+        .mission-vision-image img {
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        .mission-vision-image img:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        .mission-vision-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .mission-vision-content .icon {
+            font-size: 2.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: var(--primary-blue);
+            display: inline-block;
+        }
+        .mission-vision-content h3 {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0;
+        }
+        .mission-vision-content p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        @media (max-width: 991.98px) {
+            #mission-vision .row + .row {
+                margin-top: 3rem;
+            }
+             .mission-vision-content {
+                margin-top: 2rem;
+                text-align: center;
+            }
+            .mission-vision-header {
+                justify-content: center;
+            }
+             .mission-vision-image {
+                text-align: center;
+            }
+        }
+
+        /* Why Choose Us Section */
+        .usp-card {
+            background-color: var(--bg-white);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            height: 100%;
+            text-align: left;
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+        .usp-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        .usp-icon {
+            font-size: 2rem;
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: .75rem;
+            background: var(--gradient-primary);
+            color: var(--bg-white);
+        }
+        .usp-card-content h5 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .usp-card-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+        @media (max-width: 576px) {
+            .usp-card {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+        }
+
 
         /* Courses Section */
         .badge-new {
@@ -370,7 +471,7 @@
 
         /* Testimonials Section */
         #testimonials {
-            background-color: var(--bg-off-white);
+            background-color: var(--bg-white);
         }
         .testimonial-card {
             background-color: var(--bg-white);
@@ -560,7 +661,7 @@
             box-shadow: 0 7px 20px rgba(155, 73, 242, 0.4);
         }
 
-        /* Responsive cho trang chủ */
+        /* Responsive chung */
         @media (max-width: 767.98px) {
             .carousel-item { height: 60vh; min-height: 450px; }
             .carousel-control-prev-icon, .carousel-control-next-icon { padding: 1rem; background-size: 60%; }
@@ -631,7 +732,7 @@
                 <div class="row align-items-stretch">
                     <div class="col-lg-4 col-md-6">
                         <div class="service-item-wrapper">
-                            <div class="service-item text-lg-end"><div class="service-content"><h5>Tài liệu độc quyền</h5><p>Tài liệu độc quyền do VietTarot phát hành sưu tầm.</p></div><div class="service-icon"><i class="fas fa-book-open"></i></div></div>
+                            <div class="service-item text-lg-end"><div class="service-content"><h5>Tài liệu độc quyền</h5><p>Tài liệu được biên tập giúp có những phương pháp học mới lạ.</p></div><div class="service-icon"><i class="fas fa-book-open"></i></div></div>
                             <div class="service-item text-lg-end"><div class="service-content"><h5>Bài viết bổ ích</h5><p>Sưu tầm và phát hành những bài hữu ích và giá trị.</p></div><div class="service-icon"><i class="fas fa-gem"></i></div></div>
                             <div class="service-item text-lg-end"><div class="service-content"><h5>Cộng đồng lớn mạnh</h5><p>Cộng đồng Reader lớn sẵn sàng hỗ trợ bạn.</p></div><div class="service-icon"><i class="fas fa-compass"></i></div></div>
                         </div>
@@ -650,6 +751,91 @@
             </div>
         </section>
 
+        <section id="mission-vision" class="py-5">
+            <div class="container py-4">
+                <div class="row mb-5 pb-3 text-center">
+                    <div class="col-lg-8 mx-auto">
+                        <h2 class="section-title">Sứ Mệnh & Tầm Nhìn</h2>
+                        <p class="section-subtitle lead">Kim chỉ nam cho mọi hoạt động và định hướng phát triển của VietTarot.</p>
+                    </div>
+                </div>
+                
+                <div class="row g-lg-5 align-items-center">
+                    <div class="col-lg-6 mission-vision-image">
+                        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2070&auto=format&fit=crop" alt="Sứ mệnh VietTarot">
+                    </div>
+                    <div class="col-lg-6 mission-vision-content">
+                        <div class="mission-vision-header">
+                            <div class="icon"><i class="fas fa-crosshairs"></i></div>
+                            <h3>Sứ Mệnh Của Chúng Tôi</h3>
+                        </div>
+                        <p>Phá vỡ rào cản kiến thức, kiến tạo một lộ trình học thuật huyền học bài bản cho người Việt. Chúng tôi Việt hóa các bộ môn phương Tây, kết hợp tâm lý học để đào tạo nên những nhà luận giải có khả năng biến kỹ năng thành dịch vụ giá trị cao, giải quyết nỗi trăn trở của người mới bắt đầu về một môi trường học tập và thực hành chuyên nghiệp.</p>
+                    </div>
+                </div>
+
+                <div class="row g-lg-5 align-items-center mt-5 pt-4">
+                     <div class="col-lg-6 order-lg-2 mission-vision-image">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop" alt="Tầm nhìn VietTarot">
+                    </div>
+                    <div class="col-lg-6 order-lg-1 mission-vision-content">
+                        <div class="mission-vision-header">
+                            <div class="icon"><i class="fas fa-flag-checkered"></i></div>
+                            <h3>Tầm Nhìn Hướng Tới</h3>
+                        </div>
+                        <p>Trở thành nơi đào tạo nên thế hệ Holistic Tarot Reader và Astrologer mới tại Việt Nam. Với giáo trình chuẩn hóa, chú trọng thực hành và các phương pháp độc đáo, chúng tôi xây dựng một cộng đồng những người dẫn đường có tâm và có tầm, sử dụng tri thức huyền học như một công cụ mạnh mẽ để soi sáng và khai vấn cho hành trình phát triển bản thân của người khác.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="why-choose-us" class="py-5 bg-off-white">
+            <div class="container py-4">
+                <div class="row mb-5 text-center">
+                    <div class="col-lg-8 mx-auto">
+                        <h2 class="section-title">Tại Sao Chọn VietTarot?</h2>
+                        <p class="section-subtitle lead">Những giá trị độc đáo chỉ có tại VietTarot sẽ là nền tảng vững chắc cho hành trình huyền học của bạn.</p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6 d-flex">
+                        <div class="usp-card">
+                            <div class="usp-icon"><i class="fas fa-globe-asia"></i></div>
+                            <div class="usp-card-content">
+                                <h5>Tiên Phong "Việt Hóa" Huyền Học</h5>
+                                <p>Chúng tôi không chỉ dịch thuật, mà "Việt hóa" kiến thức để gần gũi với tư duy, văn hóa người Việt, giúp bạn phá vỡ rào cản và thẩm thấu kiến thức nhanh, sâu hơn.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-flex">
+                        <div class="usp-card">
+                            <div class="usp-icon"><i class="fas fa-sitemap"></i></div>
+                            <div class="usp-card-content">
+                                <h5>Lộ Trình Đào Tạo Chuyên Nghiệp</h5>
+                                <p>Cam kết một lộ trình rõ ràng để chuyên nghiệp hóa kỹ năng, kết hợp Tâm lý học và định hướng "biến kỹ năng thành dịch vụ giá trị cao".</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-flex">
+                        <div class="usp-card">
+                           <div class="usp-icon"><i class="fas fa-layer-group"></i></div>
+                            <div class="usp-card-content">
+                                <h5>Hệ Thống Kiến Thức Bài Bản</h5>
+                                <p>Giải quyết triệt để nỗi đau "lạc trong ma trận kiến thức" bằng giáo trình được hệ thống hóa, giúp bạn xây dựng nền tảng từ gốc rễ một cách vững chắc.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-flex">
+                        <div class="usp-card">
+                            <div class="usp-icon"><i class="fas fa-users"></i></div>
+                            <div class="usp-card-content">
+                                <h5>Cộng Đồng Lớn Mạnh & Hỗ Trợ</h5>
+                                <p>Việc học sẽ không đơn độc với cộng đồng sôi nổi để thực hành, chia sẻ. Chúng tôi tạo ra không gian học tập an toàn, truyền cảm hứng và không hề khô khan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section id="featured-courses" class="py-5 bg-white">
             <div class="container py-4">
                 <div class="section-heading">
@@ -662,7 +848,7 @@
             </div>
         </section>
 
-        <section id="testimonials" class="py-5">
+        <section id="testimonials" class="py-5 bg-off-white">
             <div class="container py-4">
                 <div class="row mb-5 text-center">
                     <div class="col-lg-8 mx-auto">
@@ -817,7 +1003,7 @@
                                         </div>
                                         <a href="${course.course_link || '#'}" class="btn btn-gradient w-100">Xem chi tiết</a>
                                     </div>
-                                </div>
+                                 </div>
                             </div>
                         </div>`;
                 });
@@ -865,7 +1051,7 @@
             }, { threshold: 0.1 });
 
             function initializeScrollAnimations() {
-                document.querySelectorAll('.section-title, .section-subtitle, .service-item, .course-card, .testimonial-card, .central-hand-image').forEach(el => {
+                document.querySelectorAll('.section-title, .section-subtitle, .service-item, .course-card, .testimonial-card, .central-hand-image, .mission-vision-image, .mission-vision-content, .usp-card').forEach(el => {
                     el.classList.add('animate-on-scroll');
                     observer.observe(el);
                 });
