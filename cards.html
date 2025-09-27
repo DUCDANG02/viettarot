@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ý Nghĩa Lá Bài</title>
+    <title>VietTarot - Ý Nghĩa Các Loại Bài</title>
 
      <link rel="icon" type="image/png" sizes="16x16" href="image/iconlogo.png">
     <link rel="icon" type="image/png" sizes="32x32" href="image/iconlogo.png">
@@ -29,13 +29,16 @@
             --danger-color: #dc3545;
             --success-color: #198754;
             --gradient-primary: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-purple) 100%);
+            --facebook-bg: #F0F2F5;
+            --facebook-comment-bg: #E4E6EB;
+            --facebook-text-secondary: #65676B;
+            --facebook-link-color: #1877F2;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg-off-white);
             color: var(--text-primary);
-            /* [THÊM MỚI] Vô hiệu hoá chọn văn bản */
             -webkit-user-select: none; /* Safari */
             -ms-user-select: none; /* IE 10+ */
             user-select: none; /* Chuẩn */
@@ -155,20 +158,20 @@
         
         .filter-buttons .btn {
             margin: 0;
-            font-weight: 600; /* [SỬA] Tăng độ đậm */
+            font-weight: 600; 
             border-radius: 50px;
             border: 1px solid transparent;
-            color: var(--text-primary); /* [SỬA] Đổi màu chữ đậm hơn */
+            color: var(--text-primary);
             transition: all 0.3s ease;
             background-color: transparent;
             z-index: 2;
-            padding: 0.6rem 1.3rem; /* [SỬA] Tăng padding cho lớn hơn */
-            font-size: 0.95rem; /* [SỬA] Tăng cỡ chữ */
-            letter-spacing: 0.2px; /* [SỬA] Thêm khoảng cách chữ */
+            padding: 0.6rem 1.3rem; 
+            font-size: 0.95rem; 
+            letter-spacing: 0.2px; 
         }
         
         .filter-buttons .btn:hover {
-            color: var(--primary-blue); /* [SỬA] Đổi màu khi hover */
+            color: var(--primary-blue); 
         }
         
         .filter-slider {
@@ -185,7 +188,7 @@
         
         .filter-buttons .btn.active {
             color: var(--bg-white);
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* [SỬA] Thêm hiệu ứng glow cho chữ active */
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
         }
 
         @media (max-width: 991.98px) {
@@ -213,10 +216,9 @@
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-            /* Đảm bảo không bị cắt khi scale, dùng perspective và z-index để hiệu ứng 3D */
             position: relative;
             z-index: 1;
-            perspective: 1000px; /* Thêm phối cảnh cho hiệu ứng 3D nhẹ */
+            perspective: 1000px; 
         }
         .tarot-card-item-wrapper.is-visible {
             opacity: 1;
@@ -226,7 +228,7 @@
         .tarot-card-item {
             background-color: var(--bg-white);
             border-radius: 1rem;
-            overflow: hidden; /* Quan trọng để giữ bo tròn khi scale ảnh bên trong */
+            overflow: hidden; 
             text-align: center;
             text-decoration: none;
             color: var(--text-primary);
@@ -234,15 +236,14 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            /* [CẬP NHẬT] Thêm transition cho transform và box-shadow */
             transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease; 
-            will-change: transform; /* [MỚI] Tối ưu hiệu suất animation */
+            will-change: transform; 
         }
 
         .tarot-card-item-wrapper:hover .tarot-card-item {
-            transform: translateY(-10px) scale(1.08); /* [CẬP NHẬT] Phóng to rõ rệt hơn, đẩy lên cao hơn */
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2); /* [CẬP NHẬT] Đổ bóng mạnh và rõ nét hơn */
-            z-index: 10; /* [MỚI] Đảm bảo lá bài đang hover nổi lên trên các lá khác */
+            transform: translateY(-10px) scale(1.08); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2); 
+            z-index: 10; 
         }
         
         .tarot-card-item-wrapper:hover .tarot-card-name {
@@ -255,7 +256,6 @@
             aspect-ratio: 2 / 3.5;
             object-fit: cover;
             background-color: var(--bg-off-white);
-            /* [MỚI] Đảm bảo ảnh cũng được bo tròn theo container */
             border-radius: 1rem 1rem 0 0; 
         }
 
@@ -413,7 +413,6 @@
             color: var(--text-secondary);
         }
         
-        /* Style gốc cho các section chung */
         .detail-section h5 {
             font-weight: 600;
             color: var(--text-primary);
@@ -438,10 +437,9 @@
             box-shadow: 0 0 0 2px var(--primary-purple), 0 0 15px rgba(155, 73, 242, 0.4);
             border-radius: 0.75rem;
             padding: 1rem;
-            margin: -1rem; /* Bù lại padding để không làm xô lệch layout */
+            margin: -1rem; 
         }
 
-        /* Style cho text link nâng cấp */
         .upgrade-text-link {
             color: var(--text-secondary);
             text-decoration: underline;
@@ -456,7 +454,6 @@
             color: var(--primary-blue);
         }
 
-        /* [CẢI TIẾN] Style riêng cho Tarot View để thông thoáng hơn */
         .tarot-view .detail-section {
             margin-top: 2.25rem;
         }
@@ -471,21 +468,19 @@
             line-height: 1.8;
         }
         
-        /* [BẮT ĐẦU SỬA ĐỔI] Style nâng cấp cho các nút Tab Chủ đề và nội dung trong Modal */
         #modalExampleReadingContent .nav-pills {
             background-color: var(--bg-off-white);
             padding: 0.4rem;
             border-radius: 50px;
             border: 1px solid var(--border-color);
-            position: relative; /* Thêm để định vị slider */
+            position: relative; 
         }
 
-        /* Thêm slider cho hiệu ứng trượt */
         #modalExampleReadingContent .modal-tab-slider {
             position: absolute;
             top: 0.4rem;
             bottom: 0.4rem;
-            left: 0; /* Sẽ được cập nhật bằng JS */
+            left: 0; 
             height: calc(100% - 0.8rem);
             border-radius: 50px;
             background: var(--gradient-primary);
@@ -504,8 +499,8 @@
             padding: 0.6rem 1rem;
             font-size: 0.9rem;
             letter-spacing: 0.3px;
-            position: relative; /* Thêm để nổi lên trên slider */
-            z-index: 2; /* Thêm để nổi lên trên slider */
+            position: relative;
+            z-index: 2; 
         }
 
         #modalExampleReadingContent .nav-pills .nav-link:hover:not(.active) {
@@ -514,11 +509,11 @@
         }
 
         #modalExampleReadingContent .nav-pills .nav-link.active {
-            background: transparent; /* Sửa: Bỏ background vì đã có slider */
+            background: transparent; 
             color: var(--bg-white);
-            box-shadow: none; /* Sửa: Bỏ shadow vì đã có slider */
-            transform: none; /* Sửa: Bỏ transform */
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Thêm: Hiệu ứng chữ phát sáng */
+            box-shadow: none; 
+            transform: none; 
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); 
         }
 
         #modalExampleReadingContent .nav-link i {
@@ -544,14 +539,12 @@
             text-align: justify;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
         }
-        /* [KẾT THÚC SỬA ĐỔI] */
-
-        /* [CẢI TIẾN] Style dành riêng cho Lenormand */
+        
         .lenormand-view .detail-section h5 {
             font-size: 1.15rem;
         }
         .lenormand-view .detail-section + .detail-section {
-            margin-top: 2.5rem; /* Tăng khoảng cách giữa các mục */
+            margin-top: 2.5rem; 
         }
         .lenormand-view .detail-section p, 
         .lenormand-view .detail-section div {
@@ -658,7 +651,6 @@
             box-shadow: 0 6px 20px rgba(120, 73, 242, 0.4);
         }
         
-        /* Style cho nút xem ví dụ */
         .btn-view-example {
             background: transparent;
             border: 1px solid var(--primary-blue);
@@ -678,7 +670,6 @@
             box-shadow: 0 4px 15px rgba(74, 108, 243, 0.3);
         }
         
-        /* [CẬP NHẬT] Lớp tiện ích để điều chỉnh chiều rộng và căn giữa nút */
         .w-two-thirds {
             width: 66.67%;
             margin-left: auto;
@@ -745,10 +736,245 @@
         .promo-popup-close:hover {
             background-color: rgba(0, 0, 0, 0.8);
         }
+
+        /* [SỬA ĐỔI TOÀN BỘ] CSS CHO PHẦN BÌNH LUẬN */
+        .comments-container {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif;
+            font-size: 0.95rem;
+            color: #050505;
+        }
+        .comment-item {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .comment-item-wrapper {
+             margin-top: 1rem;
+        }
+        .comment-item-wrapper:first-child {
+            margin-top: 0;
+        }
+        .comment-avatar {
+            flex-shrink: 0;
+        }
+        .comment-avatar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #ccc;
+        }
+        .comment-body {
+            flex-grow: 1;
+            position: relative;
+        }
+        .comment-content-wrapper {
+            background-color: var(--facebook-bg);
+            padding: 0.5rem 0.75rem;
+            border-radius: 18px;
+            display: inline-block; 
+            max-width: 100%;
+            line-height: 1.4;
+            position: relative;
+        }
+        .comment-author {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.1rem;
+            color: #050505;
+        }
+        .comment-author a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .comment-author a:hover {
+            text-decoration: underline;
+        }
+        .comment-author .verified-badge {
+            color: var(--facebook-link-color);
+            font-size: 0.8rem;
+            margin-left: 4px;
+        }
+        .comment-text {
+            word-wrap: break-word;
+        }
+        .comment-actions {
+            display: flex;
+            gap: 1rem;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--facebook-text-secondary);
+        }
+        .comment-actions .action-link {
+            cursor: pointer;
+            color: inherit;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+            font-weight: inherit;
+        }
+        .comment-actions .action-link:hover {
+            text-decoration: underline;
+        }
+        .comment-actions .action-link.liked {
+            color: var(--facebook-link-color);
+        }
+        .comment-actions .timestamp {
+            font-weight: 400;
+        }
+        .comment-reactions {
+            position: absolute;
+            bottom: -12px;
+            right: 0px;
+            background-color: var(--bg-white);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--facebook-text-secondary);
+            transition: all 0.2s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .comment-reactions.visible {
+            opacity: 1;
+        }
+        .comment-reactions .like-icon {
+            background-color: var(--facebook-link-color);
+            color: white;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+        }
+        /* [SỬA ĐỔI] CSS cho thanh nối và bình luận trả lời */
+        .comment-replies {
+            padding-left: 48px; 
+            position: relative;
+        }
+        /* Đường kẻ dọc chính */
+        .comment-replies::before {
+            content: '';
+            position: absolute;
+            left: 19px; /* Căn giữa với avatar 40px */
+            top: 0;
+            bottom: 20px; /* Kết thúc ở giữa avatar cuối cùng */
+            width: 2px;
+            background-color: #e0e0e0; /* Màu nhạt hơn */
+        }
+        .comment-replies .comment-item-wrapper {
+            position: relative;
+        }
+        /* Đường kẻ ngang (nhánh chữ L) */
+        .comment-replies .comment-item-wrapper::before {
+            content: '';
+            position: absolute;
+            left: -29px; /* Nối từ đường dọc ra */
+            top: 19px; /* Căn giữa avatar */
+            width: 20px;
+            height: 2px;
+            background-color: #e0e0e0;
+        }
+        .reply-summary-container {
+            padding-left: 48px;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--facebook-text-secondary);
+        }
+        .view-replies-link, .view-more-replies-link {
+            cursor: pointer;
+            display: inline-block;
+        }
+        .view-replies-link:hover, .view-more-replies-link:hover {
+            text-decoration: underline;
+        }
+        .view-replies-link i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+        /* Kết thúc CSS cho bình luận trả lời */
+        .comment-input-area {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .comment-input-area .form-control,
+        .reply-form-container .form-control {
+            background-color: var(--facebook-bg);
+            border-radius: 18px;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .comment-input-area .form-control::placeholder,
+        .reply-form-container .form-control::placeholder {
+            color: var(--facebook-text-secondary);
+        }
+        .comment-input-area .form-control:focus,
+        .reply-form-container .form-control:focus {
+            box-shadow: none;
+        }
+        .reply-form-container {
+            margin-top: 0.5rem;
+        }
+        .reply-form-container .reply-actions {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            padding-left: 48px;
+        }
+        .reply-form-container .reply-actions a {
+            cursor: pointer;
+            color: var(--facebook-link-color);
+            text-decoration: none;
+        }
+        .reply-form-container .reply-actions a:hover {
+            text-decoration: underline;
+        }
+        #no-comments-message {
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+        }
+        /* [SỬA ĐỔI] CSS responsive cho thanh nối */
+        @media (max-width: 576px) {
+            .comment-avatar img {
+                width: 32px;
+                height: 32px;
+            }
+            .comment-replies {
+                padding-left: 40px;
+            }
+            .comment-replies::before { 
+                left: 15px;
+                bottom: 16px;
+            }
+            .comment-replies .comment-item-wrapper::before { 
+                left: -25px; 
+                top: 15px;
+            }
+            .reply-summary-container,
+            .reply-form-container .reply-actions {
+                padding-left: 40px;
+            }
+            .comment-content-wrapper { font-size: 0.9rem; }
+            .comment-actions { font-size: 0.75rem; gap: 0.75rem; }
+        }
     </style>
     </head>
 
-<body oncontextmenu="return false;">
+<body>
     <div id="preloader">
         <div class="preloader-content">
             <div class="loader"></div>
@@ -882,6 +1108,24 @@
                                     <div id="related-cards-grid" class="card-group-grid">
                                     </div>
                                 </div>
+
+                                <div id="card-comments-section" class="mt-5" style="display: none;">
+                                    <h5 class="card-group-subtitle" style="border-left-color: var(--facebook-link-color); font-size: 1.25rem;">
+                                        <i class="fas fa-comments me-2"></i>Thảo Luận
+                                    </h5>
+                                    <div class="comments-container">
+                                        <div class="comment-input-area">
+                                            <div class="comment-avatar">
+                                                <img id="currentUserAvatar" src="https://i.pravatar.cc/40?u=guest" alt="Avatar">
+                                            </div>
+                                            <div class="comment-body">
+                                                <input type="text" id="comment-input-field" class="form-control" placeholder="Viết bình luận..." disabled>
+                                            </div>
+                                        </div>
+                                        <div id="comment-list-container">
+                                            </div>
+                                    </div>
+                                </div>
                                 </div>
                         </div>
                     </div>
@@ -920,30 +1164,17 @@
         document.addEventListener('DOMContentLoaded', initializePageLogic);
 
         function initializePageLogic() {
-            // [THÊM MỚI] Vô hiệu hoá chuột phải và các phím tắt sao chép
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-            });
-
-            document.addEventListener('copy', function(e) {
-                e.preventDefault();
-            });
-
-            document.addEventListener('keydown', function(e) {
-                // Chặn Ctrl+C (sao chép)
-                if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
-                    e.preventDefault();
-                }
-                // Chặn Ctrl+U (xem nguồn trang)
-                if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
-                    e.preventDefault();
-                }
-                // Chặn F12 (mở công cụ phát triển)
-                if (e.key === 'F12') {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('copy', e => e.preventDefault());
+            document.addEventListener('keydown', e => {
+                if ((e.ctrlKey && (e.key === 'c' || e.key === 'C')) || 
+                    (e.ctrlKey && (e.key === 'u' || e.key === 'U')) || 
+                    e.key === 'F12') {
                     e.preventDefault();
                 }
             });
 
+            // ... (Các biến DOM không đổi) ...
             const cardGrid = document.getElementById('card-grid');
             const searchInput = document.getElementById('search-input');
             const filterButtonsContainer = document.getElementById('filter-buttons');
@@ -955,7 +1186,6 @@
             const cardDetailModal = new bootstrap.Modal(cardDetailModalEl);
             
             const relatedCardsGrid = document.getElementById('related-cards-grid');
-
             const permissionModal = new bootstrap.Modal(document.getElementById('permissionDeniedModal'));
             
             const exampleReadingBtn = document.getElementById('exampleReadingBtn');
@@ -965,40 +1195,56 @@
             const exampleContent = document.getElementById('modalExampleReadingContent');
             const modalContentEl = document.querySelector('#cardDetailModal .modal-content');
 
+            // Các biến cho chức năng bình luận
+            const commentInputField = document.getElementById('comment-input-field');
+            const currentUserAvatarEl = document.getElementById('currentUserAvatar');
+            const commentListContainer = document.getElementById('comment-list-container');
+            const REPLIES_PER_PAGE = 3;
+            let currentOpenCardId = null;
+            let activeReplyForm = null;
+            let commentTree = {};
+            let allLikesData = {};
+
             let allCardsData = [];
             let filteredCards = [];
             let supabase = window.viettarotApp.supabase;
-            let currentUserRole = 'guest';
+            let currentUser = null;
+            let currentUserProfile = null;
 
-            async function fetchUserRole() {
+            async function fetchCurrentUser() {
                 const { data: { user } } = await supabase.auth.getUser();
+                currentUser = user;
                 if (user) {
                     const { data: profile, error } = await supabase
                         .from('profiles')
-                        .select('role')
+                        .select('role, avatar_url, full_name')
                         .eq('id', user.id)
                         .single();
                     if (error) {
-                        console.error("Lỗi khi lấy vai trò người dùng:", error);
-                        currentUserRole = 'user';
+                        console.error("Lỗi khi lấy thông tin người dùng:", error);
+                        currentUserProfile = { role: 'user', avatar_url: 'https://i.pravatar.cc/40?u=error', full_name: 'Người dùng' };
                     } else {
-                        currentUserRole = profile ? profile.role : 'user';
+                        currentUserProfile = profile || { role: 'user', avatar_url: 'https://i.pravatar.cc/40?u=default', full_name: 'Người dùng' };
                     }
+                    commentInputField.placeholder = "Viết bình luận...";
+                    commentInputField.disabled = false;
+                    currentUserAvatarEl.src = currentUserProfile.avatar_url || 'https://i.pravatar.cc/40?u=guest';
                 } else {
-                    currentUserRole = 'guest';
+                    currentUserProfile = { role: 'guest', avatar_url: 'https://i.pravatar.cc/40?u=guest', full_name: 'Khách' };
+                    commentInputField.placeholder = "Bạn cần đăng nhập để bình luận";
+                    commentInputField.disabled = true;
+                    currentUserAvatarEl.src = 'https://i.pravatar.cc/40?u=guest';
                 }
             }
             
             async function fetchAllCards() {
+                 // ... (Hàm này giữ nguyên không đổi) ...
                 loadingIndicator.style.display = 'block';
                 cardGrid.innerHTML = '';
                 noResultsMessage.style.display = 'none';
-
                 const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
-                
                 let tableName = '';
                 let query = null;
-
                 switch (activeFilter) {
                     case 'Tarot':
                         tableName = 'tarot_cards';
@@ -1017,25 +1263,17 @@
                         query = supabase.from(tableName).select('*').order('card_number', { ascending: true });
                         break;
                     default:
-                        console.error('Bộ bài không hợp lệ:', activeFilter);
                         loadingIndicator.style.display = 'none';
                         return;
                 }
-
                 try {
                     const { data: rawData, error } = await query;
                     if (error) throw error;
-                    
                     if (activeFilter === 'Lenormand') {
-                        allCardsData = (rawData || []).map(card => ({
-                            ...card,
-                            id: card.card_id,
-                            name: card.name_vi
-                        }));
+                        allCardsData = (rawData || []).map(card => ({...card, id: card.card_id, name: card.name_vi}));
                     } else {
                         allCardsData = rawData || [];
                     }
-
                 } catch (error) {
                     console.error('Lỗi khi tải dữ liệu lá bài:', error);
                     allCardsData = [];
@@ -1047,13 +1285,13 @@
                 }
             }
             
+            // ... (Các hàm createGroupHeader, createCardGridForGroup, renderCards, handleFilterAndSearch, displayRelatedCards giữ nguyên) ...
             function createGroupHeader(title, level = 'h4', customClass = 'card-group-title') {
                 const header = document.createElement(level);
                 header.className = customClass;
                 header.textContent = title;
                 return header;
             }
-            
             function createCardGridForGroup(cards) {
                 const grid = document.createElement('div');
                 grid.className = 'card-group-grid';
@@ -1062,7 +1300,6 @@
                     const cardElementWrapper = document.createElement('div');
                     cardElementWrapper.className = 'tarot-card-item-wrapper';
                     cardElementWrapper.dataset.cardId = card.id;
-                    
                     cardElementWrapper.innerHTML = `
                         <div class="tarot-card-item">
                             <img src="${card.image_url || 'https://placehold.co/300x525/cccccc/ffffff?text=No+Image'}" alt="${card.name}" class="tarot-card-image" loading="lazy">
@@ -1074,13 +1311,10 @@
                 grid.appendChild(fragment);
                 return grid;
             }
-            
             function renderCards() {
                 cardGrid.innerHTML = '';
                 noResultsMessage.style.display = 'none';
-                
                 const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
-                
                 if (filteredCards.length === 0) {
                      if (searchInput.value || allCardsData.length > 0) { 
                         noResultsMessage.innerHTML = '<i class="fas fa-exclamation-circle fa-2x mb-3"></i><p class="mb-0">Không tìm thấy lá bài nào phù hợp.</p>';
@@ -1106,7 +1340,6 @@
                             }
                         }
                     };
-                    
                     filteredCards.forEach(card => {
                         if (card.sub_type === 'major_arcana') {
                             groups.major_arcana.cards.push(card);
@@ -1142,7 +1375,6 @@
                 }, { rootMargin: '0px 0px -50px 0px' });
                 cardGrid.querySelectorAll('.tarot-card-item-wrapper').forEach(w => observer.observe(w));
             }
-            
             function handleFilterAndSearch() {
                 const searchTerm = searchInput.value.toLowerCase().trim();
                 if (allCardsData.length === 0) {
@@ -1158,21 +1390,14 @@
                 }
                 renderCards();
             }
-
             function displayRelatedCards(currentCard) {
                 const relatedSection = document.getElementById('related-cards-section');
                 relatedCardsGrid.innerHTML = ''; 
-
                 const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
-                
                 let relatedCards = [];
-
                 if (activeFilter === 'Tarot') {
                     const groupKey = currentCard.sub_type === 'major_arcana' ? 'major_arcana' : currentCard.suit;
-                    if (!groupKey) {
-                        relatedSection.style.display = 'none';
-                        return;
-                    }
+                    if (!groupKey) { relatedSection.style.display = 'none'; return; }
                     relatedCards = allCardsData.filter(card => {
                         const cardGroupKey = card.sub_type === 'major_arcana' ? 'major_arcana' : card.suit;
                         return cardGroupKey === groupKey && card.id !== currentCard.id;
@@ -1180,22 +1405,14 @@
                 } else {
                      relatedCards = allCardsData.filter(card => card.id !== currentCard.id);
                 }
-
-                if (relatedCards.length === 0) {
-                    relatedSection.style.display = 'none';
-                    return;
-                }
-
-                relatedCards.sort(() => 0.5 - Math.random());
-                const cardsToShow = relatedCards.slice(0, 5);
-
+                if (relatedCards.length === 0) { relatedSection.style.display = 'none'; return; }
+                const cardsToShow = relatedCards.sort(() => 0.5 - Math.random()).slice(0, 5);
                 const fragment = document.createDocumentFragment();
                 cardsToShow.forEach(card => {
                     const wrapper = document.createElement('div');
                     wrapper.className = 'tarot-card-item-wrapper is-visible';
                     wrapper.dataset.cardId = card.id;
                     wrapper.title = card.name;
-                    
                     wrapper.innerHTML = `
                         <div class="tarot-card-item">
                             <img src="${card.image_url || 'https://placehold.co/300x525/cccccc/ffffff?text=No+Image'}" alt="${card.name}" class="tarot-card-image" loading="lazy">
@@ -1204,12 +1421,357 @@
                     `;
                     fragment.appendChild(wrapper);
                 });
-
                 relatedCardsGrid.appendChild(fragment);
                 relatedSection.style.display = 'block';
             }
+            function timeAgo(date) {
+                const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+                let interval = seconds / 31536000;
+                if (interval > 1) return `${Math.floor(interval)} năm`;
+                interval = seconds / 2592000;
+                if (interval > 1) return `${Math.floor(interval)} tháng`;
+                interval = seconds / 86400;
+                if (interval > 1) return `${Math.floor(interval)} ngày`;
+                interval = seconds / 3600;
+                if (interval > 1) return `${Math.floor(interval)} giờ`;
+                interval = seconds / 60;
+                if (interval > 1) return `${Math.floor(interval)} phút`;
+                return `${Math.floor(seconds)} giây`;
+            }
             
+            // [HÀM SỬA ĐỔI] Tải và hiển thị bình luận có sắp xếp
+            async function loadAndRenderComments(cardId) {
+                const commentsSection = document.getElementById('card-comments-section');
+                commentListContainer.innerHTML = '<div class="text-center p-3"><div class="spinner-border spinner-border-sm" role="status"></div></div>'; 
+                
+                const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
+                if (activeFilter === 'Tarot') {
+                    commentsSection.style.display = 'block';
+                    currentOpenCardId = cardId;
+
+                    const { data: comments, error: commentsError } = await supabase
+                        .from('card_comments')
+                        .select('*, profiles(full_name, avatar_url, role)')
+                        .eq('card_id', cardId)
+                        .order('created_at', { ascending: true }); // Vẫn tải theo thời gian để xây dựng cây
+
+                    if (commentsError) {
+                        console.error('Lỗi tải bình luận:', commentsError);
+                        commentListContainer.innerHTML = '<p class="text-danger text-center">Không thể tải bình luận.</p>';
+                        return;
+                    }
+                    
+                    const commentIds = comments.map(c => c.id);
+                    allLikesData = {};
+                    if (commentIds.length > 0) {
+                        const { data: likes, error: likesError } = await supabase
+                            .from('comment_likes')
+                            .select('comment_id, user_id')
+                            .in('comment_id', commentIds);
+                        
+                        if (!likesError) {
+                            likes.forEach(like => {
+                                if (!allLikesData[like.comment_id]) {
+                                    allLikesData[like.comment_id] = { count: 0, users: new Set() };
+                                }
+                                allLikesData[like.comment_id].count++;
+                                allLikesData[like.comment_id].users.add(like.user_id);
+                            });
+                        }
+                    }
+                    
+                    if (comments.length === 0) {
+                        commentListContainer.innerHTML = '<p id="no-comments-message">Chưa có bình luận nào. Hãy là người đầu tiên!</p>';
+                        return;
+                    }
+
+                    // [SỬA ĐỔI] Sắp xếp các bình luận theo số lượt thích giảm dần
+                    comments.sort((a, b) => {
+                        const likesA = allLikesData[a.id]?.count || 0;
+                        const likesB = allLikesData[b.id]?.count || 0;
+                        return likesB - likesA;
+                    });
+                    
+                    // Xây dựng cây bình luận từ danh sách đã sắp xếp
+                    const commentMap = {};
+                    const rootComments = [];
+                    comments.forEach(comment => {
+                        comment.replies = [];
+                        commentMap[comment.id] = comment;
+                    });
+                    comments.forEach(comment => {
+                         if (comment.parent_comment_id) {
+                            if (commentMap[comment.parent_comment_id]) {
+                                commentMap[comment.parent_comment_id].replies.push(comment);
+                            }
+                        } else {
+                            rootComments.push(comment);
+                        }
+                    });
+                    commentTree = rootComments;
+
+                    // Chỉ hiển thị các bình luận gốc
+                    commentListContainer.innerHTML = '';
+                    rootComments.forEach(comment => {
+                        commentListContainer.appendChild(createCommentElement(comment));
+                    });
+
+                } else {
+                    commentsSection.style.display = 'none';
+                    currentOpenCardId = null;
+                }
+            }
+            
+            function createCommentElement(comment) {
+                // ... (Hàm này giữ nguyên không đổi) ...
+                 const author = comment.profiles || { full_name: 'Người dùng ẩn', avatar_url: 'https://i.pravatar.cc/40?u=anonymous', role: 'user' };
+                const isAdmin = author.role === 'admin';
+                const likeInfo = allLikesData[comment.id] || { count: 0, users: new Set() };
+                const isLikedByCurrentUser = currentUser ? likeInfo.users.has(currentUser.id) : false;
+
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment-item-wrapper';
+                commentElement.id = `comment-wrapper-${comment.id}`;
+
+                // Phần HTML chính của bình luận
+                let commentHTML = `
+                    <div class="comment-item" id="comment-${comment.id}">
+                        <div class="comment-avatar">
+                            <img src="${author.avatar_url || 'https://i.pravatar.cc/40?u=default'}" alt="${author.full_name}">
+                        </div>
+                        <div class="comment-body">
+                            <div class="comment-content-wrapper">
+                                <div class="comment-author">
+                                    <a href="#">${author.full_name}</a>
+                                    ${isAdmin ? '<i class="fas fa-check-circle verified-badge" title="Quản trị viên"></i>' : ''}
+                                </div>
+                                <div class="comment-text">${comment.comment_text.replace(/\n/g, '<br>')}</div>
+                                <div class="comment-reactions ${likeInfo.count > 0 ? 'visible' : ''}" id="reactions-${comment.id}">
+                                    <i class="fa-solid fa-thumbs-up like-icon"></i>
+                                    <span class="like-count">${likeInfo.count}</span>
+                                </div>
+                            </div>
+                            <div class="comment-actions">
+                                <button class="action-link action-like ${isLikedByCurrentUser ? 'liked' : ''}" data-comment-id="${comment.id}">Thích</button>
+                                <button class="action-link action-reply" data-comment-id="${comment.id}">Trả lời</button>
+                                <span class="timestamp">${timeAgo(comment.created_at)} trước</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                commentElement.innerHTML = commentHTML;
+                
+                // Vùng chứa các trả lời và nút "Xem phản hồi"
+                const repliesAndSummaryContainer = document.createElement('div');
+                
+                // Nút "Xem phản hồi"
+                if (comment.replies && comment.replies.length > 0) {
+                    const summaryContainer = document.createElement('div');
+                    summaryContainer.className = 'reply-summary-container';
+                    summaryContainer.innerHTML = `<div class="view-replies-link" data-comment-id="${comment.id}"><i class="fas fa-reply fa-flip-horizontal"></i> Xem ${comment.replies.length} phản hồi</div>`;
+                    repliesAndSummaryContainer.appendChild(summaryContainer);
+                }
+
+                // Vùng chứa rỗng cho các trả lời, sẽ được lấp đầy khi nhấn nút
+                const repliesContainer = document.createElement('div');
+                repliesContainer.className = 'comment-replies';
+                repliesContainer.id = `replies-to-${comment.id}`;
+                repliesAndSummaryContainer.appendChild(repliesContainer);
+                
+                // Vùng chứa cho form trả lời
+                const replyFormContainer = document.createElement('div');
+                replyFormContainer.className = 'reply-form-container';
+                replyFormContainer.id = `reply-form-for-${comment.id}`;
+                repliesAndSummaryContainer.appendChild(replyFormContainer);
+
+                commentElement.appendChild(repliesAndSummaryContainer);
+
+                return commentElement;
+            }
+
+            // [HÀM SỬA ĐỔI] Xử lý việc gửi bình luận để hiển thị lên đầu
+            async function handleCommentSubmit(commentText, parentId = null) {
+                if (!commentText) return false;
+                if (!currentUser) { alert("Vui lòng đăng nhập để bình luận!"); return false; }
+                if (!currentOpenCardId) { console.error("Không tìm thấy ID của lá bài."); return false; }
+
+                const { data, error } = await supabase
+                    .from('card_comments')
+                    .insert([{ card_id: currentOpenCardId, user_id: currentUser.id, comment_text: commentText, parent_comment_id: parentId }])
+                    .select('*, profiles(full_name, avatar_url, role)')
+                    .single();
+
+                if (error) {
+                    console.error('Lỗi khi gửi bình luận:', error);
+                    alert("Gửi bình luận thất bại. Vui lòng thử lại.");
+                    return false;
+                } 
+                
+                const newCommentData = { ...data, replies: [] };
+                const newCommentElement = createCommentElement(newCommentData);
+                if (parentId) {
+                    const parentComment = findCommentInTree(parentId);
+                    if (parentComment) parentComment.replies.unshift(newCommentData); // Thêm vào đầu mảng dữ liệu
+                    const repliesContainer = document.getElementById(`replies-to-${parentId}`);
+                    if (repliesContainer) repliesContainer.prepend(newCommentElement); // [SỬA ĐỔI] Thêm vào đầu giao diện
+                } else {
+                    commentTree.unshift(newCommentData); // Thêm vào đầu mảng dữ liệu
+                    const noCommentsMsg = document.getElementById('no-comments-message');
+                    if (noCommentsMsg) noCommentsMsg.remove();
+                    commentListContainer.prepend(newCommentElement); // [SỬA ĐỔI] Thêm vào đầu giao diện
+                }
+                return true;
+            }
+            
+            // ... (Các hàm handleLikeClick, handleReplyClick, findCommentInTree, handleViewRepliesClick, handleViewMoreRepliesClick giữ nguyên) ...
+            async function handleLikeClick(commentId) {
+                if (!currentUser) { alert("Vui lòng đăng nhập để thích bình luận!"); return; }
+
+                const likeButton = document.querySelector(`.action-like[data-comment-id="${commentId}"]`);
+                const reactionsContainer = document.getElementById(`reactions-${commentId}`);
+                const likeCountEl = reactionsContainer.querySelector('.like-count');
+                const isLiked = likeButton.classList.contains('liked');
+                
+                likeButton.classList.toggle('liked');
+                let currentCount = parseInt(likeCountEl.textContent);
+                likeCountEl.textContent = isLiked ? currentCount - 1 : currentCount + 1;
+                if (parseInt(likeCountEl.textContent) > 0) {
+                    reactionsContainer.classList.add('visible');
+                } else {
+                    reactionsContainer.classList.remove('visible');
+                }
+
+                if (isLiked) {
+                    const { error } = await supabase.from('comment_likes').delete().match({ comment_id: commentId, user_id: currentUser.id });
+                    if (error) {
+                        console.error("Lỗi bỏ thích:", error);
+                        likeButton.classList.add('liked');
+                        likeCountEl.textContent = currentCount;
+                        if (currentCount > 0) reactionsContainer.classList.add('visible');
+                    }
+                } else {
+                    const { error } = await supabase.from('comment_likes').insert({ comment_id: commentId, user_id: currentUser.id });
+                    if (error) {
+                        console.error("Lỗi khi thích:", error);
+                        likeButton.classList.remove('liked');
+                        likeCountEl.textContent = currentCount;
+                        if (currentCount <= 0) reactionsContainer.classList.remove('visible');
+                    }
+                }
+            }
+            function handleReplyClick(commentId) {
+                if (!currentUser) { alert("Vui lòng đăng nhập để trả lời bình luận!"); return; }
+                if (activeReplyForm) {
+                    activeReplyForm.remove();
+                    activeReplyForm = null;
+                }
+                
+                const replyContainer = document.getElementById(`reply-form-for-${commentId}`);
+                if (!replyContainer) return;
+
+                const replyForm = document.createElement('div');
+                replyForm.className = 'comment-input-area mt-2';
+                replyForm.innerHTML = `
+                    <div class="comment-avatar">
+                        <img src="${currentUserProfile.avatar_url || 'https://i.pravatar.cc/40?u=guest'}" alt="Avatar">
+                    </div>
+                    <div class="comment-body">
+                        <input type="text" class="form-control reply-input" placeholder="Viết câu trả lời...">
+                         <div class="reply-actions">
+                            Nhấn Enter để gửi. <a class="cancel-reply">Hủy</a>
+                        </div>
+                    </div>
+                `;
+                replyContainer.appendChild(replyForm);
+                activeReplyForm = replyForm;
+
+                const replyInput = replyForm.querySelector('.reply-input');
+                replyInput.focus();
+
+                replyInput.addEventListener('keydown', async (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        const commentText = replyInput.value.trim();
+                        if (commentText) {
+                            replyInput.disabled = true;
+                            const success = await handleCommentSubmit(commentText, commentId);
+                            if (success) {
+                                activeReplyForm.remove();
+                                activeReplyForm = null;
+                            } else {
+                                replyInput.disabled = false;
+                            }
+                        }
+                    }
+                });
+                
+                replyForm.querySelector('.cancel-reply').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if(activeReplyForm) activeReplyForm.remove();
+                    activeReplyForm = null;
+                });
+            }
+            function findCommentInTree(commentId, tree = commentTree) {
+                for (const comment of tree) {
+                    if (comment.id === commentId) return comment;
+                    if (comment.replies && comment.replies.length > 0) {
+                        const found = findCommentInTree(commentId, comment.replies);
+                        if (found) return found;
+                    }
+                }
+                return null;
+            }
+            function handleViewRepliesClick(commentId, triggerElement) {
+                const parentComment = findCommentInTree(parseInt(commentId));
+                if (!parentComment || !parentComment.replies) return;
+
+                const repliesContainer = document.getElementById(`replies-to-${commentId}`);
+                if (!repliesContainer) return;
+
+                triggerElement.parentElement.innerHTML = ''; // Xóa nút "Xem phản hồi"
+                
+                const repliesToShow = parentComment.replies.slice(0, REPLIES_PER_PAGE);
+                repliesToShow.forEach(reply => {
+                    repliesContainer.appendChild(createCommentElement(reply));
+                });
+
+                if (parentComment.replies.length > REPLIES_PER_PAGE) {
+                    const viewMoreLink = document.createElement('div');
+                    viewMoreLink.className = 'view-more-replies-link';
+                    viewMoreLink.dataset.commentId = commentId;
+                    viewMoreLink.dataset.offset = REPLIES_PER_PAGE;
+                    viewMoreLink.textContent = 'Xem thêm phản hồi';
+                    repliesContainer.appendChild(viewMoreLink);
+                }
+            }
+            function handleViewMoreRepliesClick(commentId, triggerElement) {
+                const parentComment = findCommentInTree(parseInt(commentId));
+                const currentOffset = parseInt(triggerElement.dataset.offset);
+                
+                if (!parentComment || !parentComment.replies || currentOffset >= parentComment.replies.length) {
+                    triggerElement.remove();
+                    return;
+                }
+
+                const repliesContainer = document.getElementById(`replies-to-${commentId}`);
+                if (!repliesContainer) return;
+
+                const nextOffset = currentOffset + REPLIES_PER_PAGE;
+                const repliesToShow = parentComment.replies.slice(currentOffset, nextOffset);
+
+                repliesToShow.forEach(reply => {
+                    repliesContainer.insertBefore(createCommentElement(reply), triggerElement);
+                });
+
+                if (nextOffset >= parentComment.replies.length) {
+                    triggerElement.remove();
+                } else {
+                    triggerElement.dataset.offset = nextOffset;
+                }
+            }
+
             function showCardDetails(cardId) {
+                // ... (Hàm này giữ nguyên không đổi) ...
                 const card = allCardsData.find(c => c.id === parseInt(cardId));
                 if (!card) return;
 
@@ -1217,8 +1779,7 @@
                 const formatHtml = (text) => (text || '').replace(/\n/g, '<br>');
 
                 const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
-                const allowedRoles = ['student', 'membership', 'admin'];
-                const hasAccess = allowedRoles.includes(currentUserRole);
+                const hasAccess = ['student', 'membership', 'admin'].includes(currentUserProfile?.role);
 
                 detailsContent.style.display = 'block';
                 exampleContent.style.display = 'none';
@@ -1246,21 +1807,12 @@
                 exampleReadingBtn.dataset.view = 'details';
                 exampleReadingBtn.innerHTML = '<i class="fas fa-eye me-2"></i>Xem qua ví dụ';
                 
-                const renderContentOrLockedMessage = (element, content) => {
-                     if (!hasAccess) {
-                        return `<button type="button" class="upgrade-text-link">Bạn cần nâng cấp tài khoản để xem đầy đủ thông tin</button>`;
-                    }
-                    return `<p>${formatHtml(safeText(content))}</p>`;
-                };
-
                 const setSectionContent = (sectionId, contentElId, content, lockCondition = false) => {
                     const section = document.getElementById(sectionId);
                     if (!section) return;
-
                     section.style.display = 'block';
                     const contentEl = document.getElementById(contentElId);
                     if (!contentEl) return;
-                    
                     if (lockCondition && !hasAccess) {
                          contentEl.innerHTML = `<button type="button" class="upgrade-text-link">Bạn cần nâng cấp tài khoản để xem đầy đủ thông tin</button>`;
                     } else {
@@ -1271,7 +1823,6 @@
                 if (activeFilter === 'Tarot') {
                     modalContentEl.classList.add('tarot-view');
                     document.querySelectorAll('[data-card-type*="tarot"]').forEach(el => el.style.display = 'block');
-                    
                     document.getElementById('modalCardElement').textContent = safeText(card.element);
                     document.getElementById('modalCardPolarity').textContent = safeText(card.polarity);
                     document.getElementById('modalCardZodiac').textContent = safeText(card.zodiac);
@@ -1285,75 +1836,35 @@
                     document.getElementById('modalThemeCareerTarot').innerHTML = formatHtml(safeText(card.theme_career));
 
                     const exampleContentEl = document.getElementById('modalExampleReadingContent');
-                    
                     const examples = [
                         { id: 'love', title: 'Tình yêu', icon: 'fa-heart', content: card.example_love },
                         { id: 'work', title: 'Sự nghiệp', icon: 'fa-briefcase', content: card.example_work },
                         { id: 'study', title: 'Học tập', icon: 'fa-book-reader', content: card.example_study }
                     ];
-
                     let navHtml = '';
                     let contentHtml = '';
                     let isFirstTab = true;
-
                     for (const ex of examples) {
                         if (ex.content && ex.content.trim() !== '') {
                             const activeClass = isFirstTab ? 'active' : '';
                             const showClass = isFirstTab ? 'show active' : '';
-                            
-                            navHtml += `
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link ${activeClass}" id="pills-${ex.id}-tab" data-bs-toggle="pill" data-bs-target="#pills-${ex.id}" type="button" role="tab" aria-controls="pills-${ex.id}" aria-selected="${isFirstTab}">
-                                        <i class="fas ${ex.icon} me-2"></i>${ex.title}
-                                    </button>
-                                </li>
-                            `;
-
-                            contentHtml += `
-                                <div class="tab-pane fade ${showClass}" id="pills-${ex.id}" role="tabpanel" aria-labelledby="pills-${ex.id}-tab" tabindex="0">
-                                    <div class="content-wrapper">
-                                        ${formatHtml(safeText(ex.content))}
-                                    </div>
-                                </div>
-                            `;
-                            
+                            navHtml += `<li class="nav-item" role="presentation"><button class="nav-link ${activeClass}" id="pills-${ex.id}-tab" data-bs-toggle="pill" data-bs-target="#pills-${ex.id}" type="button" role="tab" aria-controls="pills-${ex.id}" aria-selected="${isFirstTab}"><i class="fas ${ex.icon} me-2"></i>${ex.title}</button></li>`;
+                            contentHtml += `<div class="tab-pane fade ${showClass}" id="pills-${ex.id}" role="tabpanel" aria-labelledby="pills-${ex.id}-tab" tabindex="0"><div class="content-wrapper">${formatHtml(safeText(ex.content))}</div></div>`;
                             isFirstTab = false;
                         }
                     }
-
                     if (navHtml.trim() === '') {
-                        exampleContentEl.innerHTML = `
-                             <div class="p-3 text-center">
-                                <h5><i class="fas fa-info-circle me-2"></i>Chưa có ví dụ</h5>
-                                <p class="text-secondary mb-0">Hiện tại chưa có ví dụ giải bài cho lá bài này.</p>
-                            </div>
-                        `;
+                        exampleContentEl.innerHTML = `<div class="p-3 text-center"><h5><i class="fas fa-info-circle me-2"></i>Chưa có ví dụ</h5><p class="text-secondary mb-0">Hiện tại chưa có ví dụ giải bài cho lá bài này.</p></div>`;
                     } else {
-                        exampleContentEl.innerHTML = `
-                            <ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist">
-                                <div class="modal-tab-slider"></div>
-                                ${navHtml}
-                            </ul>
-                            <div class="tab-content" id="pills-tabContent">
-                                ${contentHtml}
-                            </div>
-                        `;
-                        
+                        exampleContentEl.innerHTML = `<ul class="nav nav-pills nav-fill mb-3" id="pills-tab" role="tablist"><div class="modal-tab-slider"></div>${navHtml}</ul><div class="tab-content" id="pills-tabContent">${contentHtml}</div>`;
                         const initialActiveTab = exampleContentEl.querySelector('#pills-tab .nav-link.active');
-                        if (initialActiveTab) {
-                            setTimeout(() => {
-                                updateModalTabSlider(initialActiveTab);
-                            }, 50);
-                        }
+                        if (initialActiveTab) setTimeout(() => updateModalTabSlider(initialActiveTab), 50);
                     }
-
                 } else if (activeFilter === 'Lenormand') {
                     modalContentEl.classList.add('lenormand-view');
                     document.querySelectorAll('[data-card-type*="lenormand"]').forEach(el => el.style.display = 'block');
-                    
                     document.getElementById('modalCardPlayingCard').textContent = safeText(card.playing_card);
                     document.getElementById('modalCardOrientation').textContent = safeText(card.orientation);
-                    
                     document.getElementById('modalDescriptionSection').style.display = 'block';
                     document.getElementById('modalDescription').innerHTML = formatHtml(safeText(card.general_description));
 
@@ -1374,35 +1885,24 @@
                         { icon: 'fas fa-wallet', color: '#16a34a', title: 'Tài chính', content: card.context_finance },
                         { icon: 'fas fa-om', color: '#8b5cf6', title: 'Tâm linh', content: card.context_spirituality }
                     ];
-
                     let themesHtml = '';
                     themes.forEach(theme => {
                         if (theme.content && theme.content.trim() !== '') {
-                            themesHtml += `
-                                <div class="lenormand-theme-item">
-                                    <h6><i class="${theme.icon}" style="color: ${theme.color};"></i>${theme.title}</h6>
-                                    ${renderContentOrLockedMessage(null, theme.content)}
-                                </div>
-                            `;
+                            themesHtml += `<div class="lenormand-theme-item"><h6><i class="${theme.icon}" style="color: ${theme.color};"></i>${theme.title}</h6>${hasAccess ? `<p>${formatHtml(safeText(theme.content))}</p>` : `<button type="button" class="upgrade-text-link">Bạn cần nâng cấp tài khoản để xem đầy đủ thông tin</button>`}</div>`;
                         }
                     });
-
                     if (themesHtml) {
                         document.getElementById('modalThemesCombinedSection').style.display = 'block';
                         themesContainer.innerHTML = themesHtml;
                     } else {
                         document.getElementById('modalThemesCombinedSection').style.display = 'none';
                     }
-
                     setSectionContent('modalAdviceSection', 'modalAdvice', card.advice, true);
                     setSectionContent('modalCombinationsSection', 'modalCombinations', card.combinations, true);
-                    
                 } else { 
                     document.querySelectorAll('[data-card-type*="' + activeFilter + '"]').forEach(el => el.style.display = 'block');
-                    
                     document.getElementById('modalDescription').innerHTML = formatHtml(safeText(card.description));
                     document.getElementById('modalMeaningGeneral').innerHTML = formatHtml(safeText(card.meaning));
-                    
                     const symbolismSection = document.getElementById('modalSymbolismSection');
                     if (card.keywords) {
                         symbolismSection.style.display = 'block';
@@ -1412,12 +1912,12 @@
                     }
                 }
                 
-                if (!cardDetailModal._isShown) {
-                    cardDetailModal.show();
-                }
+                if (!cardDetailModal._isShown) cardDetailModal.show();
                 displayRelatedCards(card);
+                loadAndRenderComments(card.id); 
             }
-
+            
+            // ... (Phần cuối cùng của script giữ nguyên không đổi) ...
             function updateFilterSlider(activeButton) {
                 if (!activeButton || !filterSlider || window.innerWidth < 992) return;
                 filterSlider.style.width = `${activeButton.offsetWidth}px`;
@@ -1425,18 +1925,14 @@
                 filterSlider.style.top = `${activeButton.offsetTop}px`;
                 filterSlider.style.height = `${activeButton.offsetHeight}px`;
             }
-            
             function updateModalTabSlider(activeButton) {
                 if (!activeButton) return;
                 const slider = activeButton.closest('.nav-pills').querySelector('.modal-tab-slider');
                 if (!slider) return;
-        
                 slider.style.width = `${activeButton.offsetWidth}px`;
                 slider.style.left = `${activeButton.offsetLeft}px`;
             }
-
             searchInput.addEventListener('input', handleFilterAndSearch);
-
             filterButtonsContainer.addEventListener('click', (e) => {
                 const targetButton = e.target.closest('button.btn');
                 if (targetButton && !targetButton.classList.contains('active')) {
@@ -1446,147 +1942,124 @@
                     fetchAllCards();
                 }
             });
-            
             cardGrid.addEventListener('click', (e) => {
                 const cardWrapper = e.target.closest('.tarot-card-item-wrapper');
                 if (cardWrapper && cardWrapper.dataset.cardId) {
-                    showCardDetails(cardWrapper.dataset.cardId);
+                    showCardDetails(parseInt(cardWrapper.dataset.cardId));
                 }
             });
-            
             relatedCardsGrid.addEventListener('click', (e) => {
                 const cardWrapper = e.target.closest('.tarot-card-item-wrapper');
                 if (cardWrapper && cardWrapper.dataset.cardId) {
                     const modalContent = document.querySelector('#cardDetailModal .card-detail-content');
-                    if (modalContent) {
-                        modalContent.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                    setTimeout(() => {
-                        showCardDetails(cardWrapper.dataset.cardId);
-                    }, 300);
+                    if (modalContent) modalContent.scrollTo({ top: 0, behavior: 'smooth' });
+                    setTimeout(() => showCardDetails(parseInt(cardWrapper.dataset.cardId)), 300);
                 }
             });
-            
-            cardDetailModalEl.addEventListener('shown.bs.tab', function (event) {
-                if (event.target.closest('#modalExampleReadingContent')) {
-                    updateModalTabSlider(event.target);
-                }
+            cardDetailModalEl.addEventListener('shown.bs.tab', e => {
+                if (e.target.closest('#modalExampleReadingContent')) updateModalTabSlider(e.target);
             });
-
-            cardDetailModalEl.addEventListener('click', function (event) {
-                if (event.target.classList.contains('upgrade-text-link')) {
+            cardDetailModalEl.addEventListener('click', e => {
+                if (e.target.classList.contains('upgrade-text-link')) {
                     cardDetailModal.hide();
-                    const upgradeModalEl = document.getElementById('upgradeModal');
-                    if (upgradeModalEl) {
-                        const upgradeModalInstance = bootstrap.Modal.getOrCreateInstance(upgradeModalEl);
-                        upgradeModalInstance.show();
-                    } else {
-                        console.error('Không tìm thấy #upgradeModal. Hãy đảm bảo nó được tạo bởi components.js');
-                    }
+                    const upgradeModalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('upgradeModal'));
+                    if(upgradeModalInstance) upgradeModalInstance.show();
                 }
             });
-            
             exampleReadingBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                
-                const allowedRoles = ['student', 'membership', 'admin'];
-                
-                if (allowedRoles.includes(currentUserRole)) {
-                    const currentView = this.dataset.view;
-                    if (currentView === 'details') {
-                        detailsContent.style.display = 'none';
-                        exampleContent.style.display = 'block';
-                        this.dataset.view = 'examples';
-                        this.innerHTML = '<i class="fas fa-info-circle me-2"></i>Xem Chi Tiết Lá Bài';
-
-                        // [BẮT ĐẦU SỬA LỖI] Cập nhật vị trí slider của tab ngay khi hiển thị
+                if (['student', 'membership', 'admin'].includes(currentUserProfile?.role)) {
+                    const isDetailsView = this.dataset.view === 'details';
+                    detailsContent.style.display = isDetailsView ? 'none' : 'block';
+                    exampleContent.style.display = isDetailsView ? 'block' : 'none';
+                    this.dataset.view = isDetailsView ? 'examples' : 'details';
+                    this.innerHTML = isDetailsView ? '<i class="fas fa-info-circle me-2"></i>Xem Chi Tiết Lá Bài' : '<i class="fas fa-eye me-2"></i>Xem qua ví dụ';
+                    if (isDetailsView) {
                         const activeTab = exampleContent.querySelector('.nav-link.active');
-                        if (activeTab) {
-                            setTimeout(() => {
-                                updateModalTabSlider(activeTab);
-                            }, 50); // Đợi 1 chút để DOM kịp render kích thước
-                        }
-                        // [KẾT THÚC SỬA LỖI]
-
-                    } else {
-                        detailsContent.style.display = 'block';
-                        exampleContent.style.display = 'none';
-                        this.dataset.view = 'details';
-                        this.innerHTML = '<i class="fas fa-eye me-2"></i>Xem qua ví dụ';
+                        if (activeTab) setTimeout(() => updateModalTabSlider(activeTab), 50);
                     }
                 } else {
-                    const permissionModalBody = document.getElementById('permissionDeniedModalBody');
-                    permissionModalBody.innerHTML = `
-                        <p class="fs-5 mb-1">Bạn cần là <strong>Học viên</strong> hoặc <strong>Member</strong> để xem nội dung này.</p>
-                        <p class="text-secondary">Vui lòng đăng nhập hoặc nâng cấp tài khoản của bạn để truy cập tính năng này.</p>
-                    `;
+                    document.getElementById('permissionDeniedModalBody').innerHTML = `<p class="fs-5 mb-1">Bạn cần là <strong>Học viên</strong> hoặc <strong>Member</strong> để xem nội dung này.</p><p class="text-secondary">Vui lòng đăng nhập hoặc nâng cấp tài khoản của bạn.</p>`;
                     permissionModal.show();
                 }
             });
-
             lenormandExampleBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                const allowedRoles = ['student', 'membership', 'admin'];
-
-                if (allowedRoles.includes(currentUserRole)) {
+                if (['student', 'membership', 'admin'].includes(currentUserProfile?.role)) {
                     const combinationsSection = document.getElementById('modalCombinationsSection');
                     const detailContentContainer = document.querySelector('.card-detail-content');
-
                     if (combinationsSection && detailContentContainer) {
-                        detailContentContainer.scrollTo({
-                            top: combinationsSection.offsetTop - 30, 
-                            behavior: 'smooth'
-                        });
-
+                        detailContentContainer.scrollTo({ top: combinationsSection.offsetTop - 30, behavior: 'smooth' });
                         combinationsSection.classList.add('highlight-section');
-                        setTimeout(() => {
-                            combinationsSection.classList.remove('highlight-section');
-                        }, 2500); 
+                        setTimeout(() => combinationsSection.classList.remove('highlight-section'), 2500); 
                     }
                 } else {
-                     const permissionModalBody = document.getElementById('permissionDeniedModalBody');
-                    permissionModalBody.innerHTML = `
-                        <p class="fs-5 mb-1">Bạn cần là <strong>Học viên</strong> hoặc <strong>Member</strong> để xem nội dung này.</p>
-                        <p class="text-secondary">Vui lòng đăng nhập hoặc nâng cấp tài khoản của bạn để truy cập tính năng này.</p>
-                    `;
+                     document.getElementById('permissionDeniedModalBody').innerHTML = `<p class="fs-5 mb-1">Bạn cần là <strong>Học viên</strong> hoặc <strong>Member</strong> để xem nội dung này.</p><p class="text-secondary">Vui lòng đăng nhập hoặc nâng cấp tài khoản của bạn.</p>`;
                     permissionModal.show();
                 }
             });
-
-            async function initializePage() {
-                if (!supabase) {
-                    console.error("Supabase client chưa được khởi tạo.");
+            commentInputField.addEventListener('keydown', async (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const commentText = commentInputField.value.trim();
+                    if (commentText) {
+                        commentInputField.disabled = true;
+                        const success = await handleCommentSubmit(commentText, null);
+                        if (success) {
+                           commentInputField.value = '';
+                        }
+                        commentInputField.disabled = false;
+                        commentInputField.focus();
+                    }
+                }
+            });
+            commentListContainer.addEventListener('click', (e) => {
+                const likeButton = e.target.closest('.action-like');
+                if (likeButton) {
+                    e.preventDefault();
+                    handleLikeClick(likeButton.dataset.commentId);
                     return;
                 }
-                await fetchUserRole();
+                const replyButton = e.target.closest('.action-reply');
+                if (replyButton) {
+                    e.preventDefault();
+                    handleReplyClick(replyButton.dataset.commentId);
+                    return;
+                }
+                const viewRepliesLink = e.target.closest('.view-replies-link');
+                if (viewRepliesLink) {
+                    e.preventDefault();
+                    handleViewRepliesClick(viewRepliesLink.dataset.commentId, viewRepliesLink);
+                    return;
+                }
+                const viewMoreRepliesLink = e.target.closest('.view-more-replies-link');
+                if(viewMoreRepliesLink) {
+                    e.preventDefault();
+                    handleViewMoreRepliesClick(viewMoreRepliesLink.dataset.commentId, viewMoreRepliesLink);
+                    return;
+                }
+            });
+            async function initializePage() {
+                if (!supabase) { console.error("Supabase client chưa được khởi tạo."); return; }
+                await fetchCurrentUser();
                 await fetchAllCards();
                 updateFilterSlider(filterButtonsContainer.querySelector('.btn.active'));
             }
-            
-            let resizeTimer;
             window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
+                clearTimeout(window.resizeTimer);
+                window.resizeTimer = setTimeout(() => {
                     updateFilterSlider(filterButtonsContainer.querySelector('.btn.active'));
-                    // Cập nhật lại slider trong modal nếu nó đang mở
                     const activeModalTab = document.querySelector('#modalExampleReadingContent .nav-link.active');
                     if (cardDetailModalEl.classList.contains('show') && activeModalTab) {
                          updateModalTabSlider(activeModalTab);
                     }
                 }, 250);
             });
-
             initializePage();
         }
-        
         window.addEventListener('load', function() {
             const preloader = document.getElementById('preloader');
-            if (preloader) {
-                setTimeout(() => {
-                    preloader.classList.add('fade-out');
-                }, 200);
-            }
-
+            if (preloader) setTimeout(() => preloader.classList.add('fade-out'), 200);
             const promotionPopup = document.getElementById('promotionPopup');
             const closePromoPopup = document.getElementById('closePromoPopup');
             if (promotionPopup && closePromoPopup && !sessionStorage.getItem('promoShown')) {
@@ -1594,7 +2067,6 @@
                     promotionPopup.classList.add('show');
                     sessionStorage.setItem('promoShown', 'true');
                 }, 1000);
-
                 const closePopup = () => promotionPopup.classList.remove('show');
                 closePromoPopup.addEventListener('click', closePopup);
                 promotionPopup.addEventListener('click', (e) => { if (e.target === promotionPopup) closePopup(); });
