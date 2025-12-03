@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cẩm Nang - VietTarot</title>
+
+    <link rel="icon" type="image/png" sizes="16x16" href="image/iconlogo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="image/iconlogo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="image/iconlogo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css/2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        /* CSS Preloader - Giữ lại để hiển thị ngay lập tức khi tải trang */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8F7FA;
+            color: #1A1229;
+        }
+
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #FFFFFF;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.75s ease, visibility 0.75s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #preloader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .preloader-content {
+            text-align: center;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #4A6CF3;
+            border-top-color: #9B49F2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        .loading-text {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #5A6474;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* ===== START: THÊM CSS CHO Ô INPUT TIÊU ĐỀ ===== */
+        #articleTitleInput {
+            font-weight: bold;
+        }
+        #articleTitleInput::placeholder {
+            font-weight: normal; /* Giữ placeholder ở dạng thường để dễ phân biệt */
+        }
+        /* ===== END: THÊM CSS CHO Ô INPUT TIÊU ĐỀ ===== */
+        
+        /* CSS cho input file tùy chỉnh */
+        #file-upload-wrapper {
+            border: 2px dashed #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        #file-upload-wrapper:hover {
+            background-color: #F8F7FA;
+            border-color: #4A6CF3;
+        }
+        #file-upload-wrapper i {
+            font-size: 2.5rem;
+            color: #4A6CF3;
+        }
+        #articleFileInput {
+            display: none;
+        }
+        #file-name-display {
+            font-weight: 500;
+            color: #1A1229;
+        }
+        .file-upload-text {
+             color: #5A6474;
+        }
+
+        /* ===== START: CSS DÀNH RIÊNG CHO TRANG CẨM NANG (CẬP NHẬT) ===== */
+
+        #header-placeholder {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .page-header {
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(90deg, #4A6CF3 0%, #9B49F2 100%);
+            margin-bottom: 100px;
+            border-radius: 0 0 1.5rem 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-header .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header h1 {
+            font-weight: 700;
+            color: #FFFFFF;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-header .lead {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+        }
+        
+        /* --- START: CSS MỚI CHO THANH TÌM KIẾM VÀ NÚT VIẾT BÀI --- */
+        .header-actions-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            max-width: 1000px; /* Tăng chiều rộng để chứa nút mới */
+            margin: 0 auto;
+        }
+
+        .unified-search-form {
+            position: relative;
+            background-color: #FFFFFF;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            height: 58px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #E5E7EB;
+            transition: box-shadow 0.3s ease;
+            flex-grow: 1; /* Cho phép form co giãn */
+        }
+
+        .unified-search-form:focus-within {
+            box-shadow: 0 5px 20px rgba(74, 108, 243, 0.2);
+        }
+
+        .unified-search-form .dropdown {
+            flex-shrink: 0;
+        }
+
+        .unified-search-form #category-filter-dropdown {
+            background-color: transparent;
+            border: none;
+            color: #1A1229;
+            font-weight: 500;
+            height: 100%;
+            padding: 0 1rem 0 1.5rem;
+            border-right: 1px solid #E5E7EB;
+            border-radius: 50px 0 0 50px;
+            white-space: nowrap;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .unified-search-form #category-filter-dropdown::after {
+            margin-left: 0.5em;
+        }
+        
+        .unified-search-form #category-filter-dropdown:focus {
+            box-shadow: none;
+        }
+
+        .unified-search-form .search-input-wrapper {
+            position: relative;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .unified-search-form #article-search {
+            width: 100%;
+            height: 56px;
+            border: none;
+            background-color: transparent;
+            padding-left: 1.5rem; 
+            padding-right: 8.5rem;
+            color: #1A1229;
+        }
+        
+        .unified-search-form #article-search:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        
+        .unified-search-form #article-search::placeholder {
+            color: #5A6474;
+        }
+
+        .unified-search-form .btn-gradient {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 50px;
+            padding: 0.6rem 1.4rem;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            z-index: 2;
+        }
+
+        .unified-search-form .btn-gradient:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        /* ===== START: TRẢ LẠI CSS NGUYÊN BẢN CHO NÚT VIẾT BÀI ===== */
+        
+        /* 1. Animation cho cả viền và chữ */
+        @keyframes animate-glow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* 2. Style cho nút Viết Bài - Trạng thái mặc định */
+        #create-article-btn {
+            position: relative; /* Quan trọng cho pseudo-element */
+            background: #FFFFFF;
+            border: 2px solid transparent; /* Đặt sẵn không gian cho border hover */
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 58px;
+            padding: 0 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: #4A6CF3; /* Màu mặc định cho icon */
+            overflow: hidden; /* Giữ cho pseudo-element không tràn ra ngoài */
+        }
+
+        /* 3. Tạo viền chuyển động bằng pseudo-element ::before */
+        #create-article-btn::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px;
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            background: linear-gradient(90deg, #4A6CF3, #9B49F2, #ff75c3, #4A6CF3);
+            background-size: 200% auto;
+            animation: animate-glow 3s linear infinite;
+            z-index: -1; /* Đưa viền ra sau nút */
+            border-radius: 50px;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 4. Áp dụng hiệu ứng cho phần chữ (span) */
+        #create-article-btn span {
+            background: linear-gradient(90deg, #4A6CF3, #9B49F2, #ff75c3, #4A6CF3);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: animate-glow 3s linear infinite;
+        }
+        
+        /* 5. Style khi hover chuột vào nút */
+        #create-article-btn:hover {
+            background: linear-gradient(90deg, #4A6CF3 0%, #9B49F2 100%);
+            color: #FFFFFF; /* Icon và chữ sẽ chuyển thành màu trắng */
+            border: 2px solid #FFFFFF; /* HIỂN THỊ VIỀN TRẮNG KHI HOVER */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 108, 243, 0.3);
+        }
+
+        /* 6. Ẩn viền chuyển động khi hover */
+        #create-article-btn:hover::before {
+            opacity: 0;
+        }
+
+        /* 7. Khi hover, chữ không còn hiệu ứng nữa mà chuyển thành màu trắng */
+        #create-article-btn:hover span {
+            background: none;
+            -webkit-text-fill-color: #FFFFFF;
+            animation: none; /* Tắt animation */
+        }
+        /* ===== END: CSS NÚT VIẾT BÀI ===== */
+
+
+        .content-container-wrapper {
+            background-color: #FFFFFF;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            margin-top: -80px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .article-card {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .article-card a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .article-card-thumbnail {
+            display: block;
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            background-color: #F8F7FA;
+        }
+
+        .article-card-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .article-card:hover .article-card-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .article-card-category {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: linear-gradient(90deg, #4A6CF3 0%, #9B49F2 100%);
+            color: #FFFFFF;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .article-card-body {
+            padding: 1.25rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 0.75rem;
+            color: #1A1229;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            min-height: 3.1em;
+        }
+
+        .article-card-excerpt {
+            font-size: 0.9rem;
+            color: #5A6474;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+        
+        .article-card-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #E5E7EB;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #5A6474;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            overflow: hidden;
+        }
+        .author-name-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .info-item .fas {
+            min-width: 14px;
+        }
+
+        .no-results-message {
+            background-color: #FFFFFF; padding: 2rem; border-radius: 1rem;
+            text-align: center; color: #5A6474; border: 1px solid #E5E7EB;
+        }
+        
+        .filter-btn-group {
+            display: contents;
+        }
+
+        .filter-btn {
+            background-color: #FFFFFF; border: 1px solid #E5E7EB; color: #5A6474;
+            font-weight: 500; border-radius: 50px; padding: 0.5rem 1.2rem;
+            transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+        .filter-btn:hover:not(.active) { transform: translateY(-2px); background-color: #e9e7ec; border-color: #d1d5db; }
+        .filter-btn.active {
+            background: linear-gradient(90deg, #4A6CF3 0%, #9B49F2 100%); color: #FFFFFF;
+            border-color: transparent; box-shadow: 0 4px 15px rgba(120, 73, 242, 0.3);
+        }
+        
+        .pagination-container { margin-top: 2.5rem; }
+        .pagination .page-link {
+            border-radius: 50% !important; width: 40px; height: 40px; display: flex;
+            justify-content: center; align-items: center; margin: 0 5px;
+            border: 1px solid #E5E7EB; font-weight: 500; color: #5A6474; transition: all 0.3s ease;
+        }
+        .pagination .page-link:hover { background-color: #F8F7FA; color: #4A6CF3; border-color: #4A6CF3; }
+        .pagination .page-item.disabled .page-link { background-color: transparent; color: #ced4da; border-color: #E5E7EB; }
+        .pagination .page-item.active .page-link {
+            background: linear-gradient(90deg, #4A6CF3 0%, #9B49F2 100%); border-color: transparent;
+            color: white; box-shadow: 0 4px 15px rgba(120, 73, 242, 0.3);
+        }
+
+        /* ===== START: CSS CHO SIDEBAR ===== */
+        .sidebar-widget {
+            background-color: #FFFFFF;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid #EDF2F7;
+        }
+
+        .sidebar-widget-title {
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #E5E7EB;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-widget-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #4A6CF3 0%, #9B49F2 100%);
+        }
+
+        .sidebar-widget-title i {
+            font-size: 1.1rem;
+            margin-right: 0.6rem;
+        }
+
+        .sidebar-widget-title .icon-popular { color: #FF6B6B; }
+        .sidebar-widget-title .icon-latest { color: #4A6CF3; }
+
+        .widget-post-list .widget-post-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            margin: 0 -0.5rem;
+            text-decoration: none;
+        }
+
+        .widget-post-list .widget-post-item:not(:last-child) {
+            margin-bottom: 0.5rem;
+        }
+
+         .widget-post-item:hover {
+            background-color: #F8F7FA;
+            transform: translateX(5px);
+        }
+
+        .widget-post-thumbnail {
+            flex-shrink: 0;
+            width: 70px;
+            height: 70px;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .widget-post-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .widget-post-content h6 {
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            color: #1A1229;
+            transition: color 0.3s ease;
+        }
+        
+        .widget-post-item:hover .widget-post-content h6 {
+            color: #4A6CF3;
+        }
+
+        .widget-post-meta {
+            font-size: 0.8rem;
+            color: #5A6474;
+        }
+        /* ===== END: CSS CHO SIDEBAR ===== */
+        
+        /* Responsive */
+        @media (max-width: 991.98px) {
+            .content-container-wrapper {
+                margin-top: -70px;
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .page-header { padding: 4rem 0; margin-bottom: 80px; }
+            #topic-filters { justify-content: center; }
+
+            .article-card-body { padding: 1rem; }
+            .article-card-title { font-size: 1.1rem; min-height: 2.8em; }
+            .article-card-excerpt { font-size: 0.85rem; -webkit-line-clamp: 2; }
+
+            /* Sắp xếp lại thanh tìm kiếm và nút viết bài trên mobile */
+            .header-actions-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .unified-search-form {
+                width: 100%; /* Chiếm toàn bộ chiều rộng */
+            }
+            #create-article-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+             .unified-search-form #category-filter-dropdown {
+                max-width: 50px;
+                padding: 0 0.5rem;
+             }
+             .unified-search-form #category-filter-dropdown span {
+                display: none;
+             }
+             .unified-search-form #article-search {
+                padding-left: 1rem;
+                padding-right: 6.5rem;
+             }
+             .unified-search-form .btn-gradient {
+                padding: 0.4rem 1rem;
+                font-size: 0.85rem;
+                right: 6px;
+             }
+        }
+        /* ===== END: CSS DÀNH RIÊNG CHO TRANG CẨM NANG ===== */
+    </style>
+</head>
+
+<body>
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="loader"></div>
+            <div class="loading-text">Đang tải...</div>
+        </div>
+    </div>
+
+    <div id="header-placeholder"></div>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Cẩm Nang Huyền Học</h1>
+                <p class="lead">Nơi chia sẻ kiến thức, kinh nghiệm và những câu chuyện về Tarot và thế giới huyền bí.</p>
+                
+                <div class="header-actions-container">
+                    <form class="unified-search-form" onsubmit="event.preventDefault();">
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle" type="button" id="category-filter-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                               <span>Tất cả danh mục</span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="category-filter-dropdown" id="category-filter-list">
+                                <li><p class="text-center my-2 text-secondary small">Đang tải...</p></li>
+                            </ul>
+                        </div>
+                        <div class="search-input-wrapper">
+                            <input type="text" id="article-search" class="form-control" placeholder="Tìm kiếm bài viết...">
+                        </div>
+                        <button type="submit" class="btn btn-gradient">Tìm kiếm</button>
+                    </form>
+                    
+                    <a href="#" id="create-article-btn" class="btn">
+                        <i class="fas fa-pen-nib me-2"></i><span>Viết Bài</span>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="articles-section py-5">
+            <div class="container">
+                <div class="content-container-wrapper">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-4" id="topic-filters">
+                                <div class="filter-btn-group">
+                                     <button class="btn filter-btn active" data-filter-topic="all">Tất cả</button>
+                                </div>
+                            </div>
+
+                            <div class="row g-4" id="articles-list">
+                                </div>
+
+                            <nav class="pagination-container d-flex justify-content-center">
+                                <ul class="pagination" id="pagination-controls"></ul>
+                            </nav>
+                        </div>
+                        
+                        <div class="col-lg-4 mt-5 mt-lg-0">
+                            <aside class="sidebar-widget">
+                                <h4 class="sidebar-widget-title"><i class="fas fa-fire icon-popular"></i><span>Bài Viết Phổ Biến</span></h4>
+                                <div class="widget-post-list" id="popular-articles-list">
+                                    <p class="text-secondary small">Đang tải...</p>
+                                </div>
+                            </aside>
+                            <aside class="sidebar-widget">
+                                <h4 class="sidebar-widget-title"><i class="fas fa-clock icon-latest"></i><span>Bài Viết Mới Nhất</span></h4>
+                                <div class="widget-post-list" id="latest-articles-list">
+                                    <p class="text-secondary small">Đang tải...</p>
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal fade" id="createArticleModal" tabindex="-1" aria-labelledby="createArticleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createArticleModalLabel">Gửi Bài Viết Mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="submission-success-message" class="text-center p-4 d-none">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                        <h4>Gửi bài thành công!</h4>
+                        <p>Cảm ơn bạn đã chia sẻ kiến thức. Bài viết của bạn đang được đội ngũ Admin xem xét và sẽ sớm được xuất bản.</p>
+                        <button class="btn btn-outline-primary mt-2" id="write-another-btn">Gửi một bài khác</button>
+                    </div>
+
+                    <form id="create-article-form">
+                        <div id="form-error-message" class="alert alert-danger d-none" role="alert"></div>
+                        
+                        <div class="mb-3">
+                            <label for="articleTitleInput" class="form-label fw-bold">Tiêu đề bài viết <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="articleTitleInput" placeholder="Nhập tiêu đề hấp dẫn..." required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="articleCategorySelect" class="form-label fw-bold">Danh mục <span class="text-danger">*</span></label>
+                            <select class="form-select" id="articleCategorySelect" required>
+                                <option value="" selected disabled>-- Chọn danh mục --</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                             <label for="articleFileInput" class="form-label fw-bold">Tải lên tài liệu (.doc, .docx, .pdf) <span class="text-danger">*</span></label>
+                             <div id="file-upload-wrapper">
+                                 <input type="file" id="articleFileInput" accept=".doc, .docx, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, .pdf" required>
+                                 <i class="fas fa-cloud-upload-alt mb-2"></i>
+                                 <p class="mb-1" id="file-name-display">Nhấn để chọn file</p>
+                                 <p class="small file-upload-text mb-0">Dung lượng tối đa 10MB</p>
+                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="adminNoteInput" class="form-label fw-bold">Ghi chú cho Admin</label>
+                            <textarea class="form-control" id="adminNoteInput" rows="3" placeholder="Bạn có thể để lại lời nhắn, ví dụ: 'Vui lòng giữ nguyên định dạng trong file.'..."></textarea>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-primary" id="submit-article-btn">
+                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                <span id="submit-btn-text">Gửi Bài</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="footer-placeholder"></div>
+    <div id="modals-placeholder"></div>
+    <div id="floating-widgets-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="components.js" defer></script>
+
+    <script>
+        // Các đoạn mã Javascript khác được giữ nguyên, không thay đổi
+        // Preloader logic
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                setTimeout(() => {
+                    preloader.classList.add('fade-out');
+                    preloader.addEventListener('transitionend', () => preloader.style.display = 'none');
+                }, 500); 
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                initializeHandbookPage();
+            }, 100); 
+        });
+
+        // ===== START: LOGIC JAVASCRIPT ĐÃ SỬA VÀ BỔ SUNG =====
+
+        function setupCreateArticleButtonListener() {
+            const createArticleBtn = document.getElementById('create-article-btn');
+            if (!createArticleBtn) return;
+
+            createArticleBtn.addEventListener('click', async function(event) {
+                event.preventDefault();
+                
+                if (!window.viettarotApp || !window.viettarotApp.supabase) {
+                    console.error("Supabase client không có sẵn.");
+                    alert('Lỗi kết nối, vui lòng tải lại trang.');
+                    return;
+                }
+                const supabase = window.viettarotApp.supabase;
+
+                const { data: { session }, error } = await supabase.auth.getSession();
+
+                if (error) {
+                    console.error("Lỗi khi kiểm tra phiên đăng nhập:", error);
+                    alert("Có lỗi xảy ra, vui lòng thử lại.");
+                    return;
+                }
+                
+                if (session && session.user) {
+                    const createArticleModalEl = document.getElementById('createArticleModal');
+                    if (createArticleModalEl) {
+                        const createArticleModal = bootstrap.Modal.getOrCreateInstance(createArticleModalEl);
+                        createArticleModal.show();
+                    } else {
+                        console.error('Không tìm thấy modal viết bài với id="createArticleModal".');
+                    }
+                } else {
+                    const loginModalEl = document.getElementById('loginModal');
+                    if (loginModalEl) {
+                        const loginModal = bootstrap.Modal.getOrCreateInstance(loginModalEl);
+                        loginModal.show();
+                    } else {
+                        console.error('Không tìm thấy Login Modal với id="loginModal".');
+                        alert('Bạn cần đăng nhập để thực hiện chức năng này.');
+                    }
+                }
+            });
+        }
+        
+        // ===== LOGIC MODAL ĐÃ ĐƯỢC CẬP NHẬT (BỎ PHẦN CHỌN CHỦ ĐỀ) =====
+        async function initializeCreateArticleModal() {
+            const form = document.getElementById('create-article-form');
+            if (!form) return;
+
+            const submitBtn = document.getElementById('submit-article-btn');
+            const successMessage = document.getElementById('submission-success-message');
+            const errorMessage = document.getElementById('form-error-message');
+            const writeAnotherBtn = document.getElementById('write-another-btn');
+            const categorySelect = document.getElementById('articleCategorySelect');
+            const fileInput = document.getElementById('articleFileInput');
+            const fileUploadWrapper = document.getElementById('file-upload-wrapper');
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const submitBtnText = document.getElementById('submit-btn-text');
+            const supabase = window.viettarotApp.supabase;
+
+            if (!supabase) return;
+
+            // Xử lý giao diện cho input file
+            fileUploadWrapper.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    fileNameDisplay.textContent = fileInput.files[0].name;
+                } else {
+                    fileNameDisplay.textContent = 'Nhấn để chọn file';
+                }
+            });
+
+            const createSlug = (title) => {
+                if (!title) return '';
+                const slug = title.toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") 
+                    .replace(/[đĐ]/g, 'd')
+                    .replace(/[^a-z0-9\s-]/g, '') 
+                    .trim()
+                    .replace(/\s+/g, '-') 
+                    .replace(/-+/g, '-');
+                return `${slug}-${Date.now().toString(36)}`; 
+            };
+            
+            async function populateSelectOptions() {
+                 try {
+                    // Chỉ tải danh sách Danh mục (Categories)
+                    const { data: categories, error } = await supabase
+                        .from('article_categories')
+                        .select('id, name');
+
+                    if (error) throw error;
+                    
+                    categorySelect.innerHTML = '<option value="" selected disabled>-- Chọn danh mục --</option>';
+                    categories.forEach(cat => {
+                        categorySelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                    });
+
+                } catch (error) {
+                    console.error("Lỗi tải danh mục:", error);
+                    categorySelect.innerHTML = '<option value="">Lỗi tải danh mục</option>';
+                }
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const spinner = submitBtn.querySelector('.spinner-border');
+                
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    errorMessage.textContent = "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.";
+                    errorMessage.classList.remove('d-none');
+                    return;
+                }
+
+                // --- Kiểm tra file ---
+                const file = fileInput.files[0];
+                if (!file) {
+                    errorMessage.textContent = "Vui lòng chọn một file tài liệu để tải lên.";
+                    errorMessage.classList.remove('d-none');
+                    return;
+                }
+                const fileSizeLimit = 10 * 1024 * 1024; 
+                if (file.size > fileSizeLimit) {
+                    errorMessage.textContent = "Dung lượng file quá lớn. Vui lòng chọn file nhỏ hơn 10MB.";
+                    errorMessage.classList.remove('d-none');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                spinner.classList.remove('d-none');
+                errorMessage.classList.add('d-none');
+                submitBtnText.textContent = 'Đang tải file...';
+
+                try {
+                    // --- Tải file lên Supabase Storage ---
+                    const filePath = `public/${user.id}/${Date.now()}-${file.name}`;
+                    const { error: uploadError } = await supabase.storage
+                        .from('article-submissions')
+                        .upload(filePath, file);
+
+                    if (uploadError) {
+                        throw new Error(`Lỗi tải file: ${uploadError.message}`);
+                    }
+
+                    // --- Lấy URL công khai của file ---
+                    const { data: urlData } = supabase.storage
+                        .from('article-submissions')
+                        .getPublicUrl(filePath);
+
+                    if (!urlData || !urlData.publicUrl) {
+                         throw new Error("Không thể lấy URL của file sau khi tải lên.");
+                    }
+
+                    submitBtnText.textContent = 'Đang gửi bài...';
+                    
+                    // --- Chuẩn bị dữ liệu để lưu vào CSDL (đã bỏ topic_id) ---
+                    const articleData = {
+                        title: document.getElementById('articleTitleInput').value.trim(),
+                        category_id: categorySelect.value,
+                        author_id: user.id,
+                        is_published: false,
+                        slug: createSlug(document.getElementById('articleTitleInput').value.trim()),
+                        submitted_file_url: urlData.publicUrl,
+                        admin_note: document.getElementById('adminNoteInput').value.trim()
+                    };
+                    
+                    // --- Lưu thông tin vào bảng 'articles' ---
+                    const { error: insertError } = await supabase.from('articles').insert([articleData]);
+                    
+                    if (insertError) {
+                         throw new Error(`Lỗi lưu dữ liệu: ${insertError.message}`);
+                    }
+                    
+                    form.classList.add('d-none');
+                    successMessage.classList.remove('d-none');
+                    form.reset();
+                    fileNameDisplay.textContent = 'Nhấn để chọn file';
+
+                } catch (error) {
+                    console.error('Lỗi khi gửi bài viết:', error);
+                    errorMessage.textContent = "Đã có lỗi xảy ra. " + error.message;
+                    errorMessage.classList.remove('d-none');
+                } finally {
+                    submitBtn.disabled = false;
+                    spinner.classList.add('d-none');
+                    submitBtnText.textContent = 'Gửi Bài';
+                }
+            });
+            
+            writeAnotherBtn.addEventListener('click', () => {
+                successMessage.classList.add('d-none');
+                form.classList.remove('d-none');
+                errorMessage.classList.add('d-none');
+            });
+
+            const createArticleModalEl = document.getElementById('createArticleModal');
+            createArticleModalEl.addEventListener('show.bs.modal', populateSelectOptions, { once: true });
+        }
+        
+        // ===== PHẦN HIỂN THỊ BÀI VIẾT VÀ LỌC KHÔNG THAY ĐỔI =====
+        async function initializeHandbookPage() {
+            setupCreateArticleButtonListener();
+            initializeCreateArticleModal(); 
+
+            if (!window.viettarotApp || !window.viettarotApp.supabase) {
+                console.error("Supabase client không được khởi tạo.");
+                const articlesListContainer = document.getElementById('articles-list');
+                if(articlesListContainer) {
+                    articlesListContainer.innerHTML = `<div class="col-12"><div class="no-results-message bg-danger-light text-danger-dark border-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><h4>Lỗi Cấu Hình</h4><p>Không thể kết nối đến cơ sở dữ liệu.</p></div></div>`;
+                }
+                return;
+            }
+            const supabase = window.viettarotApp.supabase;
+            
+            let allArticles = [];
+            let currentArticles = [];
+            let currentPage = 1;
+            const itemsPerPage = 6;
+            let activeFilters = { topic: 'all', category: 'all' };
+
+            const articlesListContainer = document.getElementById('articles-list');
+            const searchInput = document.getElementById('article-search');
+            const paginationControls = document.getElementById('pagination-controls');
+            
+            const topicFiltersContainer = document.getElementById('topic-filters');
+            const categoryFilterList = document.getElementById('category-filter-list');
+            const topicButtonGroup = topicFiltersContainer.querySelector('.filter-btn-group');
+            const categoryFilterDropdownBtn = document.getElementById('category-filter-dropdown');
+            const popularArticlesContainer = document.getElementById('popular-articles-list');
+            const latestArticlesContainer = document.getElementById('latest-articles-list');
+            
+            const formatDate = (dateString) => {
+                if (!dateString) return 'Không rõ ngày';
+                return new Date(dateString).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            };
+
+            function renderArticles(articles) {
+                if (!articlesListContainer) return;
+                articlesListContainer.innerHTML = ''; 
+                if (articles.length === 0) {
+                    articlesListContainer.innerHTML = `<div class="col-12"><div class="no-results-message"><i class="fas fa-folder-open fa-2x mb-3"></i><h4>Không tìm thấy bài viết nào</h4><p>Vui lòng thử lại với bộ lọc hoặc từ khóa khác.</p></div></div>`;
+                    return;
+                }
+                articles.forEach(article => {
+                    const articleLink = `handbook-detail.html?slug=${article.slug || 'coming-soon'}`;
+                    const cardHTML = `
+                        <div class="col-lg-4 col-md-6 d-flex"> 
+                            <div class="article-card">
+                                <a href="${articleLink}">
+                                    <div class="article-card-thumbnail">
+                                        <img src="${article.image_url || 'image/default-article-image.png'}" alt="${article.title}" loading="lazy">
+                                        ${article.category ? `<div class="article-card-category">${article.category}</div>` : ''}
+                                    </div>
+                                    <div class="article-card-body">
+                                        <h3 class="article-card-title">${article.title}</h3>
+                                        <p class="article-card-excerpt">${article.excerpt || ''}</p>
+                                        <div class="article-card-footer">
+                                            <span class="info-item"><i class="fas fa-user-edit"></i><span class="author-name-text">${article.author_name || 'VietTarot'}</span></span>
+                                            <span class="info-item"><i class="fas fa-calendar-alt"></i><span>${formatDate(article.published_at)}</span></span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>`;
+                    articlesListContainer.insertAdjacentHTML('beforeend', cardHTML);
+                });
+            }
+
+            function renderSidebarArticles(container, articles) {
+                if (!container) return;
+                if (!articles || articles.length === 0) {
+                    container.innerHTML = '<p class="text-secondary small">Chưa có bài viết nào.</p>';
+                    return;
+                }
+                container.innerHTML = articles.map(article => `
+                    <a href="handbook-detail.html?slug=${article.slug}" class="widget-post-item">
+                        <div class="widget-post-thumbnail">
+                            <img src="${article.image_url || 'image/default-article-image.png'}" alt="${article.title}" loading="lazy">
+                        </div>
+                        <div class="widget-post-content">
+                            <h6>${article.title}</h6>
+                            <span class="widget-post-meta">${formatDate(article.published_at)}</span>
+                        </div>
+                    </a>`).join('');
+            }
+
+            function setupPagination(items) {
+                if (!paginationControls) return;
+                paginationControls.innerHTML = "";
+                const pageCount = Math.ceil(items.length / itemsPerPage);
+                if (pageCount <= 1) {
+                    paginationControls.parentElement.style.display = 'none';
+                    return;
+                }
+                paginationControls.parentElement.style.display = 'flex';
+                const createPageItem = (page, text) => {
+                    const li = document.createElement('li');
+                    li.className = `page-item ${page === currentPage ? 'active' : ''} ${page === '...' || (text==='&laquo;' && currentPage===1) || (text==='&raquo;' && currentPage===pageCount) ? 'disabled' : ''}`;
+                    li.innerHTML = `<a class="page-link" href="#">${text || page}</a>`;
+                    if (li.className.indexOf('disabled') === -1) {
+                        li.querySelector('a').addEventListener('click', (e) => {
+                            e.preventDefault();
+                            currentPage = page;
+                            updatePage();
+                            document.querySelector('.content-container-wrapper')?.scrollIntoView({ behavior: 'smooth' });
+                        });
+                    }
+                    return li;
+                }
+                if (currentPage > 1) paginationControls.appendChild(createPageItem(currentPage - 1, '&laquo;'));
+                for (let i = 1; i <= pageCount; i++) {
+                     if (i === 1 || i === pageCount || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                        paginationControls.appendChild(createPageItem(i));
+                     } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        paginationControls.appendChild(createPageItem('...', '...'));
+                     }
+                }
+                if (currentPage < pageCount) paginationControls.appendChild(createPageItem(currentPage + 1, '&raquo;'));
+            }
+            
+            function renderTopicFilters(topics) {
+                if (!topicButtonGroup) return;
+                topics.forEach(topic => {
+                    const button = document.createElement('button');
+                    button.className = 'btn filter-btn';
+                    button.dataset.filterTopic = topic.slug;
+                    button.textContent = topic.name;
+                    topicButtonGroup.appendChild(button);
+                });
+            }
+            
+            function renderCategoryFilters(categories) {
+                if (!categoryFilterList) return;
+                categoryFilterList.innerHTML = '<li><a class="dropdown-item" href="#" data-category="all">Tất cả danh mục</a></li>';
+                const categoryHTML = categories
+                    .map(cat => `<li><a class="dropdown-item" href="#" data-category="${cat}">${cat}</a></li>`)
+                    .join('');
+                categoryFilterList.insertAdjacentHTML('beforeend', categoryHTML);
+            }
+
+            function displayPage(items) {
+                const start = (currentPage - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+                renderArticles(items.slice(start, end));
+            }
+            
+            function updatePage() {
+                displayPage(currentArticles);
+                setupPagination(currentArticles);
+            }
+            
+            function applyFilters() {
+                let filtered = [...allArticles];
+                const searchTerm = searchInput.value.toLowerCase().trim();
+
+                if (searchTerm) {
+                    filtered = filtered.filter(doc => doc.title.toLowerCase().includes(searchTerm));
+                }
+                if (activeFilters.category !== 'all') {
+                    filtered = filtered.filter(doc => doc.category === activeFilters.category);
+                }
+                if (activeFilters.topic !== 'all') {
+                    filtered = filtered.filter(doc => doc.topic_slug === activeFilters.topic);
+                }
+
+                currentArticles = filtered;
+                currentPage = 1;
+                updatePage();
+            }
+
+            async function fetchAllData() {
+                try {
+                    articlesListContainer.innerHTML = `<div class="col-12 text-center text-secondary py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Đang tải bài viết...</p></div>`;
+                    
+                    const selectQuery = `
+                        id, title, slug, excerpt, image_url, published_at, views,
+                        author:profiles ( full_name ),
+                        category:article_categories ( name ),
+                        topic:article_topics ( slug )
+                    `;
+                    
+                    const articlesFilter = (query) => query.eq('is_published', true);
+
+                    const [topicsRes, allArticlesRes, latestArticlesRes, popularArticlesRes] = await Promise.all([
+                        supabase.from('article_topics').select('name, slug').order('display_order', { ascending: true }),
+                        articlesFilter(supabase.from('articles').select(selectQuery)).order('published_at', { ascending: false }),
+                        articlesFilter(supabase.from('articles').select(selectQuery)).order('published_at', { ascending: false }).limit(4),
+                        articlesFilter(supabase.from('articles').select(selectQuery)).order('views', { ascending: false }).limit(4)
+                    ]);
+
+                    if (topicsRes.error) throw topicsRes.error;
+                    renderTopicFilters(topicsRes.data);
+
+                    if (latestArticlesRes.error) console.error("Lỗi tải bài viết mới nhất:", latestArticlesRes.error);
+                    else renderSidebarArticles(latestArticlesContainer, latestArticlesRes.data);
+                    
+                    if (popularArticlesRes.error) console.error("Lỗi tải bài viết phổ biến:", popularArticlesRes.error);
+                    else renderSidebarArticles(popularArticlesContainer, popularArticlesRes.data);
+
+                    if (allArticlesRes.error) throw allArticlesRes.error;
+                    
+                    allArticles = allArticlesRes.data.map(article => ({
+                        id: article.id,
+                        title: article.title,
+                        slug: article.slug,
+                        excerpt: article.excerpt,
+                        image_url: article.image_url,
+                        published_at: article.published_at,
+                        author_name: article.author?.full_name,
+                        category: article.category?.name,
+                        topic_slug: article.topic?.slug
+                    }));
+                    
+                    const categories = [...new Set(allArticles.map(item => item.category).filter(Boolean))];
+                    renderCategoryFilters(categories);
+                    
+                    applyFilters();
+
+                } catch (error) {
+                    console.error('Lỗi khi tải dữ liệu cẩm nang:', error);
+                    articlesListContainer.innerHTML = `<div class="col-12"><div class="no-results-message bg-danger-light text-danger-dark border-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><h4>Đã xảy ra lỗi</h4><p>Không thể tải dữ liệu từ máy chủ. Vui lòng thử lại sau.</p></div></div>`;
+                }
+            }
+            
+            topicFiltersContainer?.addEventListener('click', (e) => {
+                const targetBtn = e.target.closest('.filter-btn');
+                if (targetBtn) {
+                    topicFiltersContainer.querySelector('.filter-btn.active')?.classList.remove('active');
+                    targetBtn.classList.add('active');
+                    activeFilters.topic = targetBtn.dataset.filterTopic;
+                    applyFilters();
+                }
+            });
+
+            categoryFilterList?.addEventListener('click', (e) => {
+                const targetDropdownItem = e.target.closest('.dropdown-item');
+                if (targetDropdownItem) {
+                    e.preventDefault();
+                    const category = targetDropdownItem.dataset.category;
+                    activeFilters.category = category;
+                    const buttonTextSpan = categoryFilterDropdownBtn.querySelector('span');
+                    if(buttonTextSpan) {
+                         buttonTextSpan.textContent = category === 'all' ? 'Tất cả danh mục' : targetDropdownItem.textContent;
+                    }
+                    applyFilters();
+                }
+            });
+
+            searchInput?.addEventListener('input', applyFilters);
+
+            await fetchAllData();
+        }
+    </script>
+</body>
+</html>
