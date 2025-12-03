@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VietTarot - Ý Nghĩa Các Loại Bài</title>
 
-     <link rel="icon" type="image/png" sizes="16x16" href="image/iconlogo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="image/iconlogo.png">
     <link rel="icon" type="image/png" sizes="32x32" href="image/iconlogo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="image/iconlogo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -39,9 +39,9 @@
             font-family: 'Poppins', sans-serif;
             background-color: var(--bg-off-white);
             color: var(--text-primary);
-            -webkit-user-select: none; /* Safari */
-            -ms-user-select: none; /* IE 10+ */
-            user-select: none; /* Chuẩn */
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
 
@@ -93,7 +93,7 @@
                 transform: rotate(360deg);
             }
         }
-        
+
         .page-header {
             background: var(--gradient-primary);
             color: var(--bg-white);
@@ -106,7 +106,7 @@
 
         .page-header h1 {
             font-weight: 700;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .page-header p {
@@ -147,7 +147,7 @@
             color: var(--text-secondary);
             font-size: 1.2rem;
         }
-        
+
         .filter-buttons {
             position: relative;
             display: flex;
@@ -155,25 +155,25 @@
             justify-content: center;
             gap: 0.5rem;
         }
-        
+
         .filter-buttons .btn {
             margin: 0;
-            font-weight: 600; 
+            font-weight: 600;
             border-radius: 50px;
             border: 1px solid transparent;
             color: var(--text-primary);
             transition: all 0.3s ease;
             background-color: transparent;
             z-index: 2;
-            padding: 0.6rem 1.3rem; 
-            font-size: 0.95rem; 
-            letter-spacing: 0.2px; 
+            padding: 0.6rem 1.3rem;
+            font-size: 0.95rem;
+            letter-spacing: 0.2px;
         }
-        
+
         .filter-buttons .btn:hover {
-            color: var(--primary-blue); 
+            color: var(--primary-blue);
         }
-        
+
         .filter-slider {
             position: absolute;
             top: 0;
@@ -185,7 +185,7 @@
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             z-index: 1;
         }
-        
+
         .filter-buttons .btn.active {
             color: var(--bg-white);
             text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
@@ -195,20 +195,22 @@
             .filter-slider {
                 display: none !important;
             }
+
             .filter-buttons .btn.active {
                 background: var(--gradient-primary);
                 box-shadow: 0 2px 8px rgba(120, 73, 242, 0.3);
             }
         }
-        
+
         @media (min-width: 992px) {
             .filter-buttons {
                 justify-content: flex-start;
                 gap: 0.25rem;
             }
+
             .filter-buttons .btn {
                 margin: 0.25rem;
-             }
+            }
         }
 
         .tarot-card-item-wrapper {
@@ -218,8 +220,9 @@
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
             position: relative;
             z-index: 1;
-            perspective: 1000px; 
+            perspective: 1000px;
         }
+
         .tarot-card-item-wrapper.is-visible {
             opacity: 1;
             transform: translateY(0);
@@ -228,24 +231,24 @@
         .tarot-card-item {
             background-color: var(--bg-white);
             border-radius: 1rem;
-            overflow: hidden; 
+            overflow: hidden;
             text-align: center;
             text-decoration: none;
             color: var(--text-primary);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
             height: 100%;
-            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease; 
-            will-change: transform; 
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
+            will-change: transform;
         }
 
         .tarot-card-item-wrapper:hover .tarot-card-item {
-            transform: translateY(-10px) scale(1.08); 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2); 
-            z-index: 10; 
+            transform: translateY(-10px) scale(1.08);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10;
         }
-        
+
         .tarot-card-item-wrapper:hover .tarot-card-name {
             color: var(--primary-blue);
         }
@@ -256,7 +259,7 @@
             aspect-ratio: 2 / 3.5;
             object-fit: cover;
             background-color: var(--bg-off-white);
-            border-radius: 1rem 1rem 0 0; 
+            border-radius: 1rem 1rem 0 0;
         }
 
         .tarot-card-name {
@@ -271,13 +274,14 @@
             transition: color 0.3s ease;
         }
 
-        #loading-indicator, #no-results-message {
+        #loading-indicator,
+        #no-results-message {
             display: none;
             text-align: center;
             padding: 3rem 0;
             color: var(--text-secondary);
         }
-        
+
         #cardDetailModal .modal-dialog {
             max-width: 1200px;
             animation: zoomIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
@@ -288,6 +292,7 @@
                 opacity: 0;
                 transform: scale(0.9);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -302,7 +307,7 @@
             overflow: hidden;
             position: relative;
         }
-        
+
         #cardDetailModal .modal-content::before {
             content: '';
             position: absolute;
@@ -313,12 +318,12 @@
             background: var(--gradient-primary);
             z-index: 2;
         }
-        
+
         #cardDetailModal .modal-header {
             border-bottom: none;
             padding: 1.3rem 0.5rem;
         }
-        
+
         #cardDetailModal .btn-close {
             position: absolute;
             top: 1.2rem;
@@ -334,44 +339,44 @@
             justify-content: center;
             padding: 0;
             border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
-        
+
         #cardDetailModal .btn-close i {
             color: white;
             font-size: 1rem;
         }
 
         #cardDetailModal .btn-close:hover {
-             transform: scale(1.1) rotate(90deg);
+            transform: scale(1.1) rotate(90deg);
         }
 
         #cardDetailModal .modal-body {
             padding: 0 1.5rem 1.5rem 1.5rem;
         }
-        
+
         .card-detail-image {
             width: 100%;
             max-width: 300px;
             height: auto;
             border-radius: 0.75rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
             margin: 0 auto;
         }
-        
+
         .card-detail-content {
             max-height: 75vh;
             overflow-y: auto;
             padding-right: 1rem;
         }
-        
+
         .card-detail-title {
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 0.25rem;
         }
-        
+
         .card-detail-english-name-inline {
             background: var(--gradient-primary);
             -webkit-background-clip: text;
@@ -380,7 +385,7 @@
             font-weight: 700;
             font-size: 0.8em;
         }
-        
+
         .card-detail-subtitle {
             font-weight: 500;
             color: var(--primary-purple);
@@ -396,23 +401,23 @@
             border-radius: 0.75rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .info-item {
             font-size: 0.9rem;
             text-align: center;
         }
-        
+
         .info-item .info-label {
             font-weight: 600;
             color: var(--text-primary);
             display: block;
             margin-bottom: 0.25rem;
         }
-        
+
         .info-item .info-value {
             color: var(--text-secondary);
         }
-        
+
         .detail-section h5 {
             font-weight: 600;
             color: var(--text-primary);
@@ -421,23 +426,26 @@
             margin-bottom: 1rem;
             display: inline-block;
         }
-        
-        .detail-section p, .detail-section ul, .detail-section div {
+
+        .detail-section p,
+        .detail-section ul,
+        .detail-section div {
             color: var(--text-secondary);
             line-height: 1.7;
             text-align: justify;
             font-size: 0.95rem;
         }
+
         .detail-section div p {
-             margin-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
         }
-        
+
         .highlight-section {
             transition: all 0.5s ease-in-out;
             box-shadow: 0 0 0 2px var(--primary-purple), 0 0 15px rgba(155, 73, 242, 0.4);
             border-radius: 0.75rem;
             padding: 1rem;
-            margin: -1rem; 
+            margin: -1rem;
         }
 
         .upgrade-text-link {
@@ -450,6 +458,7 @@
             font: inherit;
             text-align: left;
         }
+
         .upgrade-text-link:hover {
             color: var(--primary-blue);
         }
@@ -457,30 +466,32 @@
         .tarot-view .detail-section {
             margin-top: 2.25rem;
         }
+
         .tarot-view .detail-section h5 {
             font-size: 1.15rem;
             padding-bottom: 0.6rem;
             margin-bottom: 1.25rem;
         }
+
         .tarot-view .detail-section p,
         .tarot-view .detail-section div {
             font-size: 1rem;
             line-height: 1.8;
         }
-        
+
         #modalExampleReadingContent .nav-pills {
             background-color: var(--bg-off-white);
             padding: 0.4rem;
             border-radius: 50px;
             border: 1px solid var(--border-color);
-            position: relative; 
+            position: relative;
         }
 
         #modalExampleReadingContent .modal-tab-slider {
             position: absolute;
             top: 0.4rem;
             bottom: 0.4rem;
-            left: 0; 
+            left: 0;
             height: calc(100% - 0.8rem);
             border-radius: 50px;
             background: var(--gradient-primary);
@@ -500,7 +511,7 @@
             font-size: 0.9rem;
             letter-spacing: 0.3px;
             position: relative;
-            z-index: 2; 
+            z-index: 2;
         }
 
         #modalExampleReadingContent .nav-pills .nav-link:hover:not(.active) {
@@ -509,11 +520,11 @@
         }
 
         #modalExampleReadingContent .nav-pills .nav-link.active {
-            background: transparent; 
+            background: transparent;
             color: var(--bg-white);
-            box-shadow: none; 
-            transform: none; 
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); 
+            box-shadow: none;
+            transform: none;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
         }
 
         #modalExampleReadingContent .nav-link i {
@@ -539,18 +550,21 @@
             text-align: justify;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
         }
-        
+
         .lenormand-view .detail-section h5 {
             font-size: 1.15rem;
         }
-        .lenormand-view .detail-section + .detail-section {
-            margin-top: 2.5rem; 
+
+        .lenormand-view .detail-section+.detail-section {
+            margin-top: 2.5rem;
         }
-        .lenormand-view .detail-section p, 
+
+        .lenormand-view .detail-section p,
         .lenormand-view .detail-section div {
             font-size: 1rem;
             line-height: 1.75;
         }
+
         .lenormand-view .attribute-item {
             display: flex;
             align-items: baseline;
@@ -558,6 +572,7 @@
             font-size: 0.95rem;
             text-align: left;
         }
+
         .lenormand-view .attribute-item strong {
             font-weight: 600;
             color: var(--text-primary);
@@ -565,14 +580,17 @@
             margin-right: 8px;
             min-width: 95px;
         }
+
         .lenormand-view .attribute-item span {
             color: var(--text-secondary);
         }
+
         .lenormand-themes-container {
             display: grid;
             grid-template-columns: 1fr;
             gap: 1.5rem;
         }
+
         .lenormand-theme-item h6 {
             font-weight: 600;
             font-size: 0.95rem;
@@ -581,18 +599,21 @@
             display: flex;
             align-items: center;
         }
+
         .lenormand-theme-item h6 i {
             margin-right: 0.65rem;
             width: 20px;
             text-align: center;
         }
-        .lenormand-theme-item p, .lenormand-theme-item .upgrade-text-link {
+
+        .lenormand-theme-item p,
+        .lenormand-theme-item .upgrade-text-link {
             font-size: 0.9rem;
             line-height: 1.6;
             margin-bottom: 0;
             padding-left: 2rem;
         }
-        
+
         .card-group-title {
             font-weight: 600;
             color: var(--text-primary);
@@ -606,7 +627,7 @@
         .card-group-title:first-child {
             margin-top: 0;
         }
-        
+
         .card-group-subtitle {
             font-weight: 600;
             font-size: 1.15rem;
@@ -623,19 +644,34 @@
             grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
         }
 
-        @media (min-width: 576px) { .card-group-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); } }
-        @media (min-width: 768px) { .card-group-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); } }
-        @media (min-width: 1200px) { .card-group-grid { grid-template-columns: repeat(8, 1fr); } }
-        
+        @media (min-width: 576px) {
+            .card-group-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+
+        @media (min-width: 768px) {
+            .card-group-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .card-group-grid {
+                grid-template-columns: repeat(8, 1fr);
+            }
+        }
+
         #related-cards-grid {
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         }
+
         @media (min-width: 1200px) {
             #related-cards-grid {
                 grid-template-columns: repeat(5, 1fr);
             }
         }
-        
+
         .btn-gradient-primary {
             background: var(--gradient-primary);
             border: none;
@@ -650,7 +686,7 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(120, 73, 242, 0.4);
         }
-        
+
         .btn-view-example {
             background: transparent;
             border: 1px solid var(--primary-blue);
@@ -669,7 +705,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(74, 108, 243, 0.3);
         }
-        
+
         .w-two-thirds {
             width: 66.67%;
             margin-left: auto;
@@ -678,8 +714,10 @@
 
         .promo-popup-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-color: rgba(26, 18, 41, 0.75);
             z-index: 2000;
             display: flex;
@@ -690,10 +728,12 @@
             visibility: hidden;
             transition: opacity 0.4s ease, visibility 0.4s ease;
         }
+
         .promo-popup-overlay.show {
             opacity: 1;
             visibility: visible;
         }
+
         .promo-popup-content {
             position: relative;
             background-color: var(--bg-white);
@@ -706,22 +746,30 @@
             transform: scale(0.8);
             transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
         }
+
         .promo-popup-overlay.show .promo-popup-content {
             transform: scale(1);
         }
+
         .promo-popup-content a {
             display: block;
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
         }
+
         .promo-popup-content img {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             background-color: var(--bg-off-white);
         }
+
         .promo-popup-close {
             position: absolute;
-            top: 10px; right: 10px;
-            width: 36px; height: 36px;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
@@ -733,29 +781,35 @@
             z-index: 10;
             transition: background-color 0.3s ease;
         }
+
         .promo-popup-close:hover {
             background-color: rgba(0, 0, 0, 0.8);
         }
 
-        /* [SỬA ĐỔI TOÀN BỘ] CSS CHO PHẦN BÌNH LUẬN */
+        /* CSS CHO PHẦN BÌNH LUẬN */
         .comments-container {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif;
             font-size: 0.95rem;
             color: #050505;
         }
+
         .comment-item {
             display: flex;
             gap: 0.75rem;
         }
+
         .comment-item-wrapper {
-             margin-top: 1rem;
+            margin-top: 1rem;
         }
+
         .comment-item-wrapper:first-child {
             margin-top: 0;
         }
+
         .comment-avatar {
             flex-shrink: 0;
         }
+
         .comment-avatar img {
             width: 40px;
             height: 40px;
@@ -763,40 +817,48 @@
             object-fit: cover;
             background-color: #ccc;
         }
+
         .comment-body {
             flex-grow: 1;
             position: relative;
         }
+
         .comment-content-wrapper {
             background-color: var(--facebook-bg);
             padding: 0.5rem 0.75rem;
             border-radius: 18px;
-            display: inline-block; 
+            display: inline-block;
             max-width: 100%;
             line-height: 1.4;
             position: relative;
         }
+
         .comment-author {
             font-weight: 600;
             font-size: 0.85rem;
             margin-bottom: 0.1rem;
             color: #050505;
         }
+
         .comment-author a {
             text-decoration: none;
             color: inherit;
         }
+
         .comment-author a:hover {
             text-decoration: underline;
         }
+
         .comment-author .verified-badge {
             color: var(--facebook-link-color);
             font-size: 0.8rem;
             margin-left: 4px;
         }
+
         .comment-text {
             word-wrap: break-word;
         }
+
         .comment-actions {
             display: flex;
             gap: 1rem;
@@ -805,6 +867,7 @@
             font-weight: 600;
             color: var(--facebook-text-secondary);
         }
+
         .comment-actions .action-link {
             cursor: pointer;
             color: inherit;
@@ -814,22 +877,26 @@
             font-size: inherit;
             font-weight: inherit;
         }
+
         .comment-actions .action-link:hover {
             text-decoration: underline;
         }
+
         .comment-actions .action-link.liked {
             color: var(--facebook-link-color);
         }
+
         .comment-actions .timestamp {
             font-weight: 400;
         }
+
         .comment-reactions {
             position: absolute;
             bottom: -12px;
             right: 0px;
             background-color: var(--bg-white);
             border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
             font-size: 0.8rem;
             padding: 2px 6px;
             display: flex;
@@ -840,9 +907,11 @@
             opacity: 0;
             pointer-events: none;
         }
+
         .comment-reactions.visible {
             opacity: 1;
         }
+
         .comment-reactions .like-icon {
             background-color: var(--facebook-link-color);
             color: white;
@@ -854,34 +923,36 @@
             justify-content: center;
             font-size: 0.6rem;
         }
-        /* [SỬA ĐỔI] CSS cho thanh nối và bình luận trả lời */
+
         .comment-replies {
-            padding-left: 48px; 
+            padding-left: 48px;
             position: relative;
         }
-        /* Đường kẻ dọc chính */
+
         .comment-replies::before {
             content: '';
             position: absolute;
-            left: 19px; /* Căn giữa với avatar 40px */
+            left: 19px;
             top: 0;
-            bottom: 20px; /* Kết thúc ở giữa avatar cuối cùng */
+            bottom: 20px;
             width: 2px;
-            background-color: #e0e0e0; /* Màu nhạt hơn */
+            background-color: #e0e0e0;
         }
+
         .comment-replies .comment-item-wrapper {
             position: relative;
         }
-        /* Đường kẻ ngang (nhánh chữ L) */
+
         .comment-replies .comment-item-wrapper::before {
             content: '';
             position: absolute;
-            left: -29px; /* Nối từ đường dọc ra */
-            top: 19px; /* Căn giữa avatar */
+            left: -29px;
+            top: 19px;
             width: 20px;
             height: 2px;
             background-color: #e0e0e0;
         }
+
         .reply-summary-container {
             padding-left: 48px;
             margin-top: 0.5rem;
@@ -889,18 +960,23 @@
             font-weight: 600;
             color: var(--facebook-text-secondary);
         }
-        .view-replies-link, .view-more-replies-link {
+
+        .view-replies-link,
+        .view-more-replies-link {
             cursor: pointer;
             display: inline-block;
         }
-        .view-replies-link:hover, .view-more-replies-link:hover {
+
+        .view-replies-link:hover,
+        .view-more-replies-link:hover {
             text-decoration: underline;
         }
+
         .view-replies-link i {
             margin-right: 6px;
             font-size: 0.8rem;
         }
-        /* Kết thúc CSS cho bình luận trả lời */
+
         .comment-input-area {
             display: flex;
             gap: 0.75rem;
@@ -908,6 +984,7 @@
             padding-bottom: 1rem;
             border-bottom: 1px solid var(--border-color);
         }
+
         .comment-input-area .form-control,
         .reply-form-container .form-control {
             background-color: var(--facebook-bg);
@@ -917,62 +994,80 @@
             font-size: 0.95rem;
             line-height: 1.4;
         }
+
         .comment-input-area .form-control::placeholder,
         .reply-form-container .form-control::placeholder {
             color: var(--facebook-text-secondary);
         }
+
         .comment-input-area .form-control:focus,
         .reply-form-container .form-control:focus {
             box-shadow: none;
         }
+
         .reply-form-container {
             margin-top: 0.5rem;
         }
+
         .reply-form-container .reply-actions {
             font-size: 0.8rem;
             margin-top: 0.25rem;
             padding-left: 48px;
         }
+
         .reply-form-container .reply-actions a {
             cursor: pointer;
             color: var(--facebook-link-color);
             text-decoration: none;
         }
+
         .reply-form-container .reply-actions a:hover {
             text-decoration: underline;
         }
+
         #no-comments-message {
             color: var(--text-secondary);
             text-align: center;
             padding: 1.5rem;
             font-size: 0.9rem;
         }
-        /* [SỬA ĐỔI] CSS responsive cho thanh nối */
+
         @media (max-width: 576px) {
             .comment-avatar img {
                 width: 32px;
                 height: 32px;
             }
+
             .comment-replies {
                 padding-left: 40px;
             }
-            .comment-replies::before { 
+
+            .comment-replies::before {
                 left: 15px;
                 bottom: 16px;
             }
-            .comment-replies .comment-item-wrapper::before { 
-                left: -25px; 
+
+            .comment-replies .comment-item-wrapper::before {
+                left: -25px;
                 top: 15px;
             }
+
             .reply-summary-container,
             .reply-form-container .reply-actions {
                 padding-left: 40px;
             }
-            .comment-content-wrapper { font-size: 0.9rem; }
-            .comment-actions { font-size: 0.75rem; gap: 0.75rem; }
+
+            .comment-content-wrapper {
+                font-size: 0.9rem;
+            }
+
+            .comment-actions {
+                font-size: 0.75rem;
+                gap: 0.75rem;
+            }
         }
     </style>
-    </head>
+</head>
 
 <body>
     <div id="preloader">
@@ -981,7 +1076,7 @@
             <div class="loading-text">Đang tải...</div>
         </div>
     </div>
-    
+
     <div id="header-placeholder"></div>
     <div id="modals-placeholder"></div>
     <div id="floating-widgets-placeholder"></div>
@@ -990,7 +1085,7 @@
         <section class="page-header">
             <div class="container">
                 <h1>Khám Phá Ý Nghĩa Các Lá Bài</h1>
-                <p class="lead">Tra cứu ý nghĩa, thông điệp và lời khuyên từ các bộ bài Tarot, Oracle và Lenormand.</p>
+                <p class="lead">Tra cứu ý nghĩa, thông điệp và lời khuyên từ các bộ bài Tarot, Oracle, Lenormand và Rune.</p>
             </div>
         </section>
 
@@ -1009,7 +1104,7 @@
                                 <div class="filter-slider" id="filter-slider"></div>
                                 <button class="btn active" data-filter="Tarot">Bài Tarot</button>
                                 <button class="btn" data-filter="Lenormand">Bài Lenormand</button>
-                                <button class="btn" data-filter="Tra">Bài trà</button>
+                                <button class="btn" data-filter="Tra">Bài Trà/Oracle</button>
                                 <button class="btn" data-filter="Rune">Kí tự Rune</button>
                             </div>
                         </div>
@@ -1022,10 +1117,10 @@
                     </div>
                     <p class="mt-3">Đang tải dữ liệu các lá bài...</p>
                 </div>
-                
+
                 <div id="card-grid">
-                    </div>
-                
+                </div>
+
                 <div id="no-results-message">
                     <i class="fas fa-exclamation-circle fa-2x mb-3"></i>
                     <p class="mb-0">Không tìm thấy lá bài nào phù hợp.</p>
@@ -1049,7 +1144,7 @@
                     <div class="row g-4">
                         <div class="col-lg-4 text-center">
                             <img src="https://placehold.co/300x525/cccccc/ffffff?text=Image" alt="Hình ảnh lá bài" id="modalCardImage" class="card-detail-image">
-                            
+
                             <button id="exampleReadingBtn" class="btn btn-view-example w-two-thirds" data-view="details" style="display: none;">
                                 <i class="fas fa-eye me-2"></i>Xem qua ví dụ
                             </button>
@@ -1062,52 +1157,79 @@
                             <div class="card-detail-content">
                                 <h2 class="card-detail-title" id="modalCardName">Tên lá bài</h2>
                                 <h4 class="card-detail-subtitle" id="modalDharmaName">Tên pháp danh</h4>
-                                
+
                                 <div id="modalCardDetailsContent">
                                     <div class="card-detail-info-grid">
                                         <div class="info-item"><span class="info-label"><i class="fas fa-hashtag me-2" style="color: #4A6CF3;"></i>Số thứ tự</span><span class="info-value" id="modalCardNumber"></span></div>
-                                        
+
                                         <div class="info-item" data-card-type="tarot"><span class="info-label"><i class="fas fa-atom me-2" style="color: #10B981;"></i>Nguyên tố</span><span class="info-value" id="modalCardElement"></span></div>
                                         <div class="info-item" data-card-type="tarot"><span class="info-label"><i class="fas fa-yin-yang me-2" style="color: #EF4444;"></i>Tính chất</span><span class="info-value" id="modalCardPolarity"></span></div>
                                         <div class="info-item" data-card-type="tarot"><span class="info-label"><i class="fas fa-star-of-david me-2" style="color: #F59E0B;"></i>Cung hoàng đạo</span><span class="info-value" id="modalCardZodiac"></span></div>
 
                                         <div class="info-item" data-card-type="lenormand"><span class="info-label"><i class="fa-solid fa-layer-group me-2" style="color: #a855f7;"></i>Lá bài Tây</span><span class="info-value" id="modalCardPlayingCard"></span></div>
                                         <div class="info-item" data-card-type="lenormand"><span class="info-label"><i class="fas fa-compass me-2" style="color: #64748b;"></i>Phương hướng</span><span class="info-value" id="modalCardOrientation"></span></div>
+                                        
+                                        <div class="info-item" data-card-type="rune"><span class="info-label"><i class="fas fa-volume-up me-2" style="color: #F59E0B;"></i>Phát âm</span><span class="info-value" id="modalCardPhonetic"></span></div>
                                     </div>
 
-                                    <div class="detail-section" data-section-type="common" id="modalDescriptionSection"><h5><i class="fas fa-book-open me-2" style="color: #6366F1;"></i>Mô tả</h5><p id="modalDescription"></p></div>
-                                    <div class="detail-section" data-card-type="tarot Tra Rune" id="modalMeaningGeneralSection"><h5><i class="fas fa-key me-2" style="color: #8B5CF6;"></i>Ý nghĩa tổng quan</h5><p id="modalMeaningGeneral"></p></div>
-                                    <div class="detail-section" data-card-type="tarot Tra Rune" id="modalSymbolismSection"><h5><i class="fas fa-gem me-2" style="color: #0EA5E9;"></i>Ý nghĩa biểu tượng</h5><div id="modalSymbolism"></div></div>
-                                    
-                                    <div data-card-type="tarot">
-                                        <div class="detail-section" id="modalMeaningUprightSection"><h5><i class="fas fa-arrow-up me-2" style="color: var(--success-color);"></i>Nghĩa xuôi</h5><div id="modalMeaningUpright"></div></div>
-                                        <div class="detail-section" id="modalMeaningReversedSection"><h5><i class="fas fa-arrow-down me-2" style="color: var(--danger-color);"></i>Nghĩa ngược</h5><div id="modalMeaningReversed"></div></div>
-                                        <div class="detail-section" id="modalThemeLoveSectionTarot"><h5><i class="fas fa-heart me-2" style="color: #EC4899;"></i>Chủ đề Tình yêu</h5><p id="modalThemeLoveTarot"></p></div>
-                                        <div class="detail-section" id="modalThemeCareerSectionTarot"><h5><i class="fas fa-briefcase me-2" style="color: #3B82F6;"></i>Chủ đề Sự nghiệp</h5><p id="modalThemeCareerTarot"></p></div>
-                                        <div class="detail-section" id="modalThemeStudySection"><h5><i class="fas fa-book-reader me-2" style="color: #F97316;"></i>Chủ đề Học tập</h5><p id="modalThemeStudy"></p></div>
+                                    <div class="detail-section" data-section-type="common" id="modalDescriptionSection">
+                                        <h5><i class="fas fa-book-open me-2" style="color: #6366F1;"></i>Mô tả</h5>
+                                        <p id="modalDescription"></p>
                                     </div>
-                                    
+                                    <div class="detail-section" data-card-type="tarot Tra Rune" id="modalMeaningGeneralSection">
+                                        <h5><i class="fas fa-key me-2" style="color: #8B5CF6;"></i>Ý nghĩa tổng quan</h5>
+                                        <p id="modalMeaningGeneral"></p>
+                                    </div>
+                                    <div class="detail-section" data-card-type="tarot Tra Rune" id="modalSymbolismSection">
+                                        <h5><i class="fas fa-gem me-2" style="color: #0EA5E9;"></i>Ý nghĩa biểu tượng/Từ khóa</h5>
+                                        <div id="modalSymbolism"></div>
+                                    </div>
+
+                                    <div data-card-type="tarot">
+                                        <div class="detail-section" id="modalMeaningUprightSection">
+                                            <h5><i class="fas fa-arrow-up me-2" style="color: var(--success-color);"></i>Nghĩa xuôi</h5>
+                                            <div id="modalMeaningUpright"></div>
+                                        </div>
+                                        <div class="detail-section" id="modalMeaningReversedSection">
+                                            <h5><i class="fas fa-arrow-down me-2" style="color: var(--danger-color);"></i>Nghĩa ngược</h5>
+                                            <div id="modalMeaningReversed"></div>
+                                        </div>
+                                        <div class="detail-section" id="modalThemeLoveSectionTarot">
+                                            <h5><i class="fas fa-heart me-2" style="color: #EC4899;"></i>Chủ đề Tình yêu</h5>
+                                            <p id="modalThemeLoveTarot"></p>
+                                        </div>
+                                        <div class="detail-section" id="modalThemeCareerSectionTarot">
+                                            <h5><i class="fas fa-briefcase me-2" style="color: #3B82F6;"></i>Chủ đề Sự nghiệp</h5>
+                                            <p id="modalThemeCareerTarot"></p>
+                                        </div>
+                                        <div class="detail-section" id="modalThemeStudySection">
+                                            <h5><i class="fas fa-book-reader me-2" style="color: #F97316;"></i>Chủ đề Học tập</h5>
+                                            <p id="modalThemeStudy"></p>
+                                        </div>
+                                    </div>
+
                                     <div data-card-type="lenormand">
-                                        <div class="detail-section" id="modalAttributesSection"><h5><i class="fas fa-tags me-2" style="color: #0ea5e9;"></i>Thuộc tính</h5><div id="modalAttributes"></div></div>
+                                        <div class="detail-section" id="modalAttributesSection">
+                                            <h5><i class="fas fa-tags me-2" style="color: #0ea5e9;"></i>Thuộc tính</h5>
+                                            <div id="modalAttributes"></div>
+                                        </div>
                                         <div class="detail-section" id="modalThemesCombinedSection">
                                             <h5><i class="fas fa-star me-2" style="color: #EC4899;"></i>Ý nghĩa theo chủ đề</h5>
                                             <div class="lenormand-themes-container" id="lenormandThemesContainer">
-                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="detail-section" id="modalAdviceSection"><h5><i class="fas fa-lightbulb me-2" style="color: #f59e0b;"></i>Lời khuyên</h5><p id="modalAdvice"></p></div>
-                                        <div class="detail-section" id="modalCombinationsSection"><h5><i class="fas fa-link me-2" style="color: #d946ef;"></i>Kết hợp lá bài</h5><p id="modalCombinations"></p></div>
+                                        <div class="detail-section" id="modalAdviceSection">
+                                            <h5><i class="fas fa-lightbulb me-2" style="color: #f59e0b;"></i>Lời khuyên</h5>
+                                            <p id="modalAdvice"></p>
+                                        </div>
+                                        <div class="detail-section" id="modalCombinationsSection">
+                                            <h5><i class="fas fa-link me-2" style="color: #d946ef;"></i>Kết hợp lá bài</h5>
+                                            <p id="modalCombinations"></p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div id="modalExampleReadingContent" style="display: none;"></div>
-                                
-                                <div id="related-cards-section" class="mt-5" style="display: none;">
-                                    <h5 class="card-group-subtitle" style="border-left-color: var(--primary-purple); font-size: 1.25rem;">
-                                        <i class="fas fa-random me-2"></i>Các lá bài liên quan
-                                    </h5>
-                                    <div id="related-cards-grid" class="card-group-grid">
-                                    </div>
-                                </div>
 
                                 <div id="card-comments-section" class="mt-5" style="display: none;">
                                     <h5 class="card-group-subtitle" style="border-left-color: var(--facebook-link-color); font-size: 1.25rem;">
@@ -1123,10 +1245,19 @@
                                             </div>
                                         </div>
                                         <div id="comment-list-container">
-                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <div id="related-cards-section" class="mt-5" style="display: none;">
+                                    <h5 class="card-group-subtitle" style="border-left-color: var(--primary-purple); font-size: 1.25rem;">
+                                        <i class="fas fa-random me-2"></i>Các lá bài liên quan
+                                    </h5>
+                                    <div id="related-cards-grid" class="card-group-grid">
+                                    </div>
                                 </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1141,7 +1272,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center" id="permissionDeniedModalBody">
-                    </div>
+                </div>
                 <div class="modal-footer justify-content-center border-top-0">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đã hiểu</button>
                 </div>
@@ -1167,30 +1298,29 @@
             document.addEventListener('contextmenu', e => e.preventDefault());
             document.addEventListener('copy', e => e.preventDefault());
             document.addEventListener('keydown', e => {
-                if ((e.ctrlKey && (e.key === 'c' || e.key === 'C')) || 
-                    (e.ctrlKey && (e.key === 'u' || e.key === 'U')) || 
+                if ((e.ctrlKey && (e.key === 'c' || e.key === 'C')) ||
+                    (e.ctrlKey && (e.key === 'u' || e.key === 'U')) ||
                     e.key === 'F12') {
                     e.preventDefault();
                 }
             });
 
-            // ... (Các biến DOM không đổi) ...
             const cardGrid = document.getElementById('card-grid');
             const searchInput = document.getElementById('search-input');
             const filterButtonsContainer = document.getElementById('filter-buttons');
             const filterSlider = document.getElementById('filter-slider');
             const loadingIndicator = document.getElementById('loading-indicator');
             const noResultsMessage = document.getElementById('no-results-message');
-            
+
             const cardDetailModalEl = document.getElementById('cardDetailModal');
             const cardDetailModal = new bootstrap.Modal(cardDetailModalEl);
-            
+
             const relatedCardsGrid = document.getElementById('related-cards-grid');
             const permissionModal = new bootstrap.Modal(document.getElementById('permissionDeniedModal'));
-            
+
             const exampleReadingBtn = document.getElementById('exampleReadingBtn');
             const lenormandExampleBtn = document.getElementById('lenormandExampleBtn');
-            
+
             const detailsContent = document.getElementById('modalCardDetailsContent');
             const exampleContent = document.getElementById('modalExampleReadingContent');
             const modalContentEl = document.querySelector('#cardDetailModal .modal-content');
@@ -1212,65 +1342,87 @@
             let currentUserProfile = null;
 
             async function fetchCurrentUser() {
-                const { data: { user } } = await supabase.auth.getUser();
+                const {
+                    data: {
+                        user
+                    }
+                } = await supabase.auth.getUser();
                 currentUser = user;
                 if (user) {
-                    const { data: profile, error } = await supabase
+                    const {
+                        data: profile,
+                        error
+                    } = await supabase
                         .from('profiles')
                         .select('role, avatar_url, full_name')
                         .eq('id', user.id)
                         .single();
                     if (error) {
                         console.error("Lỗi khi lấy thông tin người dùng:", error);
-                        currentUserProfile = { role: 'user', avatar_url: 'https://i.pravatar.cc/40?u=error', full_name: 'Người dùng' };
+                        currentUserProfile = {
+                            role: 'user',
+                            avatar_url: 'https://i.pravatar.cc/40?u=error',
+                            full_name: 'Người dùng'
+                        };
                     } else {
-                        currentUserProfile = profile || { role: 'user', avatar_url: 'https://i.pravatar.cc/40?u=default', full_name: 'Người dùng' };
+                        currentUserProfile = profile || {
+                            role: 'user',
+                            avatar_url: 'https://i.pravatar.cc/40?u=default',
+                            full_name: 'Người dùng'
+                        };
                     }
                     commentInputField.placeholder = "Viết bình luận...";
                     commentInputField.disabled = false;
                     currentUserAvatarEl.src = currentUserProfile.avatar_url || 'https://i.pravatar.cc/40?u=guest';
                 } else {
-                    currentUserProfile = { role: 'guest', avatar_url: 'https://i.pravatar.cc/40?u=guest', full_name: 'Khách' };
+                    currentUserProfile = {
+                        role: 'guest',
+                        avatar_url: 'https://i.pravatar.cc/40?u=guest',
+                        full_name: 'Khách'
+                    };
                     commentInputField.placeholder = "Bạn cần đăng nhập để bình luận";
                     commentInputField.disabled = true;
                     currentUserAvatarEl.src = 'https://i.pravatar.cc/40?u=guest';
                 }
             }
-            
+
             async function fetchAllCards() {
-                 // ... (Hàm này giữ nguyên không đổi) ...
                 loadingIndicator.style.display = 'block';
                 cardGrid.innerHTML = '';
                 noResultsMessage.style.display = 'none';
                 const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
-                let tableName = '';
                 let query = null;
+
+                // Phân luồng query dựa trên loại bài
                 switch (activeFilter) {
                     case 'Tarot':
-                        tableName = 'tarot_cards';
-                        query = supabase.from(tableName).select('*').order('rank_order', { ascending: true });
+                        query = supabase.from('tarot_cards').select('*').order('rank_order', { ascending: true });
                         break;
-                    case 'Tra':
-                        tableName = 'oracle_cards';
-                        query = supabase.from(tableName).select('*').order('rank_order', { ascending: true });
+                    case 'Tra': // Sử dụng bảng Oracle cho Bài Trà
+                        query = supabase.from('oracle_cards').select('*').order('rank_order', { ascending: true });
                         break;
-                    case 'Rune':
-                        tableName = 'rune_symbols';
-                        query = supabase.from(tableName).select('*').order('rank_order', { ascending: true });
+                    case 'Rune': // Query bảng Rune
+                        query = supabase.from('rune_symbols').select('*').order('rank_order', { ascending: true });
                         break;
                     case 'Lenormand':
-                        tableName = 'lenormand_cards';
-                        query = supabase.from(tableName).select('*').order('card_number', { ascending: true });
+                        query = supabase.from('lenormand_cards').select('*').order('card_number', { ascending: true });
                         break;
                     default:
                         loadingIndicator.style.display = 'none';
                         return;
                 }
+
                 try {
                     const { data: rawData, error } = await query;
                     if (error) throw error;
+
+                    // Chuẩn hóa dữ liệu đầu vào cho các loại bài khác nhau để dùng chung logic hiển thị
                     if (activeFilter === 'Lenormand') {
-                        allCardsData = (rawData || []).map(card => ({...card, id: card.card_id, name: card.name_vi}));
+                        allCardsData = (rawData || []).map(card => ({
+                            ...card,
+                            id: card.card_id, // Map card_id thành id
+                            name: card.name_vi
+                        }));
                     } else {
                         allCardsData = rawData || [];
                     }
@@ -1284,14 +1436,14 @@
                     loadingIndicator.style.display = 'none';
                 }
             }
-            
-            // ... (Các hàm createGroupHeader, createCardGridForGroup, renderCards, handleFilterAndSearch, displayRelatedCards giữ nguyên) ...
+
             function createGroupHeader(title, level = 'h4', customClass = 'card-group-title') {
                 const header = document.createElement(level);
                 header.className = customClass;
                 header.textContent = title;
                 return header;
             }
+
             function createCardGridForGroup(cards) {
                 const grid = document.createElement('div');
                 grid.className = 'card-group-grid';
@@ -1311,12 +1463,14 @@
                 grid.appendChild(fragment);
                 return grid;
             }
+
             function renderCards() {
                 cardGrid.innerHTML = '';
                 noResultsMessage.style.display = 'none';
                 const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
+                
                 if (filteredCards.length === 0) {
-                     if (searchInput.value || allCardsData.length > 0) { 
+                    if (searchInput.value || allCardsData.length > 0) {
                         noResultsMessage.innerHTML = '<i class="fas fa-exclamation-circle fa-2x mb-3"></i><p class="mb-0">Không tìm thấy lá bài nào phù hợp.</p>';
                         noResultsMessage.style.display = 'block';
                     } else {
@@ -1326,12 +1480,11 @@
                     return;
                 }
 
-                if (activeFilter !== 'Tarot') {
-                    cardGrid.appendChild(createCardGridForGroup(filteredCards));
-                } else {
+                // Render lưới bài: Tarot có logic chia nhóm riêng, các loại khác render phẳng
+                if (activeFilter === 'Tarot') {
                     const groups = {
                         major_arcana: { title: 'Bộ Ẩn Chính', cards: [] },
-                        minor_arcana: { 
+                        minor_arcana: {
                             suits: {
                                 Wands: { title: 'Gậy (Wands)', cards: [] },
                                 Cups: { title: 'Cốc (Cups)', cards: [] },
@@ -1353,9 +1506,9 @@
                         fragment.appendChild(createGroupHeader(groups.major_arcana.title));
                         fragment.appendChild(createCardGridForGroup(groups.major_arcana.cards));
                     }
-                    
+
                     const minorSuits = Object.values(groups.minor_arcana.suits).filter(s => s.cards.length > 0);
-                    if(minorSuits.length > 0) {
+                    if (minorSuits.length > 0) {
                         fragment.appendChild(createGroupHeader('Bộ Ẩn Phụ'));
                         minorSuits.forEach(suit => {
                             fragment.appendChild(createGroupHeader(suit.title, 'h5', 'card-group-subtitle'));
@@ -1363,8 +1516,12 @@
                         });
                     }
                     cardGrid.appendChild(fragment);
+                } else {
+                    // Lenormand, Tea, Rune: Render trực tiếp không chia nhóm
+                    cardGrid.appendChild(createCardGridForGroup(filteredCards));
                 }
-                
+
+                // Lazy loading animation
                 const observer = new IntersectionObserver((entries, obs) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -1372,42 +1529,59 @@
                             obs.unobserve(entry.target);
                         }
                     });
-                }, { rootMargin: '0px 0px -50px 0px' });
+                }, {
+                    rootMargin: '0px 0px -50px 0px'
+                });
                 cardGrid.querySelectorAll('.tarot-card-item-wrapper').forEach(w => observer.observe(w));
             }
+
             function handleFilterAndSearch() {
                 const searchTerm = searchInput.value.toLowerCase().trim();
                 if (allCardsData.length === 0) {
                     filteredCards = [];
                 } else {
-                    filteredCards = searchTerm 
-                        ? allCardsData.filter(card => 
-                            card.name.toLowerCase().includes(searchTerm) || 
+                    filteredCards = searchTerm ?
+                        allCardsData.filter(card =>
+                            card.name.toLowerCase().includes(searchTerm) ||
                             (card.dharma_name && card.dharma_name.toLowerCase().includes(searchTerm)) ||
                             (card.name_en && card.name_en.toLowerCase().includes(searchTerm))
-                          )
-                        : [...allCardsData];
+                        ) :
+                        [...allCardsData];
                 }
                 renderCards();
             }
+
             function displayRelatedCards(currentCard) {
                 const relatedSection = document.getElementById('related-cards-section');
-                relatedCardsGrid.innerHTML = ''; 
+                relatedCardsGrid.innerHTML = '';
                 const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
                 let relatedCards = [];
+                
+                // Logic lấy bài liên quan
                 if (activeFilter === 'Tarot') {
                     const groupKey = currentCard.sub_type === 'major_arcana' ? 'major_arcana' : currentCard.suit;
-                    if (!groupKey) { relatedSection.style.display = 'none'; return; }
+                    if (!groupKey) {
+                        relatedSection.style.display = 'none';
+                        return;
+                    }
                     relatedCards = allCardsData.filter(card => {
                         const cardGroupKey = card.sub_type === 'major_arcana' ? 'major_arcana' : card.suit;
                         return cardGroupKey === groupKey && card.id !== currentCard.id;
                     });
                 } else {
-                     relatedCards = allCardsData.filter(card => card.id !== currentCard.id);
+                    // Với Lenormand, Tea, Rune: Lấy ngẫu nhiên bài khác trong bộ
+                    relatedCards = allCardsData.filter(card => card.id !== currentCard.id);
                 }
-                if (relatedCards.length === 0) { relatedSection.style.display = 'none'; return; }
+
+                if (relatedCards.length === 0) {
+                    relatedSection.style.display = 'none';
+                    return;
+                }
+                
+                // Chọn ngẫu nhiên 5 lá
                 const cardsToShow = relatedCards.sort(() => 0.5 - Math.random()).slice(0, 5);
                 const fragment = document.createDocumentFragment();
+                
                 cardsToShow.forEach(card => {
                     const wrapper = document.createElement('div');
                     wrapper.className = 'tarot-card-item-wrapper is-visible';
@@ -1424,6 +1598,7 @@
                 relatedCardsGrid.appendChild(fragment);
                 relatedSection.style.display = 'block';
             }
+
             function timeAgo(date) {
                 const seconds = Math.floor((new Date() - new Date(date)) / 1000);
                 let interval = seconds / 31536000;
@@ -1438,102 +1613,103 @@
                 if (interval > 1) return `${Math.floor(interval)} phút`;
                 return `${Math.floor(seconds)} giây`;
             }
-            
-            // [HÀM SỬA ĐỔI] Tải và hiển thị bình luận có sắp xếp
+
+            // [LOGIC CHUNG] Áp dụng cho cả Tarot, Lenormand, Tea và Rune
             async function loadAndRenderComments(cardId) {
                 const commentsSection = document.getElementById('card-comments-section');
-                commentListContainer.innerHTML = '<div class="text-center p-3"><div class="spinner-border spinner-border-sm" role="status"></div></div>'; 
-                
+                commentListContainer.innerHTML = '<div class="text-center p-3"><div class="spinner-border spinner-border-sm" role="status"></div></div>';
+
                 const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
-                if (activeFilter === 'Tarot') {
-                    commentsSection.style.display = 'block';
-                    currentOpenCardId = cardId;
+                
+                // Hiển thị bình luận cho tất cả loại bài
+                commentsSection.style.display = 'block';
+                currentOpenCardId = cardId;
+                const cardType = activeFilter.toLowerCase(); // 'tarot', 'lenormand', 'tra', 'rune'
 
-                    const { data: comments, error: commentsError } = await supabase
-                        .from('card_comments')
-                        .select('*, profiles(full_name, avatar_url, role)')
-                        .eq('card_id', cardId)
-                        .order('created_at', { ascending: true }); // Vẫn tải theo thời gian để xây dựng cây
+                const { data: comments, error: commentsError } = await supabase
+                    .from('card_comments')
+                    .select('*, profiles(full_name, avatar_url, role)')
+                    .eq('card_id', cardId)
+                    .eq('card_type', cardType) // Sử dụng card_type để phân biệt các bộ bài có cùng ID
+                    .order('created_at', { ascending: true });
 
-                    if (commentsError) {
-                        console.error('Lỗi tải bình luận:', commentsError);
-                        commentListContainer.innerHTML = '<p class="text-danger text-center">Không thể tải bình luận.</p>';
-                        return;
-                    }
-                    
-                    const commentIds = comments.map(c => c.id);
-                    allLikesData = {};
-                    if (commentIds.length > 0) {
-                        const { data: likes, error: likesError } = await supabase
-                            .from('comment_likes')
-                            .select('comment_id, user_id')
-                            .in('comment_id', commentIds);
-                        
-                        if (!likesError) {
-                            likes.forEach(like => {
-                                if (!allLikesData[like.comment_id]) {
-                                    allLikesData[like.comment_id] = { count: 0, users: new Set() };
-                                }
-                                allLikesData[like.comment_id].count++;
-                                allLikesData[like.comment_id].users.add(like.user_id);
-                            });
-                        }
-                    }
-                    
-                    if (comments.length === 0) {
-                        commentListContainer.innerHTML = '<p id="no-comments-message">Chưa có bình luận nào. Hãy là người đầu tiên!</p>';
-                        return;
-                    }
-
-                    // [SỬA ĐỔI] Sắp xếp các bình luận theo số lượt thích giảm dần
-                    comments.sort((a, b) => {
-                        const likesA = allLikesData[a.id]?.count || 0;
-                        const likesB = allLikesData[b.id]?.count || 0;
-                        return likesB - likesA;
-                    });
-                    
-                    // Xây dựng cây bình luận từ danh sách đã sắp xếp
-                    const commentMap = {};
-                    const rootComments = [];
-                    comments.forEach(comment => {
-                        comment.replies = [];
-                        commentMap[comment.id] = comment;
-                    });
-                    comments.forEach(comment => {
-                         if (comment.parent_comment_id) {
-                            if (commentMap[comment.parent_comment_id]) {
-                                commentMap[comment.parent_comment_id].replies.push(comment);
-                            }
-                        } else {
-                            rootComments.push(comment);
-                        }
-                    });
-                    commentTree = rootComments;
-
-                    // Chỉ hiển thị các bình luận gốc
-                    commentListContainer.innerHTML = '';
-                    rootComments.forEach(comment => {
-                        commentListContainer.appendChild(createCommentElement(comment));
-                    });
-
-                } else {
-                    commentsSection.style.display = 'none';
-                    currentOpenCardId = null;
+                if (commentsError) {
+                    console.error('Lỗi tải bình luận:', commentsError);
+                    commentListContainer.innerHTML = '<p class="text-danger text-center">Không thể tải bình luận.</p>';
+                    return;
                 }
+
+                const commentIds = comments.map(c => c.id);
+                allLikesData = {};
+                if (commentIds.length > 0) {
+                    const { data: likes, error: likesError } = await supabase
+                        .from('comment_likes')
+                        .select('comment_id, user_id')
+                        .in('comment_id', commentIds);
+
+                    if (!likesError) {
+                        likes.forEach(like => {
+                            if (!allLikesData[like.comment_id]) {
+                                allLikesData[like.comment_id] = { count: 0, users: new Set() };
+                            }
+                            allLikesData[like.comment_id].count++;
+                            allLikesData[like.comment_id].users.add(like.user_id);
+                        });
+                    }
+                }
+
+                if (comments.length === 0) {
+                    commentListContainer.innerHTML = '<p id="no-comments-message">Chưa có bình luận nào. Hãy là người đầu tiên!</p>';
+                    return;
+                }
+
+                // Sắp xếp comment theo lượng like
+                comments.sort((a, b) => {
+                    const likesA = allLikesData[a.id]?.count || 0;
+                    const likesB = allLikesData[b.id]?.count || 0;
+                    return likesB - likesA;
+                });
+
+                const commentMap = {};
+                const rootComments = [];
+                comments.forEach(comment => {
+                    comment.replies = [];
+                    commentMap[comment.id] = comment;
+                });
+                comments.forEach(comment => {
+                    if (comment.parent_comment_id) {
+                        if (commentMap[comment.parent_comment_id]) {
+                            commentMap[comment.parent_comment_id].replies.push(comment);
+                        }
+                    } else {
+                        rootComments.push(comment);
+                    }
+                });
+                commentTree = rootComments;
+
+                commentListContainer.innerHTML = '';
+                rootComments.forEach(comment => {
+                    commentListContainer.appendChild(createCommentElement(comment));
+                });
             }
-            
+
             function createCommentElement(comment) {
-                // ... (Hàm này giữ nguyên không đổi) ...
-                 const author = comment.profiles || { full_name: 'Người dùng ẩn', avatar_url: 'https://i.pravatar.cc/40?u=anonymous', role: 'user' };
+                const author = comment.profiles || {
+                    full_name: 'Người dùng ẩn',
+                    avatar_url: 'https://i.pravatar.cc/40?u=anonymous',
+                    role: 'user'
+                };
                 const isAdmin = author.role === 'admin';
-                const likeInfo = allLikesData[comment.id] || { count: 0, users: new Set() };
+                const likeInfo = allLikesData[comment.id] || {
+                    count: 0,
+                    users: new Set()
+                };
                 const isLikedByCurrentUser = currentUser ? likeInfo.users.has(currentUser.id) : false;
 
                 const commentElement = document.createElement('div');
                 commentElement.className = 'comment-item-wrapper';
                 commentElement.id = `comment-wrapper-${comment.id}`;
 
-                // Phần HTML chính của bình luận
                 let commentHTML = `
                     <div class="comment-item" id="comment-${comment.id}">
                         <div class="comment-avatar">
@@ -1560,11 +1736,9 @@
                     </div>
                 `;
                 commentElement.innerHTML = commentHTML;
-                
-                // Vùng chứa các trả lời và nút "Xem phản hồi"
+
                 const repliesAndSummaryContainer = document.createElement('div');
-                
-                // Nút "Xem phản hồi"
+
                 if (comment.replies && comment.replies.length > 0) {
                     const summaryContainer = document.createElement('div');
                     summaryContainer.className = 'reply-summary-container';
@@ -1572,13 +1746,11 @@
                     repliesAndSummaryContainer.appendChild(summaryContainer);
                 }
 
-                // Vùng chứa rỗng cho các trả lời, sẽ được lấp đầy khi nhấn nút
                 const repliesContainer = document.createElement('div');
                 repliesContainer.className = 'comment-replies';
                 repliesContainer.id = `replies-to-${comment.id}`;
                 repliesAndSummaryContainer.appendChild(repliesContainer);
-                
-                // Vùng chứa cho form trả lời
+
                 const replyFormContainer = document.createElement('div');
                 replyFormContainer.className = 'reply-form-container';
                 replyFormContainer.id = `reply-form-for-${comment.id}`;
@@ -1589,15 +1761,33 @@
                 return commentElement;
             }
 
-            // [HÀM SỬA ĐỔI] Xử lý việc gửi bình luận để hiển thị lên đầu
+            // [LOGIC CHUNG] Gửi và hiển thị comment
             async function handleCommentSubmit(commentText, parentId = null) {
                 if (!commentText) return false;
-                if (!currentUser) { alert("Vui lòng đăng nhập để bình luận!"); return false; }
-                if (!currentOpenCardId) { console.error("Không tìm thấy ID của lá bài."); return false; }
+                if (!currentUser) {
+                    alert("Vui lòng đăng nhập để bình luận!");
+                    return false;
+                }
+                if (!currentOpenCardId) {
+                    console.error("Không tìm thấy ID của lá bài.");
+                    return false;
+                }
 
-                const { data, error } = await supabase
+                const activeFilter = document.querySelector('#filter-buttons .btn.active').dataset.filter;
+                const cardType = activeFilter.toLowerCase();
+
+                const {
+                    data,
+                    error
+                } = await supabase
                     .from('card_comments')
-                    .insert([{ card_id: currentOpenCardId, user_id: currentUser.id, comment_text: commentText, parent_comment_id: parentId }])
+                    .insert([{
+                        card_id: currentOpenCardId,
+                        user_id: currentUser.id,
+                        comment_text: commentText,
+                        parent_comment_id: parentId,
+                        card_type: cardType
+                    }])
                     .select('*, profiles(full_name, avatar_url, role)')
                     .single();
 
@@ -1605,33 +1795,46 @@
                     console.error('Lỗi khi gửi bình luận:', error);
                     alert("Gửi bình luận thất bại. Vui lòng thử lại.");
                     return false;
-                } 
-                
-                const newCommentData = { ...data, replies: [] };
+                }
+
+                const newCommentData = {
+                    ...data,
+                    replies: []
+                };
+                allLikesData[newCommentData.id] = {
+                    count: 0,
+                    users: new Set()
+                };
                 const newCommentElement = createCommentElement(newCommentData);
+
                 if (parentId) {
-                    const parentComment = findCommentInTree(parentId);
-                    if (parentComment) parentComment.replies.unshift(newCommentData); // Thêm vào đầu mảng dữ liệu
+                    const parentComment = findCommentInTree(parseInt(parentId));
+                    if (parentComment) {
+                        if (!parentComment.replies) parentComment.replies = [];
+                        parentComment.replies.unshift(newCommentData);
+                    }
                     const repliesContainer = document.getElementById(`replies-to-${parentId}`);
-                    if (repliesContainer) repliesContainer.prepend(newCommentElement); // [SỬA ĐỔI] Thêm vào đầu giao diện
+                    if (repliesContainer) repliesContainer.prepend(newCommentElement);
                 } else {
-                    commentTree.unshift(newCommentData); // Thêm vào đầu mảng dữ liệu
+                    commentTree.unshift(newCommentData);
                     const noCommentsMsg = document.getElementById('no-comments-message');
                     if (noCommentsMsg) noCommentsMsg.remove();
-                    commentListContainer.prepend(newCommentElement); // [SỬA ĐỔI] Thêm vào đầu giao diện
+                    commentListContainer.prepend(newCommentElement);
                 }
                 return true;
             }
-            
-            // ... (Các hàm handleLikeClick, handleReplyClick, findCommentInTree, handleViewRepliesClick, handleViewMoreRepliesClick giữ nguyên) ...
+
             async function handleLikeClick(commentId) {
-                if (!currentUser) { alert("Vui lòng đăng nhập để thích bình luận!"); return; }
+                if (!currentUser) {
+                    alert("Vui lòng đăng nhập để thích bình luận!");
+                    return;
+                }
 
                 const likeButton = document.querySelector(`.action-like[data-comment-id="${commentId}"]`);
                 const reactionsContainer = document.getElementById(`reactions-${commentId}`);
                 const likeCountEl = reactionsContainer.querySelector('.like-count');
                 const isLiked = likeButton.classList.contains('liked');
-                
+
                 likeButton.classList.toggle('liked');
                 let currentCount = parseInt(likeCountEl.textContent);
                 likeCountEl.textContent = isLiked ? currentCount - 1 : currentCount + 1;
@@ -1642,7 +1845,12 @@
                 }
 
                 if (isLiked) {
-                    const { error } = await supabase.from('comment_likes').delete().match({ comment_id: commentId, user_id: currentUser.id });
+                    const {
+                        error
+                    } = await supabase.from('comment_likes').delete().match({
+                        comment_id: commentId,
+                        user_id: currentUser.id
+                    });
                     if (error) {
                         console.error("Lỗi bỏ thích:", error);
                         likeButton.classList.add('liked');
@@ -1650,7 +1858,12 @@
                         if (currentCount > 0) reactionsContainer.classList.add('visible');
                     }
                 } else {
-                    const { error } = await supabase.from('comment_likes').insert({ comment_id: commentId, user_id: currentUser.id });
+                    const {
+                        error
+                    } = await supabase.from('comment_likes').insert({
+                        comment_id: commentId,
+                        user_id: currentUser.id
+                    });
                     if (error) {
                         console.error("Lỗi khi thích:", error);
                         likeButton.classList.remove('liked');
@@ -1659,13 +1872,17 @@
                     }
                 }
             }
+
             function handleReplyClick(commentId) {
-                if (!currentUser) { alert("Vui lòng đăng nhập để trả lời bình luận!"); return; }
+                if (!currentUser) {
+                    alert("Vui lòng đăng nhập để trả lời bình luận!");
+                    return;
+                }
                 if (activeReplyForm) {
                     activeReplyForm.remove();
                     activeReplyForm = null;
                 }
-                
+
                 const replyContainer = document.getElementById(`reply-form-for-${commentId}`);
                 if (!replyContainer) return;
 
@@ -1704,13 +1921,14 @@
                         }
                     }
                 });
-                
+
                 replyForm.querySelector('.cancel-reply').addEventListener('click', (e) => {
                     e.preventDefault();
-                    if(activeReplyForm) activeReplyForm.remove();
+                    if (activeReplyForm) activeReplyForm.remove();
                     activeReplyForm = null;
                 });
             }
+
             function findCommentInTree(commentId, tree = commentTree) {
                 for (const comment of tree) {
                     if (comment.id === commentId) return comment;
@@ -1721,6 +1939,7 @@
                 }
                 return null;
             }
+
             function handleViewRepliesClick(commentId, triggerElement) {
                 const parentComment = findCommentInTree(parseInt(commentId));
                 if (!parentComment || !parentComment.replies) return;
@@ -1728,8 +1947,8 @@
                 const repliesContainer = document.getElementById(`replies-to-${commentId}`);
                 if (!repliesContainer) return;
 
-                triggerElement.parentElement.innerHTML = ''; // Xóa nút "Xem phản hồi"
-                
+                triggerElement.parentElement.innerHTML = '';
+
                 const repliesToShow = parentComment.replies.slice(0, REPLIES_PER_PAGE);
                 repliesToShow.forEach(reply => {
                     repliesContainer.appendChild(createCommentElement(reply));
@@ -1744,10 +1963,11 @@
                     repliesContainer.appendChild(viewMoreLink);
                 }
             }
+
             function handleViewMoreRepliesClick(commentId, triggerElement) {
                 const parentComment = findCommentInTree(parseInt(commentId));
                 const currentOffset = parseInt(triggerElement.dataset.offset);
-                
+
                 if (!parentComment || !parentComment.replies || currentOffset >= parentComment.replies.length) {
                     triggerElement.remove();
                     return;
@@ -1771,7 +1991,6 @@
             }
 
             function showCardDetails(cardId) {
-                // ... (Hàm này giữ nguyên không đổi) ...
                 const card = allCardsData.find(c => c.id === parseInt(cardId));
                 if (!card) return;
 
@@ -1783,15 +2002,16 @@
 
                 detailsContent.style.display = 'block';
                 exampleContent.style.display = 'none';
+                // Ẩn tất cả các section data-card-type trước khi hiện cái phù hợp
                 document.querySelectorAll('[data-card-type]').forEach(el => el.style.display = 'none');
                 modalContentEl.classList.remove('lenormand-view', 'tarot-view');
 
                 document.getElementById('modalCardImage').src = card.image_url || 'https://placehold.co/300x525/cccccc/ffffff?text=No+Image';
-                
+
                 const cardNameEl = document.getElementById('modalCardName');
                 const vietnameseName = safeText(card.name, 'Tên lá bài');
                 const englishName = safeText(card.name_en, '');
-                
+
                 if (activeFilter === 'Lenormand' && englishName) {
                     cardNameEl.innerHTML = `${vietnameseName} <span class="card-detail-english-name-inline">(${englishName})</span>`;
                 } else {
@@ -1799,14 +2019,14 @@
                 }
 
                 document.getElementById('modalDharmaName').textContent = safeText(card.dharma_name, '');
-                document.getElementById('modalCardNumber').textContent = safeText(card.card_number, 'N/A');
-                
+                document.getElementById('modalCardNumber').textContent = safeText(card.card_number || card.rank_order || 'N/A');
+
                 exampleReadingBtn.style.display = activeFilter === 'Tarot' ? 'block' : 'none';
                 lenormandExampleBtn.style.display = activeFilter === 'Lenormand' ? 'block' : 'none';
 
                 exampleReadingBtn.dataset.view = 'details';
                 exampleReadingBtn.innerHTML = '<i class="fas fa-eye me-2"></i>Xem qua ví dụ';
-                
+
                 const setSectionContent = (sectionId, contentElId, content, lockCondition = false) => {
                     const section = document.getElementById(sectionId);
                     if (!section) return;
@@ -1814,9 +2034,9 @@
                     const contentEl = document.getElementById(contentElId);
                     if (!contentEl) return;
                     if (lockCondition && !hasAccess) {
-                         contentEl.innerHTML = `<button type="button" class="upgrade-text-link">Bạn cần nâng cấp tài khoản để xem đầy đủ thông tin</button>`;
+                        contentEl.innerHTML = `<button type="button" class="upgrade-text-link">Bạn cần nâng cấp tài khoản để xem đầy đủ thông tin</button>`;
                     } else {
-                         contentEl.innerHTML = formatHtml(safeText(content));
+                        contentEl.innerHTML = formatHtml(safeText(content));
                     }
                 };
 
@@ -1836,10 +2056,24 @@
                     document.getElementById('modalThemeCareerTarot').innerHTML = formatHtml(safeText(card.theme_career));
 
                     const exampleContentEl = document.getElementById('modalExampleReadingContent');
-                    const examples = [
-                        { id: 'love', title: 'Tình yêu', icon: 'fa-heart', content: card.example_love },
-                        { id: 'work', title: 'Sự nghiệp', icon: 'fa-briefcase', content: card.example_work },
-                        { id: 'study', title: 'Học tập', icon: 'fa-book-reader', content: card.example_study }
+                    const examples = [{
+                            id: 'love',
+                            title: 'Tình yêu',
+                            icon: 'fa-heart',
+                            content: card.example_love
+                        },
+                        {
+                            id: 'work',
+                            title: 'Sự nghiệp',
+                            icon: 'fa-briefcase',
+                            content: card.example_work
+                        },
+                        {
+                            id: 'study',
+                            title: 'Học tập',
+                            icon: 'fa-book-reader',
+                            content: card.example_study
+                        }
                     ];
                     let navHtml = '';
                     let contentHtml = '';
@@ -1878,12 +2112,36 @@
                     setSectionContent('modalAttributesSection', 'modalAttributes', attributesHtml || '<div class="attribute-item"><span>Chưa có thông tin.</span></div>', true);
 
                     const themesContainer = document.getElementById('lenormandThemesContainer');
-                    const themes = [
-                        { icon: 'fas fa-heart', color: '#EC4899', title: 'Tình yêu', content: card.context_love },
-                        { icon: 'fas fa-briefcase', color: '#3B82F6', title: 'Sự nghiệp', content: card.context_work },
-                        { icon: 'fas fa-heartbeat', color: '#e11d48', title: 'Sức khỏe', content: card.context_health },
-                        { icon: 'fas fa-wallet', color: '#16a34a', title: 'Tài chính', content: card.context_finance },
-                        { icon: 'fas fa-om', color: '#8b5cf6', title: 'Tâm linh', content: card.context_spirituality }
+                    const themes = [{
+                            icon: 'fas fa-heart',
+                            color: '#EC4899',
+                            title: 'Tình yêu',
+                            content: card.context_love
+                        },
+                        {
+                            icon: 'fas fa-briefcase',
+                            color: '#3B82F6',
+                            title: 'Sự nghiệp',
+                            content: card.context_work
+                        },
+                        {
+                            icon: 'fas fa-heartbeat',
+                            color: '#e11d48',
+                            title: 'Sức khỏe',
+                            content: card.context_health
+                        },
+                        {
+                            icon: 'fas fa-wallet',
+                            color: '#16a34a',
+                            title: 'Tài chính',
+                            content: card.context_finance
+                        },
+                        {
+                            icon: 'fas fa-om',
+                            color: '#8b5cf6',
+                            title: 'Tâm linh',
+                            content: card.context_spirituality
+                        }
                     ];
                     let themesHtml = '';
                     themes.forEach(theme => {
@@ -1899,10 +2157,21 @@
                     }
                     setSectionContent('modalAdviceSection', 'modalAdvice', card.advice, true);
                     setSectionContent('modalCombinationsSection', 'modalCombinations', card.combinations, true);
-                } else { 
+                } else {
+                    // Logic chung cho Rune và Oracle (Tra)
+                    // Hiển thị các phần tử dùng chung (data-card-type="tarot Tra Rune")
                     document.querySelectorAll('[data-card-type*="' + activeFilter + '"]').forEach(el => el.style.display = 'block');
-                    document.getElementById('modalDescription').innerHTML = formatHtml(safeText(card.description));
-                    document.getElementById('modalMeaningGeneral').innerHTML = formatHtml(safeText(card.meaning));
+                    
+                    // Hiển thị Description
+                    document.getElementById('modalDescription').innerHTML = formatHtml(safeText(card.description || card.description_original));
+                    // Hiển thị Meaning
+                    document.getElementById('modalMeaningGeneral').innerHTML = formatHtml(safeText(card.meaning || card.meaning_general));
+                    
+                    // Logic riêng cho Rune (Phonetic)
+                    if (activeFilter === 'Rune') {
+                        document.getElementById('modalCardPhonetic').textContent = safeText(card.phonetic, 'Không có');
+                    }
+
                     const symbolismSection = document.getElementById('modalSymbolismSection');
                     if (card.keywords) {
                         symbolismSection.style.display = 'block';
@@ -1911,13 +2180,13 @@
                         symbolismSection.style.display = 'none';
                     }
                 }
-                
+
                 if (!cardDetailModal._isShown) cardDetailModal.show();
+
+                loadAndRenderComments(card.id);
                 displayRelatedCards(card);
-                loadAndRenderComments(card.id); 
             }
-            
-            // ... (Phần cuối cùng của script giữ nguyên không đổi) ...
+
             function updateFilterSlider(activeButton) {
                 if (!activeButton || !filterSlider || window.innerWidth < 992) return;
                 filterSlider.style.width = `${activeButton.offsetWidth}px`;
@@ -1925,6 +2194,7 @@
                 filterSlider.style.top = `${activeButton.offsetTop}px`;
                 filterSlider.style.height = `${activeButton.offsetHeight}px`;
             }
+
             function updateModalTabSlider(activeButton) {
                 if (!activeButton) return;
                 const slider = activeButton.closest('.nav-pills').querySelector('.modal-tab-slider');
@@ -1952,7 +2222,10 @@
                 const cardWrapper = e.target.closest('.tarot-card-item-wrapper');
                 if (cardWrapper && cardWrapper.dataset.cardId) {
                     const modalContent = document.querySelector('#cardDetailModal .card-detail-content');
-                    if (modalContent) modalContent.scrollTo({ top: 0, behavior: 'smooth' });
+                    if (modalContent) modalContent.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
                     setTimeout(() => showCardDetails(parseInt(cardWrapper.dataset.cardId)), 300);
                 }
             });
@@ -1963,7 +2236,7 @@
                 if (e.target.classList.contains('upgrade-text-link')) {
                     cardDetailModal.hide();
                     const upgradeModalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('upgradeModal'));
-                    if(upgradeModalInstance) upgradeModalInstance.show();
+                    if (upgradeModalInstance) upgradeModalInstance.show();
                 }
             });
             exampleReadingBtn.addEventListener('click', function(e) {
@@ -1977,9 +2250,31 @@
                     if (isDetailsView) {
                         const activeTab = exampleContent.querySelector('.nav-link.active');
                         if (activeTab) setTimeout(() => updateModalTabSlider(activeTab), 50);
+                        if (activeTab) {
+                            // Thêm một chút delay để đảm bảo tab đã hiển thị trước khi tính toán vị trí
+                            setTimeout(() => {
+                                updateModalTabSlider(activeTab);
+                            }, 150);
+                        }
                     }
                 } else {
                     document.getElementById('permissionDeniedModalBody').innerHTML = `<p class="fs-5 mb-1">Bạn cần là <strong>Học viên</strong> hoặc <strong>Member</strong> để xem nội dung này.</p><p class="text-secondary">Vui lòng đăng nhập hoặc nâng cấp tài khoản của bạn.</p>`;
+                    const modalBody = document.getElementById('permissionDeniedModalBody');
+                    modalBody.innerHTML = `
+                        <i class="fas fa-gem fa-3x text-primary-purple mb-3"></i>
+                        <h5 class="fw-bold">Mở Khóa Ví Dụ Thực Tế!</h5>
+                        <p class="text-secondary">Nâng cấp tài khoản <strong>Member</strong> hoặc <strong>Học viên</strong> để xem các ví dụ giải bài chi tiết, giúp bạn hiểu sâu hơn về cách áp dụng lá bài trong các tình huống tình yêu, sự nghiệp và học tập.</p>
+                        <button class="btn btn-gradient mt-2" id="upgrade-from-permission-modal">Nâng cấp ngay</button>
+                    `;
+                    // Thêm sự kiện cho nút nâng cấp mới
+                    document.getElementById('upgrade-from-permission-modal').addEventListener('click', () => {
+                        permissionModal.hide();
+                        cardDetailModal.hide();
+                        const upgradeModalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('upgradeModal'));
+                        if (upgradeModalInstance) upgradeModalInstance.show();
+                    }, {
+                        once: true
+                    });
                     permissionModal.show();
                 }
             });
@@ -1989,12 +2284,29 @@
                     const combinationsSection = document.getElementById('modalCombinationsSection');
                     const detailContentContainer = document.querySelector('.card-detail-content');
                     if (combinationsSection && detailContentContainer) {
-                        detailContentContainer.scrollTo({ top: combinationsSection.offsetTop - 30, behavior: 'smooth' });
+                        detailContentContainer.scrollTo({
+                            top: combinationsSection.offsetTop - 30,
+                            behavior: 'smooth'
+                        });
                         combinationsSection.classList.add('highlight-section');
-                        setTimeout(() => combinationsSection.classList.remove('highlight-section'), 2500); 
+                        setTimeout(() => combinationsSection.classList.remove('highlight-section'), 2500);
                     }
                 } else {
-                     document.getElementById('permissionDeniedModalBody').innerHTML = `<p class="fs-5 mb-1">Bạn cần là <strong>Học viên</strong> hoặc <strong>Member</strong> để xem nội dung này.</p><p class="text-secondary">Vui lòng đăng nhập hoặc nâng cấp tài khoản của bạn.</p>`;
+                    document.getElementById('permissionDeniedModalBody').innerHTML = `<p class="fs-5 mb-1">Bạn cần là <strong>Học viên</strong> hoặc <strong>Member</strong> để xem nội dung này.</p><p class="text-secondary">Vui lòng đăng nhập hoặc nâng cấp tài khoản của bạn.</p>`;
+                    const modalBody = document.getElementById('permissionDeniedModalBody');
+                    modalBody.innerHTML = `
+                        <i class="fas fa-link fa-3x text-primary-purple mb-3"></i>
+                        <h5 class="fw-bold">Khám Phá Sự Kết Hợp!</h5>
+                        <p class="text-secondary">Nâng cấp tài khoản <strong>Member</strong> hoặc <strong>Học viên</strong> để xem các ví dụ kết hợp lá bài Lenormand, một kỹ năng quan trọng để luận giải chính xác.</p>
+                        <button class="btn btn-gradient mt-2" id="upgrade-from-permission-modal-2">Nâng cấp ngay</button>
+                    `;
+                    document.getElementById('upgrade-from-permission-modal-2').addEventListener('click', () => {
+                        permissionModal.hide();
+                        cardDetailModal.hide();
+                        bootstrap.Modal.getOrCreateInstance(document.getElementById('upgradeModal'))?.show();
+                    }, {
+                        once: true
+                    });
                     permissionModal.show();
                 }
             });
@@ -2006,7 +2318,7 @@
                         commentInputField.disabled = true;
                         const success = await handleCommentSubmit(commentText, null);
                         if (success) {
-                           commentInputField.value = '';
+                            commentInputField.value = '';
                         }
                         commentInputField.disabled = false;
                         commentInputField.focus();
@@ -2033,14 +2345,17 @@
                     return;
                 }
                 const viewMoreRepliesLink = e.target.closest('.view-more-replies-link');
-                if(viewMoreRepliesLink) {
+                if (viewMoreRepliesLink) {
                     e.preventDefault();
                     handleViewMoreRepliesClick(viewMoreRepliesLink.dataset.commentId, viewMoreRepliesLink);
                     return;
                 }
             });
             async function initializePage() {
-                if (!supabase) { console.error("Supabase client chưa được khởi tạo."); return; }
+                if (!supabase) {
+                    console.error("Supabase client chưa được khởi tạo.");
+                    return;
+                }
                 await fetchCurrentUser();
                 await fetchAllCards();
                 updateFilterSlider(filterButtonsContainer.querySelector('.btn.active'));
@@ -2051,7 +2366,7 @@
                     updateFilterSlider(filterButtonsContainer.querySelector('.btn.active'));
                     const activeModalTab = document.querySelector('#modalExampleReadingContent .nav-link.active');
                     if (cardDetailModalEl.classList.contains('show') && activeModalTab) {
-                         updateModalTabSlider(activeModalTab);
+                        updateModalTabSlider(activeModalTab);
                     }
                 }, 250);
             });
@@ -2069,10 +2384,15 @@
                 }, 1000);
                 const closePopup = () => promotionPopup.classList.remove('show');
                 closePromoPopup.addEventListener('click', closePopup);
-                promotionPopup.addEventListener('click', (e) => { if (e.target === promotionPopup) closePopup(); });
-                document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePopup(); });
+                promotionPopup.addEventListener('click', (e) => {
+                    if (e.target === promotionPopup) closePopup();
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') closePopup();
+                });
             }
         });
     </script>
-    </body>
+</body>
+
 </html>
