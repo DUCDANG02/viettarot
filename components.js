@@ -55,23 +55,22 @@ class ViettarotComponents {
         }
         /* END: ÁP DỤNG FONT CHỮ MỚI */
 
-        /* START: CSS ĐÃ SỬA CHO HEADER THEO MẪU MỚI */
+        /* START: CSS CHO HEADER DẠNG VIÊN THUỐC */
         header {
-            position: fixed; /* SỬA LẠI: 'fixed' để luôn định vị theo màn hình, tốt hơn 'absolute' */
+            position: fixed;
             width: 100%;
             left: 0;
             top: 1rem;
             z-index: 1030;
-            /* SỬA LẠI: Thêm opacity và cập nhật transition để mượt mà hơn */
             transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
             transform: translateY(0);
-            opacity: 1; /* THÊM MỚI: Trạng thái mặc định */
+            opacity: 1;
             padding: 0;
             background-color: transparent;
             box-shadow: none;
         }
         
-        /* SỬA LẠI: Class để ẩn header với hiệu ứng trượt và mờ dần */
+        /* Class để ẩn header với hiệu ứng trượt và mờ dần */
         header.header-hidden {
             transform: translateY(-150%);
             opacity: 0;
@@ -81,7 +80,7 @@ class ViettarotComponents {
         .navbar {
             background-color: var(--bg-white) !important;
             box-shadow: 0 10px 40px -15px rgba(65, 56, 240, 0.49);
-            padding: 7px 20px; 
+            padding: 1px 20px; 
             border-radius: 50px;
         }
         .navbar-brand {
@@ -89,7 +88,7 @@ class ViettarotComponents {
             font-size: 1.75rem;
         }
         #header-logo {
-            max-height: 40px;
+            max-height: 35px;
             width: auto;
         }
         .gradient-text {
@@ -99,9 +98,27 @@ class ViettarotComponents {
             -webkit-text-fill-color: transparent;
             color: var(--primary-blue);
         }
+        
         .navbar-toggler {
             position: relative;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            background-color: var(--bg-off-white);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
         }
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 3px rgba(74, 108, 243, 0.25);
+        }
+        .navbar-toggler .navbar-toggler-icon {
+            background-image: none;
+        }
+        
         .navbar-nav .nav-link {
             color: var(--text-secondary);
             font-weight: 600; 
@@ -147,7 +164,7 @@ class ViettarotComponents {
         .navbar-nav .nav-link.active:hover {
             color: var(--bg-white);
         }
-        /* END: CSS ĐÃ SỬA CHO HEADER */
+        /* END: CSS CHO HEADER */
 
         .dropdown-menu {
             border-radius: 0.75rem;
@@ -180,7 +197,7 @@ class ViettarotComponents {
             border: none;
             color: white;
             font-weight: 600;
-            padding: 0.75rem 1.5rem;
+            padding: 0.45rem 1.5rem;
             border-radius: 50px;
             transition: all 0.4s ease;
             box-shadow: 0 4px 15px rgba(120, 73, 242, 0.4);
@@ -230,7 +247,8 @@ class ViettarotComponents {
             border: 2px solid var(--primary-purple);
             box-shadow: 0 2px 8px rgba(155, 73, 242, 0.4);
         }
-        #auth-container-wrapper {
+        
+        #auth-container {
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -272,15 +290,15 @@ class ViettarotComponents {
             right: 1.5rem;
         }
         
-        /* START: CSS ĐÃ SỬA CHO UPGRADE MODAL (NHỎ GỌN HƠN) */
+        /* CSS CHO UPGRADE MODAL */
         #upgradeModal .modal-body {
             background-color: var(--bg-off-white);
         }
         .pricing-card {
             background-color: var(--bg-white);
             border: 1px solid var(--border-color);
-            border-radius: 1rem; /* Giảm độ bo tròn */
-            padding: 1.5rem; /* Giảm padding */
+            border-radius: 1rem;
+            padding: 1.5rem;
             text-align: center;
             height: 100%;
             display: flex;
@@ -304,7 +322,6 @@ class ViettarotComponents {
             box-shadow: 0 15px 40px rgba(155, 73, 242, 0.2);
         }
         
-        /* Huy hiệu mới */
         .plan-badge {
             position: absolute;
             top: 1.25rem;
@@ -346,24 +363,24 @@ class ViettarotComponents {
         }
         .pricing-card-header h3 {
             font-weight: 700;
-            font-size: 1.6rem; /* Giảm kích thước tên gói */
+            font-size: 1.6rem;
             color: var(--text-primary);
-            margin-bottom: 0.4rem; /* Giảm margin */
+            margin-bottom: 0.4rem;
         }
         .pricing-card-header p {
             color: var(--text-secondary);
-            min-height: 38px; /* Giảm chiều cao tối thiểu */
-            font-size: 0.9rem; /* Giảm kích thước mô tả */
+            min-height: 38px;
+            font-size: 0.9rem;
         }
         .pricing-card-price {
-            font-size: 2.75rem; /* Giảm kích thước giá */
+            font-size: 2.75rem;
             font-weight: 700;
-            margin: 1.25rem 0; /* Giảm margin */
+            margin: 1.25rem 0;
             color: var(--text-primary);
             line-height: 1;
         }
         .pricing-card-price .price-period {
-            font-size: 0.95rem; /* Giảm kích thước */
+            font-size: 0.95rem;
             font-weight: 500;
             color: var(--text-secondary);
         }
@@ -376,20 +393,20 @@ class ViettarotComponents {
         .pricing-card-features {
             list-style: none;
             padding: 0;
-            margin: 0 0 1.5rem 0; /* Giảm khoảng cách dưới */
+            margin: 0 0 1.5rem 0;
             text-align: left;
             flex-grow: 1;
         }
         .pricing-card-features li {
-            margin-bottom: 0.75rem; /* Giảm khoảng cách giữa các tính năng */
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: flex-start;
-            font-size: 0.9rem; /* Giảm kích thước chữ */
+            font-size: 0.9rem;
         }
         .pricing-card-features li .fa-check-circle {
             color: var(--success-color);
             margin-right: 10px;
-            margin-top: 3px; /* Điều chỉnh vị trí icon */
+            margin-top: 3px;
         }
         .pricing-card-features li.disabled {
             color: #adb5bd;
@@ -401,26 +418,24 @@ class ViettarotComponents {
         .pricing-card .btn {
             margin-top: auto;
             font-weight: 600;
-            padding: 0.8rem; /* Giảm padding nút */
+            padding: 0.8rem;
             border-radius: 50px;
         }
 
-        /* CSS điều chỉnh riêng cho card "Học viên" để tối ưu không gian */
         .pricing-card[data-role="student"] .pricing-card-price {
             font-size: 1.7rem;
             margin: 1.8rem 0;
             line-height: 1.2;
         }
 
-        /* START: CSS LÀM NỔI BẬT GÓI HỌC VIÊN */
         .pricing-card[data-role="student"] {
             border: 2px solid var(--warning-color);
             box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
-            background-color: #FFFBF2; /* Màu nền vàng rất nhạt */
-            transform: scale(1.02); /* Tăng kích thước nhẹ để nổi bật hơn */
+            background-color: #FFFBF2;
+            transform: scale(1.02);
         }
         .pricing-card[data-role="student"]:hover {
-            transform: translateY(-5px) scale(1.03); /* Hiệu ứng hover được cải thiện */
+            transform: translateY(-5px) scale(1.03);
             box-shadow: 0 15px 35px rgba(255, 193, 7, 0.3);
         }
         .pricing-card[data-role="student"] .btn {
@@ -432,22 +447,17 @@ class ViettarotComponents {
         .pricing-card[data-role="student"] .btn:hover {
             color: #212529;
         }
-        /* END: CSS LÀM NỔI BẬT GÓI HỌC VIÊN */
         
-        /* END: CSS ĐÃ SỬA CHO UPGRADE MODAL */
-        
-        /* START: CSS TÙY CHỈNH CHO BỐ CỤC CHI TIẾT KHÓA HỌC VIÊN */
         @media (min-width: 992px) {
             #course-details-container > .col-lg-6 {
-                max-width: 450px; /* Giảm chiều rộng tối đa của mỗi cột chứa card */
+                max-width: 450px;
                 width: 100%;
             }
         }
-        /* END: CSS TÙY CHỈNH CHO BỐ CỤC CHI TIẾT KHÓA HỌC VIÊN */
         
-        /* START: CSS CHO PAYMENT QR MODAL (THIẾT KẾ MỚI) */
+        /* CSS CHO PAYMENT QR MODAL */
         #paymentQRModal .modal-dialog {
-            max-width: 800px; /* Rộng hơn */
+            max-width: 800px;
         }
         #paymentQRModal .modal-content {
             background-color: var(--bg-off-white);
@@ -534,22 +544,13 @@ class ViettarotComponents {
             color: var(--success-color);
         }
 
-        /* Responsive cho QR Modal */
         @media (max-width: 767.98px) {
-            #paymentQRModal .modal-body {
-                padding: 1rem;
-            }
-             .qr-code-wrapper {
-                margin-bottom: 1rem;
-             }
+            #paymentQRModal .modal-body { padding: 1rem; }
+            .qr-code-wrapper { margin-bottom: 1rem; }
         }
-        /* END: CSS CHO PAYMENT QR MODAL */
-
 
         /* Forms in Modals */
-        .form-group-icon {
-            position: relative;
-        }
+        .form-group-icon { position: relative; }
         .form-group-icon .form-icon {
             position: absolute;
             left: 1rem;
@@ -565,9 +566,7 @@ class ViettarotComponents {
             border-radius: 0.5rem;
             transition: all 0.3s ease;
         }
-        .form-control-icon {
-            padding-left: 2.8rem !important;
-        }
+        .form-control-icon { padding-left: 2.8rem !important; }
         .form-control:focus {
             background-color: var(--bg-white);
             border-color: var(--primary-blue);
@@ -584,8 +583,7 @@ class ViettarotComponents {
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
-        .social-login-divider::before,
-        .social-login-divider::after {
+        .social-login-divider::before, .social-login-divider::after {
             content: '';
             flex: 1;
             border-bottom: 1px solid var(--border-color);
@@ -609,10 +607,7 @@ class ViettarotComponents {
             background-color: var(--bg-off-white);
             border-color: #d1d5db;
         }
-        .btn-social img {
-            width: 22px;
-            height: 22px;
-        }
+        .btn-social img { width: 22px; height: 22px; }
         .btn-social-text {
             font-size: 0.8rem;
             color: var(--text-secondary);
@@ -713,9 +708,7 @@ class ViettarotComponents {
             max-height: 50px;
             width: auto;
         }
-        .footer-links li {
-            margin-bottom: 0.75rem;
-        }
+        .footer-links li { margin-bottom: 0.75rem; }
         .footer-links a {
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
@@ -742,28 +735,24 @@ class ViettarotComponents {
             transform: translateY(-2px);
         }
 
-        /* START: CSS ĐÃ SỬA CHO FACEBOOK WIDGET */
         .footer-widget .fb-page {
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
-            line-height: 0; /* Giúp loại bỏ khoảng trắng thừa bên dưới iframe */
+            line-height: 0;
         }
         .footer-widget .fb-page:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
         }
-        /* END: CSS ĐÃ SỬA CHO FACEBOOK WIDGET */
 
         .footer-bottom {
             background-color: rgba(0, 0, 0, 0.1);
             padding: 1.5rem 0;
             margin-top: 3rem;
         }
-        .footer-bottom p {
-            color: var(--bg-white);
-        }
+        .footer-bottom p { color: var(--bg-white); }
 
         /* Floating Widgets */
         .messenger-widget-container {
@@ -784,21 +773,15 @@ class ViettarotComponents {
             flex-direction: row-reverse;
         }
         
-        /* START: CSS ĐIỀU CHỈNH VỊ TRÍ WIDGET */
         #tiktok-widget-container {
-             bottom: 100px; /* Vị trí widget TikTok trên Facebook (desktop) */
+             bottom: 100px;
         }
-        .widget-right .messenger-text-bubble {
-            transform-origin: right bottom;
-        }
-        .widget-left .messenger-text-bubble {
-             transform-origin: left bottom;
-        }
+        .widget-right .messenger-text-bubble { transform-origin: right bottom; }
+        .widget-left .messenger-text-bubble { transform-origin: left bottom; }
         .widget-left .messenger-close-btn {
             right: auto;
             left: -5px;
         }
-        /* END: CSS ĐIỀU CHỈNH VỊ TRÍ WIDGET */
 
         .messenger-widget-container.collapsed .messenger-text-bubble,
         .messenger-widget-container.collapsed .messenger-close-btn {
@@ -811,9 +794,7 @@ class ViettarotComponents {
             padding-left: 0; padding-right: 0;
             margin-left: 0; margin-right: 0;
         }
-        .messenger-widget-container.collapsed {
-            gap: 0;
-        }
+        .messenger-widget-container.collapsed { gap: 0; }
         .messenger-widget-container.collapsed .messenger-fab-icon {
             transform: scale(0.7);
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
@@ -876,9 +857,7 @@ class ViettarotComponents {
             transition: all 0.3s ease;
             padding: 0;
         }
-        .widget-right .messenger-close-btn {
-            right: -5px;
-        }
+        .widget-right .messenger-close-btn { right: -5px; }
         .messenger-close-btn:hover {
             transform: scale(1.15) rotate(180deg);
             background-color: var(--danger-color);
@@ -888,10 +867,8 @@ class ViettarotComponents {
             to { opacity: 1; transform: scale(1); }
         }
         
-        /* START: CSS MỚI CHO TOAST NOTIFICATION */
-        .toast-container {
-            z-index: 1090; /* Đảm bảo toast nổi trên các thành phần khác */
-        }
+        /* TOAST NOTIFICATION */
+        .toast-container { z-index: 1090; }
         .viettarot-toast {
             border: none;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
@@ -914,7 +891,6 @@ class ViettarotComponents {
         .viettarot-toast.toast-warning { background-color: var(--warning-color); color: var(--text-primary); }
         .viettarot-toast.toast-warning .toast-header { color: var(--text-primary); }
         .viettarot-toast.toast-warning .btn-close { filter: none; }
-        /* END: CSS MỚI CHO TOAST NOTIFICATION */
 
         /* Notification Badge */
         .notification-badge {
@@ -934,10 +910,7 @@ class ViettarotComponents {
             animation: pulse-badge 1.5s infinite;
             z-index: 10;
         }
-        #userDropdown .notification-badge {
-            top: -2px;
-            right: 0;
-        }
+        #userDropdown .notification-badge { top: -2px; right: 0; }
         .navbar-toggler .notification-badge {
             position: absolute;
             top: 4px; right: 4px;
@@ -962,27 +935,12 @@ class ViettarotComponents {
         }
 
         /* Responsive */
-        @media (max-width: 991.98px) {
-            /* START: CSS RESPONSIVE CHO HEADER MỚI */
+        /* START: THAY ĐỔI THEO YÊU CẦU - Thay đổi breakpoint để menu mobile hiển thị sớm hơn */
+        @media (max-width: 1199.98px) { 
+        /* END: THAY ĐỔI THEO YÊU CẦU */
             header {
-                position: static; /* Trả header về trạng thái tĩnh trên mobile */
-                padding: 0;
-                top: 0;
+                padding: 0 0.75rem;
             }
-            header.header-hidden {
-                 transform: none; /* Vô hiệu hóa hiệu ứng ẩn trên mobile */
-                 opacity: 1;
-            }
-            header .container {
-                max-width: 100%;
-                padding-right: var(--bs-gutter-x, 0.75rem);
-                padding-left: var(--bs-gutter-x, 0.75rem);
-            }
-            .navbar {
-                border-radius: 0;
-                padding: 10px 0px;
-            }
-            /* END: CSS RESPONSIVE CHO HEADER MỚI */
 
             .navbar-nav { padding-top: 1rem; }
             .navbar-nav .nav-item { margin-bottom: 0.5rem; }
@@ -992,11 +950,14 @@ class ViettarotComponents {
                 padding: 0.75rem 1rem;
                 justify-content: center;
             }
+            
             #auth-container {
-                flex-direction: column;
                 align-items: center;
+                justify-content: center; 
                 gap: 1rem;
+                margin-top: 1rem; 
             }
+            
             .pricing-card.featured, .pricing-card[data-role="student"] {
                  transform: scale(1); /* Reset scale on mobile */
             }
@@ -1018,17 +979,9 @@ class ViettarotComponents {
                 flex-direction: row; 
                 gap: 10px;
             }
-            /* START: ĐIỀU CHỈNH VỊ TRÍ WIDGET TRÊN MOBILE */
-            #facebook-widget-container.widget-right {
-                bottom: 15px;
-            }
-            #tiktok-widget-container.widget-right {
-                bottom: 80px; /* Phía trên FB */
-            }
-            #community-widget-container.widget-left {
-                bottom: 145px; /* Phía trên TikTok */
-            }
-            /* END: ĐIỀU CHỈNH VỊ TRÍ WIDGET TRÊN MOBILE */
+            #facebook-widget-container.widget-right { bottom: 15px; }
+            #tiktok-widget-container.widget-right { bottom: 80px; }
+            #community-widget-container.widget-left { bottom: 145px; }
 
             .widget-left .messenger-text-bubble,
             .widget-right .messenger-text-bubble {
@@ -1050,6 +1003,38 @@ class ViettarotComponents {
                 font-size: 14px;
                 line-height: 20px;
             }
+            
+            /* START: ĐIỀU CHỈNH RESPONSIVE CHO UPGRADE MODAL */
+            #upgradeModal .modal-body {
+                padding: 1.5rem 1rem; /* Giảm padding ngang của modal body */
+            }
+            .pricing-card {
+                padding: 1.25rem; /* Giảm padding bên trong các card */
+            }
+            .pricing-card-header h3 {
+                font-size: 1.4rem; /* Giảm cỡ chữ tiêu đề gói */
+            }
+            .pricing-card-header p {
+                min-height: unset; /* Bỏ chiều cao tối thiểu của mô tả để tiết kiệm không gian */
+                font-size: 0.85rem;
+            }
+            .pricing-card-price {
+                font-size: 2.5rem; /* Giảm cỡ chữ giá tiền */
+                margin: 1rem 0;
+            }
+            .pricing-card-features li {
+                font-size: 0.85rem; /* Giảm cỡ chữ các tính năng */
+                margin-bottom: 0.6rem;
+                align-items: center;
+            }
+            .pricing-card[data-role="student"] .pricing-card-price {
+                font-size: 1.5rem;
+                margin: 1.5rem 0;
+            }
+            #back-to-plans-btn {
+                font-size: 0.9rem;
+            }
+            /* END: ĐIỀU CHỈNH RESPONSIVE CHO UPGRADE MODAL */
         }
         
         `;
@@ -1061,18 +1046,20 @@ class ViettarotComponents {
         document.head.appendChild(style);
     }
 
-    // Phương thức trả về HTML của Header (Không thay đổi)
     getHeaderHTML() {
         return `
         <header>
             <div class="container">
-                <nav class="navbar navbar-expand-lg">
-                    <a class="navbar-brand" href="index.html">
+                <nav class="navbar navbar-expand-xl">
+                <a class="navbar-brand" href="index.html">
                         <img src="/image/logo.png" alt="VietTarot Logo" id="header-logo">
                     </a>
+                    
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-bars me-2"></i> Menu
                         <span class="navbar-toggler-icon"></span>
                     </button>
+                    
                     <div class="collapse navbar-collapse" id="mainNavbar">
                         <ul class="navbar-nav mx-auto">
                             <li class="nav-item">
@@ -1097,14 +1084,13 @@ class ViettarotComponents {
                                 <a class="nav-link" href="cards.html"><i class="fas fa-layer-group me-2"></i> Ý nghĩa lá bài</a>
                             </li>
                         </ul>
-                        <div id="auth-container" class="d-flex justify-content-center mt-3 mt-lg-0"></div>
+                        <div id="auth-container" class="d-flex align-items-center justify-content-center mt-3 mt-xl-0"></div>
                     </div>
                 </nav>
             </div>
         </header>`;
     }
 
-    // Phương thức trả về HTML của Footer (Không thay đổi)
     getFooterHTML() {
         return `
         <footer class="site-footer">
@@ -1169,10 +1155,6 @@ class ViettarotComponents {
         </footer>`;
     }
 
-    // Các hàm modals, widgets... không thay đổi
-    // ... (Toàn bộ các hàm getModalsHTML, getFloatingWidgetsHTML,... được giữ nguyên)
-
-    // START: HÀM ĐƯỢC CẬP NHẬT
     getModalsHTML() {
         return `
         <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -1528,7 +1510,6 @@ class ViettarotComponents {
     // ===== BẮT ĐẦU: CÁC HÀM LOGIC CHO COMPONENT (AUTH, ETC.) =========
     // =====================================================================
     
-    // START: CÁC HÀM THEO DÕI TRẠNG THÁI ONLINE
     async initializeRealtimePresence(user) {
         if (this.presenceChannel || !user) return;
         this.presenceChannel = this.supabase.channel('online-users', {
@@ -1567,9 +1548,7 @@ class ViettarotComponents {
             this.lastSeenInterval = null;
         }
     }
-    // END: CÁC HÀM THEO DÕI TRẠNG THÁI ONLINE
 
-    // START: HÀM MỚI ĐỂ HIỂN THỊ TOAST
     showToast(message, type = 'info', duration = 4000) {
         const toastEl = document.getElementById('viettarot-toast');
         const toastBody = document.getElementById('viettarot-toast-body');
@@ -1608,7 +1587,6 @@ class ViettarotComponents {
         });
         toast.show();
     }
-    // END: HÀM MỚI ĐỂ HIỂN THỊ TOAST
 
     getNotificationCount() {
         return parseInt(localStorage.getItem(this.NOTIFICATION_KEY) || '0', 10);
@@ -1691,25 +1669,24 @@ class ViettarotComponents {
         if (user) {
             const fullName = user.user_metadata?.full_name || user.email.split('@')[0];
             const avatarUrl = user.user_metadata?.avatar_url || this.defaultAvatarIcon;
+            
             authContainer.innerHTML = `
-                <div id="auth-container-wrapper">
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
-                           style="background-color: transparent; padding: 0.1rem 0.5rem; margin:0; border-radius: 50px;">
-                            <img src="${avatarUrl}" alt="${fullName}" class="user-avatar">
-                            <span class="gradient-text fw-bold d-none d-lg-inline">${fullName}</span>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                       style="background-color: transparent; padding: 0.1rem 0.5rem; margin:0; border-radius: 50px;">
+                        <img src="${avatarUrl}" alt="${fullName}" class="user-avatar">
+                        <span class="gradient-text fw-bold d-none d-xl-inline">${fullName}</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" id="profile-dropdown-item" href="infor-user.html"><i class="fas fa-user-circle fa-fw"></i> Hồ sơ của tôi</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#" id="logout-button"><i class="fas fa-sign-out-alt fa-fw"></i> Đăng xuất</a></li>
-                        </ul>
-                    </div>
-                     <a href="#" class="btn-upgrade" data-bs-toggle="modal" data-bs-target="#upgradeModal">
-                        <i class="fas fa-crown me-2"></i>
-                        <span class="d-none d-md-inline">Nâng cấp</span>
-                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" id="profile-dropdown-item" href="infor-user.html"><i class="fas fa-user-circle fa-fw"></i> Hồ sơ của tôi</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="logout-button"><i class="fas fa-sign-out-alt fa-fw"></i> Đăng xuất</a></li>
+                    </ul>
                 </div>
+                <a href="#" class="btn-upgrade" data-bs-toggle="modal" data-bs-target="#upgradeModal">
+                    <i class="fas fa-crown me-2"></i>
+                    <span class="d-none d-md-inline">Nâng cấp</span>
+                </a>
             `;
             document.getElementById('logout-button').addEventListener('click', (e) => this.handleLogout(e));
             this.initializeRealtimePresence(user); 
@@ -2133,7 +2110,6 @@ class ViettarotComponents {
         document.head.appendChild(script);
     }
 
-    // SỬA LẠI: Hàm ẩn/hiện header khi cuộn
     setupAutoHidingHeader() {
         const header = document.querySelector('header');
         if (!header) return;
@@ -2141,17 +2117,9 @@ class ViettarotComponents {
         window.addEventListener('scroll', () => {
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
-            // Logic này sẽ không chạy trên màn hình mobile (nhờ CSS media query)
-            // nhưng thêm check để chắc chắn
-            if (window.innerWidth < 992) {
-                header.classList.remove('header-hidden');
-                return;
-            }
-
-            // Nếu cuộn xuống và đã qua một khoảng nhất định, ẩn header
             if (scrollTop > this.lastScrollTop && scrollTop > 150) { 
                 header.classList.add('header-hidden');
-            } else { // Nếu cuộn lên, hiện header
+            } else {
                 header.classList.remove('header-hidden');
             }
             this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
@@ -2224,7 +2192,7 @@ class ViettarotComponents {
         this.setupUpgradeModalViewSwitch();
         this.setupPaymentLogic(); 
         this.setupCopyToClipboard();
-        this.setupAutoHidingHeader(); // Kích hoạt chức năng ẩn/hiện header
+        this.setupAutoHidingHeader();
 
         document.dispatchEvent(new CustomEvent('viettarot.initialized'));
     }
