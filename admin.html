@@ -1,0 +1,3044 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản Trị Supabase (CKEditor)</title>
+
+    <link rel="icon" type="image/png" href="image/logotab.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/super-build/ckeditor.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            '50': '#eff6ff',
+                            '100': '#dbeafe',
+                            '200': '#bfdbfe',
+                            '300': '#93c5fd',
+                            '400': '#60a5fa',
+                            '500': '#3b82f6',
+                            '600': '#2563eb',
+                            '700': '#1d4ed8',
+                            '800': '#1e40af',
+                            '900': '#1e3a8a',
+                            '950': '#172554',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* CSS giữ nguyên như file gốc của bạn */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #a8a8a8; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #888; }
+        .sidebar-item.active { background-color: #1e40af; color: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .modal { transition: opacity 0.25s ease; }
+        #admin-panel, #login-screen { display: none; }
+        .table-row-hover:hover { background-color: #f9fafb; }
+        @media (max-width: 767px) {
+            .responsive-table thead { display: none; }
+            .responsive-table tr { display: block; border: 1px solid #e5e7eb; border-radius: 0.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); background-color: white; }
+            .responsive-table td { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; text-align: right; border-bottom: 1px solid #f3f4f6; }
+            .responsive-table tr:last-child td { margin-bottom: 0; }
+            .responsive-table td:last-child { border-bottom: none; }
+            .responsive-table td::before { content: attr(data-label); font-weight: 600; text-align: left; margin-right: 1rem; color: #374151; flex-shrink: 0; }
+            .responsive-table .td-content { word-break: break-all; }
+            .responsive-table td.image-cell { justify-content: center; padding: 1rem; }
+            .responsive-table td.image-cell::before { display: none; }
+            .responsive-table td.action-cell { justify-content: flex-end; background-color: #f9fafb; border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; }
+            .quiz-action-buttons-mobile {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 0.5rem;
+            }
+            .quiz-action-buttons-mobile .btn-quiz-action {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        #notification-panel { transition: transform 0.3s ease-in-out; transform: translateX(100%); }
+        #notification-panel.open { transform: translateX(0); }
+        #notification-badge { display: none; }
+        #notification-badge.active { display: block; }
+        .ck-editor__editable_inline { min-height: 250px; }
+        :root { --ck-z-default: 100; --ck-z-modal: calc( var(--ck-z-default) + 999 ); }
+        #form-modal .ck.ck-balloon-panel, #question-modal .ck.ck-balloon-panel { z-index: 60 !important; }
+
+        .author-selector-container { position: relative; }
+        .author-selector-input-wrapper { display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.5rem 0.75rem; background-color: white; border: 1px solid #d1d5db; border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .author-selector-input-wrapper:focus-within { outline: none; box-shadow: 0 0 0 2px #3b82f6; border-color: #3b82f6; }
+        .author-selector-avatar { width: 2rem; height: 2rem; border-radius: 9999px; object-fit: cover; background-color: #e5e7eb; }
+        .author-selector-input { flex-grow: 1; border: none; outline: none; padding: 0; font-size: 0.875rem; line-height: 1.25rem; }
+        .author-selector-dropdown { display: none; position: absolute; top: 100%; left: 0; right: 0; margin-top: 0.25rem; background-color: white; border-radius: 0.375rem; border: 1px solid #d1d5db; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); max-height: 15rem; overflow-y: auto; z-index: 10; }
+        .author-selector-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; cursor: pointer; }
+        .author-selector-item:hover { background-color: #f3f4f6; }
+        .author-selector-item.hidden { display: none; }
+        .author-selector-item-name { font-size: 0.875rem; color: #374151; }
+
+        .btn-quiz-action {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .btn-quiz-action i {
+            margin-right: 0.5rem;
+        }
+        .btn-questions {
+            background-color: #e0e7ff; color: #4338ca;
+        }
+        .btn-questions:hover {
+            background-color: #c7d2fe;
+        }
+        .btn-results {
+            background-color: #d1fae5; color: #065f46;
+        }
+        .btn-results:hover {
+            background-color: #a7f3d0;
+        }
+        
+        .question-item {
+            transition: background-color 0.2s;
+        }
+        .question-item:hover {
+            background-color: #f9fafb;
+        }
+        .answer-input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .answer-input-group input[type="text"] {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div id="login-screen" class="flex items-center justify-center h-screen bg-gray-200 p-4">
+        <div class="w-full max-w-sm bg-white rounded-xl shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Đăng nhập Admin</h2>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" required>
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Mật khẩu</label>
+                    <input type="password" id="password" name="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" required>
+                </div>
+                <div id="login-error" class="text-red-500 text-sm mb-4 text-center hidden"></div>
+                <button type="submit" id="login-button" class="w-full bg-primary-600 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-primary-700 transition duration-300 shadow-sm">
+                    Đăng nhập
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="relative min-h-screen md:flex">
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"></div>
+
+        <aside id="sidebar" class="w-64 bg-gray-900 text-white flex-shrink-0 fixed inset-y-0 left-0 z-40 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="p-5 bg-gray-900 text-2xl font-bold text-center">Admin</div>
+            <nav class="mt-5 px-2">
+                <a href="#" id="nav-dashboard" class="sidebar-item flex items-center py-2.5 px-4 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200">
+                    <i class="fa-solid fa-house w-6 h-6 mr-3 text-center"></i>
+                    <span>Bảng điều khiển</span>
+                </a>
+                <a href="#" id="nav-articles" class="sidebar-item flex items-center py-2.5 px-4 rounded-lg mt-1 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200">
+                   <i class="fa-solid fa-book-open w-6 h-6 mr-3 text-center"></i>
+                    <span>Cẩm nang</span>
+                </a>
+                <a href="#" id="nav-documents" class="sidebar-item flex items-center py-2.5 px-4 rounded-lg mt-1 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200">
+                   <i class="fa-solid fa-file-lines w-6 h-6 mr-3 text-center"></i>
+                    <span>Tài liệu</span>
+                </a>
+                <a href="#" id="nav-tarot_cards" class="sidebar-item flex items-center py-2.5 px-4 rounded-lg mt-1 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200">
+                    <i class="fa-solid fa-layer-group w-6 h-6 mr-3 text-center"></i>
+                    <span>Lá bài Tarot</span>
+                </a>
+                <a href="#" id="nav-lenormand_cards" class="sidebar-item flex items-center py-2.5 px-4 rounded-lg mt-1 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200">
+                    <i class="fa-solid fa-clone w-6 h-6 mr-3 text-center"></i>
+                    <span>Lá bài Lenormand</span>
+                </a>
+                <a href="#" id="nav-profiles" class="sidebar-item flex items-center py-2.5 px-4 rounded-lg mt-1 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200">
+                    <i class="fa-solid fa-users w-6 h-6 mr-3 text-center"></i>
+                    <span>Hồ sơ</span>
+                </a>
+                <a href="#" id="nav-test" class="sidebar-item flex items-center py-2.5 px-4 rounded-lg mt-1 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200">
+                    <i class="fa-solid fa-flask-vial w-6 h-6 mr-3 text-center"></i>
+                    <span>Test</span>
+                </a>
+                <a href="#" id="nav-sliders" class="sidebar-item flex items-center py-2.5 px-4 rounded-lg mt-1 text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200">
+                     <i class="fa-solid fa-images w-6 h-6 mr-3 text-center"></i>
+                    <span>Slider</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 flex flex-col overflow-hidden bg-gray-100">
+            <header class="flex items-center justify-between p-4 bg-white border-b sticky top-0 z-20 shadow-sm">
+                <div class="flex items-center">
+                    <button id="menu-button" class="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 mr-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <button id="back-to-list-button" class="hidden items-center text-sm font-medium text-gray-600 hover:text-primary-600 mr-4">
+                        <svg class="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                        </svg>
+                        Quay lại
+                    </button>
+                    <h1 id="page-title" class="text-xl md:text-2xl font-semibold text-gray-800">Bảng điều khiển</h1>
+                </div>
+                <div class="flex items-center space-x-2 md:space-x-3">
+                     <div class="relative">
+                        <button id="column-toggle-button" class="bg-white text-gray-600 font-bold py-2 px-3 rounded-lg hover:bg-gray-100 border border-gray-300 transition duration-300 flex items-center hidden shadow-sm">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" /><path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 0 1 0-1.18l.853-1.046a1.651 1.651 0 0 0-.54-2.257l-1.046-.853a1.651 1.651 0 0 1 1.18-2.887l1.046.853a1.651 1.651 0 0 0 2.257-.54l.853-1.046a1.651 1.651 0 0 1 2.887 1.18l-.853 1.046a1.651 1.651 0 0 0 .54 2.257l1.046.853a1.651 1.651 0 0 1-1.18 2.887l-1.046-.853a1.651 1.651 0 0 0-2.257.54l-.853 1.046a1.651 1.651 0 0 1-2.887-1.18l.853-1.046a1.651 1.651 0 0 0-.54-2.257L.664 10.59ZM10 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" clip-rule="evenodd" /></svg>
+                            <span class="hidden sm:inline ml-2">Cột</span>
+                        </button>
+                        <div id="column-selector" class="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-20 hidden p-4 border">
+                            <h4 class="text-sm font-bold mb-2 text-gray-700">Hiển thị các cột</h4>
+                            <div id="column-checkboxes" class="space-y-2">
+                            </div>
+                        </div>
+                    </div>
+                     <button id="import-excel-button" class="bg-green-600 text-white font-bold py-2 px-3 rounded-lg hover:bg-green-700 transition duration-300 flex items-center hidden shadow-sm">
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-11.25a.75.75 0 0 0-1.5 0v4.59L7.3 9.7a.75.75 0 0 0-1.1 1.02l3.25 3.5a.75.75 0 0 0 1.1 0l3.25-3.5a.75.75 0 1 0-1.1-1.02l-1.95 2.1V6.75Z" clip-rule="evenodd" /></svg>
+                         <span class="hidden sm:inline ml-2">Import</span>
+                     </button>
+                     <input type="file" id="excel-file-input" class="hidden" accept=".xlsx, .xls">
+
+                     <button id="add-new-button" class="bg-primary-600 text-white font-bold py-2 px-3 rounded-lg hover:bg-primary-700 transition duration-300 flex items-center shadow-sm">
+                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                         <span class="hidden sm:inline ml-2">Thêm mới</span>
+                     </button>
+                    
+                    <button id="notification-button" class="relative p-2 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <span id="notification-badge" class="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
+                    </button>
+
+                    <button id="logout-button" class="bg-red-600 text-white font-bold py-2 px-3 rounded-lg hover:bg-red-700 transition duration-300 flex items-center shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                         <span class="hidden sm:inline ml-2">Đăng xuất</span>
+                    </button>
+                </div>
+            </header>
+            <div id="content" class="flex-1 p-4 md:p-6 overflow-y-auto">
+                <div id="loading-indicator" class="text-center p-10">
+                    <p class="text-gray-500 text-lg">Đang tải dữ liệu...</p>
+                </div>
+            </div>
+        </main>
+
+        <div id="notification-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+        <aside id="notification-panel" class="w-full sm:w-80 md:w-96 bg-white shadow-lg fixed top-0 right-0 h-full z-50 flex flex-col">
+            <div class="flex items-center justify-between p-4 border-b">
+                <h3 class="text-lg font-semibold text-gray-800">Thông báo</h3>
+                <button id="close-notification-button" class="p-2 rounded-full hover:bg-gray-200">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="notification-list" class="flex-1 overflow-y-auto p-2 space-y-2">
+                 <div class="text-center text-gray-400 p-8">
+                    <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    <p>Chưa có thông báo nào.</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div id="form-modal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-full flex flex-col">
+            <div class="p-5 border-b flex justify-between items-center bg-gray-50 rounded-t-lg sticky top-0 z-10">
+                <h3 id="modal-title" class="text-xl font-semibold text-gray-700"></h3>
+                <button id="close-modal-button" class="text-gray-400 hover:text-gray-800 text-3xl leading-none">&times;</button>
+            </div>
+            <form id="data-form" class="p-6 flex-grow overflow-y-auto"></form>
+            <div class="p-4 border-t flex justify-end bg-gray-50 rounded-b-lg sticky bottom-0 z-10">
+                <button type="button" id="cancel-button" class="mr-3 bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-200">Hủy</button>
+                <button type="button" id="save-button" class="bg-primary-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-700 transition duration-200 shadow-sm">Lưu</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="question-modal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-[51]">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-full flex flex-col">
+            <div class="p-5 border-b flex justify-between items-center bg-gray-50 rounded-t-lg">
+                <h3 id="question-modal-title" class="text-xl font-semibold text-gray-700"></h3>
+                <button id="close-question-modal-button" class="text-gray-400 hover:text-gray-800 text-3xl leading-none">&times;</button>
+            </div>
+            <form id="question-form" class="p-6 flex-grow overflow-y-auto space-y-6"></form>
+            <div class="p-4 border-t flex justify-end bg-gray-50 rounded-b-lg">
+                <button type="button" id="cancel-question-button" class="mr-3 bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-200">Hủy</button>
+                <button type="button" id="save-question-button" class="bg-primary-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-primary-700 transition duration-200 shadow-sm">Lưu Câu Hỏi</button>
+            </div>
+        </div>
+    </div>
+    <div id="delete-modal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="p-6 text-center">
+                <svg class="w-16 h-16 mx-auto text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <h3 class="text-xl font-semibold mt-4 mb-2">Xác nhận xóa</h3>
+                <p class="text-gray-600 mb-6">Bạn có chắc chắn muốn xóa mục này không? Hành động này không thể hoàn tác.</p>
+            </div>
+            <div class="p-4 bg-gray-50 flex justify-center rounded-b-lg space-x-4">
+                <button id="cancel-delete-button" class="w-full bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-200">Hủy</button>
+                <button id="confirm-delete-button" class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200 shadow-sm">Xóa</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="import-modal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-full flex flex-col">
+            <div class="p-5 border-b flex justify-between items-center bg-gray-50 rounded-t-lg">
+                <h3 class="text-xl font-semibold text-gray-700">Import Dữ liệu từ Excel</h3>
+                <button id="close-import-modal-button" class="text-gray-400 hover:text-gray-800 text-3xl leading-none">&times;</button>
+            </div>
+            <div class="p-6 flex-grow overflow-y-auto">
+                <div id="import-instructions" class="mb-4 bg-blue-50 border-l-4 border-blue-400 text-blue-700 p-4 rounded-md">
+                    <p class="font-bold">Hướng dẫn:</p>
+                    <p>1. Chọn cột Excel tương ứng với từng trường dữ liệu của hệ thống.</p>
+                    <p>2. Hệ thống sẽ bỏ qua các trường không được ánh xạ.</p>
+                    <p>3. Kiểm tra dữ liệu xem trước bên dưới trước khi xác nhận.</p>
+                </div>
+                <h4 class="text-lg font-semibold mb-2">Ánh xạ cột</h4>
+                <div id="column-mapping" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                </div>
+                <h4 class="text-lg font-semibold mb-2">Xem trước dữ liệu (5 dòng đầu)</h4>
+                <div class="overflow-x-auto border rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead id="import-preview-head" class="bg-gray-50"></thead>
+                        <tbody id="import-preview-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="p-4 border-t flex justify-end bg-gray-50 rounded-b-lg">
+                <button type="button" id="cancel-import-button" class="mr-3 bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition duration-200">Hủy</button>
+                <button type="button" id="start-import-button" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-200 shadow-sm">Bắt đầu Import</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 w-full max-w-xs p-4 rounded-lg shadow-lg text-white flex items-center space-x-3 opacity-0 transform translate-y-10 transition-all duration-300 z-[70]">
+        <div id="toast-icon" class="flex-shrink-0 w-6 h-6">
+        </div>
+        <p id="toast-message" class="flex-1 text-sm font-medium"></p>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        // ===================================================================================
+        // CẤU HÌNH SUPABASE
+        // ===================================================================================
+        const SUPABASE_URL = 'https://lkznteubcwladqkxyaqo.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrem50ZXViY3dsYWRxa3h5YXFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjcwODksImV4cCI6MjA2NzgwMzA4OX0.7P4-H_ujbLG2KLEFiVtlGIs8o515OkqNw9MVPDF7sCY';
+        const BUCKET_NAME = 'public-uploads';
+        // ===================================================================================
+
+        if (SUPABASE_URL === 'YOUR_SUPABASE_URL' || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
+            document.getElementById('content').innerHTML = `
+                <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+                    <p class="font-bold">Cảnh báo Cấu hình</p>
+                    <p>Vui lòng mở file HTML và cập nhật <b>SUPABASE_URL</b> và <b>SUPABASE_ANON_KEY</b> bằng thông tin Supabase project của bạn để ứng dụng hoạt động.</p>
+                </div>
+            `;
+        }
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // --- GLOBAL STATE ---
+        let currentSection = 'dashboard';
+        let currentView = 'list'; 
+        let currentQuizContext = { id: null, title: '', returnSection: '' };
+        let currentQuestionId = null;
+        let currentItemId = null;
+        let deleteHandler = null;
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 10;
+        let excelData = [];
+        let columnPreferences = {};
+        let isInitialLoad = true;
+        let hasNewNotification = false;
+        let adminUserId = null;
+        let editorInstances = {};
+        let recentActivities = []; 
+        let pendingJoinActivityTimeouts = new Map();
+        const JOIN_ACTIVITY_DELAY = 6000;
+        let onlineUsers = new Map();
+        let presenceChannel = null;
+        let profileSearchTerm = '';
+        const profileSortOptions = {
+            'created_at-desc': 'Mới nhất',
+            'last_seen-desc': 'Online gần nhất',
+            'total_quiz_score-desc': 'Điểm cao nhất',
+            'full_name-asc': 'Tên (A-Z)',
+            'created_at-asc': 'Cũ nhất',
+        };
+        let currentProfileSort = 'created_at-desc';
+        let documentSearchTerm = '';
+        const documentFilterOptions = {
+            'all': 'Tất cả',
+            'free': 'Miễn phí',
+            'member': 'Thành viên',
+            'student': 'Học viên'
+        };
+        let currentDocumentFilter = 'all';
+        let tarotCardSearchTerm = '';
+        let lenormandCardSearchTerm = '';
+        let articleSearchTerm = '';
+
+        let searchDebounceTimeout = null;
+        let authorDataCache = null; 
+        
+        // --- UI ELEMENTS ---
+        const loginScreen = document.getElementById('login-screen');
+        const adminPanel = document.getElementById('admin-panel');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const loginButton = document.getElementById('login-button');
+        const logoutButton = document.getElementById('logout-button');
+        const menuButton = document.getElementById('menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const contentDiv = document.getElementById('content');
+        const pageTitle = document.getElementById('page-title');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const addNewButton = document.getElementById('add-new-button');
+        const formModal = document.getElementById('form-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const dataForm = document.getElementById('data-form');
+        const closeModalButton = document.getElementById('close-modal-button');
+        const cancelButton = document.getElementById('cancel-button');
+        const saveButton = document.getElementById('save-button');
+        const deleteModal = document.getElementById('delete-modal');
+        const cancelDeleteButton = document.getElementById('cancel-delete-button');
+        const confirmDeleteButton = document.getElementById('confirm-delete-button');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        const toastIcon = document.getElementById('toast-icon');
+        const importExcelButton = document.getElementById('import-excel-button');
+        const excelFileInput = document.getElementById('excel-file-input');
+        const importModal = document.getElementById('import-modal');
+        const closeImportModalButton = document.getElementById('close-import-modal-button');
+        const cancelImportButton = document.getElementById('cancel-import-button');
+        const startImportButton = document.getElementById('start-import-button');
+        const columnMappingDiv = document.getElementById('column-mapping');
+        const importPreviewHead = document.getElementById('import-preview-head');
+        const importPreviewBody = document.getElementById('import-preview-body');
+        const columnToggleButton = document.getElementById('column-toggle-button');
+        const columnSelector = document.getElementById('column-selector');
+        const columnCheckboxes = document.getElementById('column-checkboxes');
+        const notificationButton = document.getElementById('notification-button');
+        const notificationPanel = document.getElementById('notification-panel');
+        const notificationOverlay = document.getElementById('notification-overlay');
+        const closeNotificationButton = document.getElementById('close-notification-button');
+        const notificationList = document.getElementById('notification-list');
+        const notificationBadge = document.getElementById('notification-badge');
+        const backToListButton = document.getElementById('back-to-list-button');
+        
+        const questionModal = document.getElementById('question-modal');
+        const questionModalTitle = document.getElementById('question-modal-title');
+        const questionForm = document.getElementById('question-form');
+        const closeQuestionModalButton = document.getElementById('close-question-modal-button');
+        const cancelQuestionButton = document.getElementById('cancel-question-button');
+        const saveQuestionButton = document.getElementById('save-question-button');
+
+        // --- CONFIGURATION FOR EACH SECTION ---
+        const sections = {
+            dashboard: {
+                title: 'Bảng điều khiển',
+                render: (stats) => renderDashboard(stats),
+            },
+            articles: {
+                title: 'Quản lý Cẩm nang',
+                table: 'articles',
+                defaultColumns: ['id', 'image_url', 'title', 'category_name', 'topic_name', 'author_name', 'is_published', 'views'],
+                fields: [
+                    { name: 'id', label: 'ID', type: 'number', readonly: true, grid: 'col-span-12 sm:col-span-2' },
+                    { name: 'is_published', label: 'Trạng thái', type: 'select', options: [{value: true, text: 'Xuất bản'}, {value: false, text: 'Bản nháp'}], required: true, grid: 'col-span-12 sm:col-span-4', defaultValue: false },
+                    { name: 'views', label: 'Lượt xem', type: 'number', readonly: true, grid: 'col-span-12 sm:col-span-3' },
+                    { name: 'published_at', label: 'Ngày xuất bản', type: 'date', grid: 'col-span-12 sm:col-span-3' },
+                    { name: 'title', label: 'Tiêu đề', type: 'text', required: true, grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'slug', label: 'Slug (URL thân thiện)', type: 'text', required: true, grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'author_id', label: 'Tác giả', type: 'author-select', required: true, grid: 'col-span-12 sm:col-span-4' },
+                    { name: 'category_id', label: 'Danh mục', type: 'select', options: [], required: true, grid: 'col-span-12 sm:col-span-4' },
+                    { name: 'topic_id', label: 'Chủ đề', type: 'select', options: [], required: true, grid: 'col-span-12 sm:col-span-4' },
+                    { name: 'image_url', label: 'Ảnh đại diện', type: 'file', grid: 'col-span-12' },
+                    { name: 'excerpt', label: 'Đoạn trích ngắn', type: 'textarea', grid: 'col-span-12' },
+                    { name: 'content', label: 'Nội dung', type: 'richtext', grid: 'col-span-12' },
+                ],
+                render: (items) => renderArticlesPage(items),
+            },
+            documents: {
+                title: 'Quản lý Tài liệu',
+                table: 'documents',
+                defaultColumns: ['id', 'image_url', 'title', 'author_name', 'category', 'access_level'],
+                fields: [
+                    { name: 'id', label: 'ID', type: 'number', readonly: true, grid: 'col-span-12 sm:col-span-2' },
+                    { name: 'title', label: 'Tiêu đề', type: 'text', required: true, import: true, grid: 'col-span-12 sm:col-span-10' },
+                    { name: 'description', label: 'Mô tả', type: 'richtext', import: true, grid: 'col-span-12' },
+                    { name: 'image_url', label: 'Hình ảnh (URL)', type: 'text', import: true, grid: 'col-span-12' },
+                    { name: 'document_url', label: 'Tài liệu (URL)', type: 'text', import: true, grid: 'col-span-12' },
+                    { name: 'author_name', label: 'Tác giả', type: 'text', import: true, grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'category', label: 'Danh mục', type: 'text', import: true, grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'published_at', label: 'Ngày XB', type: 'date', import: true, grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'access_level', label: 'Cấp độ truy cập', type: 'select', options: ['free', 'member', 'student'], required: true, grid: 'col-span-12 sm:col-span-6' },
+                ],
+                render: (items) => renderDocumentsPage(items),
+            },
+            tarot_cards: {
+                title: 'Quản lý Lá bài Tarot',
+                table: 'tarot_cards',
+                defaultColumns: ['id', 'image_url', 'name', 'sub_type', 'suit'],
+                fields: [
+                    { group: 'Thông tin cơ bản', grid: 'col-span-12' },
+                    { name: 'id', label: 'ID', type: 'number', readonly: true, grid: 'col-span-12 sm:col-span-2' },
+                    { name: 'name', label: 'Tên lá bài', type: 'text', required: true, grid: 'col-span-12 sm:col-span-4' },
+                    { name: 'dharma_name', label: 'Tên pháp danh', type: 'text', grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'image_url', label: 'Link Hình ảnh (URL)', type: 'url', grid: 'col-span-12' },
+                    
+                    { group: 'Thuộc tính lá bài', grid: 'col-span-12' },
+                    { name: 'sub_type', label: 'Phân loại', type: 'select', required: true, options: ['major_arcana', 'minor_arcana'], grid: 'col-span-12 sm:col-span-3' },
+                    { name: 'suit', label: 'Bộ (Suit)', type: 'select', options: ['', 'Wands', 'Cups', 'Swords', 'Pentacles'], grid: 'col-span-12 sm:col-span-3' },
+                    { name: 'card_number', label: 'Số thứ tự', type: 'text', grid: 'col-span-12 sm:col-span-3' },
+                    { name: 'rank_order', label: 'Hạng (để sắp xếp)', type: 'number', grid: 'col-span-12 sm:col-span-3' },
+                    { name: 'element', label: 'Nguyên tố', type: 'text', grid: 'col-span-12 sm:col-span-4' },
+                    { name: 'polarity', label: 'Tính chất', type: 'text', grid: 'col-span-12 sm:col-span-4' },
+                    { name: 'zodiac', label: 'Cung hoàng đạo', type: 'text', grid: 'col-span-12 sm:col-span-4' },
+
+                    { group: 'Nội dung & Ý nghĩa', grid: 'col-span-12' },
+                    { name: 'description_original', label: 'Mô tả sách gốc', type: 'richtext', grid: 'col-span-12' },
+                    { name: 'symbolism', label: 'Ý nghĩa biểu tượng', type: 'richtext', grid: 'col-span-12' },
+                    { name: 'meaning_general', label: 'Ý nghĩa tổng quan', type: 'richtext', grid: 'col-span-12' },
+                    { name: 'meaning_upright', label: 'Nghĩa xuôi', type: 'richtext', grid: 'col-span-12 md:col-span-6' },
+                    { name: 'meaning_reversed', label: 'Nghĩa ngược', type: 'richtext', grid: 'col-span-12 md:col-span-6' },
+                    
+                    { group: 'Chủ đề', grid: 'col-span-12' },
+                    { name: 'theme_love', label: 'Chủ đề Tình yêu', type: 'richtext', grid: 'col-span-12 md:col-span-4' },
+                    { name: 'theme_study', label: 'Chủ đề Học tập', type: 'richtext', grid: 'col-span-12 md:col-span-4' },
+                    { name: 'theme_career', label: 'Chủ đề Sự nghiệp', type: 'richtext', grid: 'col-span-12 md:col-span-4' },
+                    
+                    { group: 'Ví dụ Minh họa', grid: 'col-span-12' },
+                    { name: 'example_love', label: 'Ví dụ Tình yêu', type: 'richtext', grid: 'col-span-12' },
+                    { name: 'example_study', label: 'Ví dụ Học tập', type: 'richtext', grid: 'col-span-12' },
+                    { name: 'example_work', label: 'Ví dụ Sự nghiệp', type: 'richtext', grid: 'col-span-12' },
+                ],
+                render: (items) => renderTarotCardsPage(items),
+            },
+            lenormand_cards: {
+                title: 'Quản lý Lá bài Lenormand',
+                table: 'lenormand_cards',
+                defaultColumns: ['card_id', 'image_url', 'name_vi', 'card_number', 'playing_card'],
+                fields: [
+                    { group: 'Thông tin cơ bản', grid: 'col-span-12' },
+                    { name: 'card_id', label: 'ID', type: 'number', readonly: true, grid: 'col-span-12 sm:col-span-2' },
+                    { name: 'card_number', label: 'Số thứ tự', type: 'number', required: true, grid: 'col-span-12 sm:col-span-2' },
+                    { name: 'name_vi', label: 'Tên (Tiếng Việt)', type: 'text', required: true, grid: 'col-span-12 sm:col-span-4' },
+                    { name: 'name_en', label: 'Tên (Tiếng Anh)', type: 'text', required: true, grid: 'col-span-12 sm:col-span-4' },
+                    { name: 'playing_card', label: 'Lá bài Tây', type: 'text', grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'orientation', label: 'Chiều hướng', type: 'text', grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'image_url', label: 'Link Hình ảnh (URL)', type: 'url', grid: 'col-span-12' },
+                    { name: 'keywords', label: 'Từ khóa (cách nhau bởi dấu phẩy)', type: 'text', grid: 'col-span-12' },
+                    
+                    { group: 'Mô tả & Ý nghĩa', grid: 'col-span-12' },
+                    { name: 'general_description', label: 'Mô tả chung', type: 'richtext', grid: 'col-span-12' },
+                    { name: 'advice', label: 'Lời khuyên', type: 'richtext', grid: 'col-span-12' },
+                    { name: 'combinations', label: 'Kết hợp', type: 'richtext', grid: 'col-span-12' },
+
+                    { group: 'Ý nghĩa theo Bối cảnh', grid: 'col-span-12' },
+                    { name: 'context_work', label: 'Công việc', type: 'richtext', grid: 'col-span-12 md:col-span-6' },
+                    { name: 'context_love', label: 'Tình yêu', type: 'richtext', grid: 'col-span-12 md:col-span-6' },
+                    { name: 'context_health', label: 'Sức khỏe', type: 'richtext', grid: 'col-span-12 md:col-span-6' },
+                    { name: 'context_finance', label: 'Tài chính', type: 'richtext', grid: 'col-span-12 md:col-span-6' },
+                    { name: 'context_spirituality', label: 'Tâm linh', type: 'richtext', grid: 'col-span-12' },
+
+                    { group: 'Chi tiết khác', grid: 'col-span-12' },
+                    { name: 'personification', label: 'Hiện thân', type: 'richtext', grid: 'col-span-12 md:col-span-6' },
+                    { name: 'physical_description', label: 'Mô tả ngoại hình', type: 'richtext', grid: 'col-span-12 md:col-span-6' },
+                    { name: 'timing', label: 'Thời gian', type: 'text', grid: 'col-span-12' },
+                ],
+                render: (items) => renderLenormandCardsPage(items),
+            },
+            profiles: {
+                title: 'Quản lý Hồ sơ',
+                table: 'profiles',
+                defaultColumns: ['avatar_url', 'full_name', 'email', 'total_quiz_score', 'last_seen', 'role'],
+                fields: [
+                    { name: 'id', label: 'ID (UUID)', type: 'text', readonly: true, grid: 'col-span-12' },
+                    { name: 'full_name', label: 'Họ và tên', type: 'text', grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'email', label: 'Email', type: 'email', grid: 'col-span-12 sm:col-span-6', readonly: true },
+                    { name: 'phone_number', label: 'SĐT', type: 'text', grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'role', label: 'Vai trò', type: 'text', grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'avatar_url', label: 'Ảnh đại diện (URL)', type: 'text', grid: 'col-span-12' },
+                    { name: 'total_quiz_score', label: 'Tổng điểm Quiz', type: 'number', readonly: true, grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'last_seen', label: 'Online lần cuối', type: 'text', readonly: true, grid: 'col-span-12 sm:col-span-6' },
+                ],
+                render: (items) => renderProfilesPage(items),
+            },
+            test: {
+                title: 'Quản lý Test',
+                render: () => renderTestSelectionPage(),
+            },
+            quiz_topics: {
+                title: 'Quản lý Chủ đề Quiz',
+                table: 'quiz_topics',
+                defaultColumns: ['id', 'title', 'icon_class', 'display_order'],
+                fields: [
+                    { name: 'id', label: 'ID', type: 'number', readonly: true, grid: 'col-span-12 sm:col-span-2' },
+                    { name: 'display_order', label: 'Thứ tự hiển thị', type: 'number', required: true, defaultValue: 0, grid: 'col-span-12 sm:col-span-3' },
+                    { name: 'title', label: 'Tên chủ đề', type: 'text', required: true, grid: 'col-span-12 sm:col-span-7' },
+                    { name: 'icon_class', label: 'Font Awesome Icon (VD: fa-book)', type: 'text', required: true, defaultValue: 'fa-question-circle', grid: 'col-span-12' },
+                ],
+                render: (items) => renderTable(items),
+            },
+            practice_quizzes: {
+                title: 'Quản lý Ôn Luyện',
+                table: 'quizzes',
+                quiz_mode: 'practice', 
+                defaultColumns: ['id', 'title', 'topic_title', 'access_type', 'duration_seconds'],
+                fields: [
+                    { name: 'quiz_mode', type: 'hidden' },
+                    { name: 'id', label: 'ID', type: 'number', readonly: true, grid: 'col-span-12 sm:col-span-2' },
+                    { name: 'topic_id', label: 'Chủ đề', type: 'select', options: [], required: true, grid: 'col-span-12 sm:col-span-10' },
+                    { name: 'title', label: 'Tiêu đề bài ôn luyện', type: 'text', required: true, grid: 'col-span-12' },
+                    { name: 'description', label: 'Mô tả', type: 'richtext', grid: 'col-span-12' },
+                    { name: 'access_type', label: 'Loại truy cập', type: 'select', options: ['free', 'member', 'student'], required: true, grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'duration_seconds', label: 'Thời gian làm bài (giây)', type: 'number', required: true, grid: 'col-span-12 sm:col-span-6' },
+                ],
+                render: (items) => renderTable(items),
+            },
+            competition_quizzes: {
+                title: 'Quản lý Thi Đấu',
+                table: 'quizzes',
+                quiz_mode: 'competition',
+                defaultColumns: ['id', 'title', 'topic_title', 'access_type', 'duration_seconds', 'start_date', 'end_date'],
+                fields: [
+                    { name: 'quiz_mode', type: 'hidden' }, 
+                    { name: 'id', label: 'ID', type: 'number', readonly: true, grid: 'col-span-12 sm:col-span-2' },
+                    { name: 'topic_id', label: 'Chủ đề', type: 'select', options: [], required: true, grid: 'col-span-12 sm:col-span-10' },
+                    { name: 'title', label: 'Tiêu đề bài thi đấu', type: 'text', required: true, grid: 'col-span-12' },
+                    { name: 'description', label: 'Mô tả', type: 'richtext', grid: 'col-span-12' },
+                    { name: 'access_type', label: 'Loại truy cập', type: 'select', options: ['free', 'member', 'student'], required: true, grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'duration_seconds', label: 'Thời gian làm bài (giây)', type: 'number', required: true, grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'start_date', label: 'Ngày bắt đầu', type: 'datetime-local', grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'end_date', label: 'Ngày kết thúc', type: 'datetime-local', grid: 'col-span-12 sm:col-span-6' },
+                ],
+                render: (items) => renderTable(items),
+            },
+            sliders: {
+                title: 'Quản lý Slider',
+                table: 'sliders',
+                defaultColumns: ['id', 'image_url', 'title', 'is_active', 'display_order'],
+                fields: [
+                    { name: 'id', label: 'ID', type: 'number', readonly: true, grid: 'col-span-12 sm:col-span-2' },
+                    { name: 'display_order', label: 'Thứ tự hiển thị', type: 'number', grid: 'col-span-12 sm:col-span-4', required: true, defaultValue: 0 },
+                    { name: 'is_active', label: 'Trạng thái', type: 'select', options: [{value: true, text: 'Hiển thị'}, {value: false, text: 'Ẩn'}], grid: 'col-span-12 sm:col-span-6', required: true, defaultValue: true },
+                    { name: 'title', label: 'Tiêu đề chính', type: 'text', required: true, grid: 'col-span-12' },
+                    { name: 'subtitle', label: 'Tiêu đề phụ', type: 'text', grid: 'col-span-12' },
+                    { name: 'image_url', label: 'Hình ảnh nền (URL)', type: 'text', required: true, grid: 'col-span-12' },
+                    { name: 'button_text', label: 'Chữ trên nút', type: 'text', grid: 'col-span-12 sm:col-span-6' },
+                    { name: 'button_link', label: 'Link của nút (URL)', type: 'url', grid: 'col-span-12 sm:col-span-6' },
+                ],
+                render: (items) => renderTable(items),
+            },
+        };
+
+        // --- HELPER & RENDER FUNCTIONS ---
+        
+        function showToast(message, type = 'success') {
+            toastMessage.innerHTML = message;
+            toast.classList.remove('bg-green-500', 'bg-red-500', 'bg-blue-500', 'opacity-0', 'translate-y-10');
+            
+            switch(type) {
+                case 'error':
+                    toast.classList.add('bg-red-500');
+                    toastIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>`;
+                    break;
+                case 'info':
+                    toast.classList.add('bg-blue-500');
+                    toastIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" /></svg>`;
+                    break;
+                case 'success':
+                default:
+                    toast.classList.add('bg-green-500');
+                    toastIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>`;
+                    break;
+            }
+
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-10');
+            }, 5000);
+        }
+
+        function timeAgo(dateString) {
+            if (!dateString) return 'Chưa từng online';
+            const date = new Date(dateString);
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+
+            if (seconds < 300) return 'Đang online'; 
+
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " năm trước";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " tháng trước";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " ngày trước";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " giờ trước";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " phút trước";
+            return "vừa xong";
+        }
+
+        function renderDashboard(stats) {
+            const isLoading = stats.loading;
+            const statsCards = [
+                { title: 'Tổng Người Dùng', value: stats.profiles, icon: `<i class="fa-solid fa-users w-8 h-8"></i>`, section: 'profiles' },
+                { title: 'Đang Online', value: 0, icon: `<i class="fa-solid fa-signal w-8 h-8"></i>`, id: 'online-users-count' },
+                { title: 'Tổng Tài Liệu', value: stats.documents, icon: `<i class="fa-solid fa-file-lines w-8 h-8"></i>`, section: 'documents' },
+            ];
+
+            const cardsHtml = statsCards.map(card => `
+                <div onclick="window.switchSection('${card.section}')" class="bg-white p-6 rounded-xl shadow-md flex items-center ${card.section ? 'transition-transform transform hover:scale-105 cursor-pointer' : ''}">
+                    <div class="bg-primary-100 text-primary-600 p-4 rounded-full mr-6 text-2xl flex items-center justify-center">
+                        ${card.icon}
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">${card.title}</p>
+                        <p class="text-3xl font-bold text-gray-800" ${card.id ? `id="${card.id}"` : ''}>${isLoading ? '...' : (card.value ?? 0)}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            contentDiv.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            ${cardsHtml}
+                        </div>
+                    </div>
+                    <div class="lg:col-span-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+                         <div class="bg-white p-6 rounded-xl shadow-md h-full flex flex-col">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-3">Đang hoạt động</h3>
+                            <div id="online-users-list" class="space-y-3 mt-4 flex-1 overflow-y-auto" style="max-height: 200px;">
+                                <p class="text-center text-gray-400 p-4">Đang tải danh sách...</p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-md h-full flex flex-col">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-3">Hoạt động gần đây</h3>
+                            <div id="recent-activity-list" class="space-y-4 mt-4 flex-1 overflow-y-auto" style="max-height: 250px;">
+                                ${[1,2,3,4].map(() => `
+                                    <div class="flex items-center space-x-3 animate-pulse">
+                                        <div class="flex-shrink-0 rounded-full bg-gray-200 h-8 w-8"></div>
+                                        <div class="flex-1 space-y-2 py-1">
+                                            <div class="h-3 bg-gray-200 rounded w-full"></div>
+                                            <div class="h-2 bg-gray-200 rounded w-1/3"></div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            renderOnlineUsers(); 
+        }
+        
+        function renderTestSelectionPage() {
+            const options = [
+                { id: 'quiz_topics', title: 'Chủ đề Quiz', desc: 'Quản lý các chủ đề cho bài test.', icon: 'fa-tags' },
+                { id: 'practice_quizzes', title: 'Ôn Luyện', desc: 'Tạo và quản lý các bài test ôn luyện.', icon: 'fa-book-open-reader' },
+                { id: 'competition_quizzes', title: 'Thi Đấu', desc: 'Tổ chức các cuộc thi có giới hạn thời gian.', icon: 'fa-trophy' }
+            ];
+
+            return `
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                ${options.map(opt => `
+                    <div data-section-id="${opt.id}" class="test-selection-card bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg">
+                        <div class="bg-primary-100 text-primary-600 rounded-full w-20 h-20 flex items-center justify-center mb-4">
+                            <i class="fa-solid ${opt.icon} text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">${opt.title}</h3>
+                        <p class="text-gray-600 text-sm">${opt.desc}</p>
+                    </div>
+                `).join('')}
+            </div>
+            `;
+        }
+        
+        function updateDashboardStats(stats) {
+             const statElements = {
+                profiles: document.querySelector('p:not([id])'),
+                documents: document.querySelector('p:not([id])'),
+             };
+
+             const cardTitles = document.querySelectorAll('#content .text-sm');
+             cardTitles.forEach(titleEl => {
+                const pEl = titleEl.nextElementSibling;
+                 if (titleEl.textContent.includes('Tổng Người Dùng')) pEl.textContent = stats.profiles ?? 0;
+                 if (titleEl.textContent.includes('Tổng Tài Liệu')) pEl.textContent = stats.documents ?? 0;
+             });
+        }
+        
+        function renderOnlineUsers() {
+            if (currentSection !== 'dashboard') return;
+            const countEl = document.getElementById('online-users-count');
+            const listEl = document.getElementById('online-users-list');
+
+            const allTrackedUsers = Array.from(onlineUsers.values());
+            const now = new Date();
+
+            const currentlyOnline = allTrackedUsers
+                .filter(user => !user.is_admin && (now - new Date(user.online_at)) / 1000 < 300)
+                .sort((a, b) => new Date(b.online_at) - new Date(a.online_at));
+
+            const recentlyOnline = allTrackedUsers
+                .filter(user => !user.is_admin && (now - new Date(user.online_at)) / 1000 >= 300)
+                .sort((a, b) => new Date(b.online_at) - new Date(a.online_at))
+                .slice(0, 20); 
+
+            const finalUserList = [...currentlyOnline, ...recentlyOnline];
+
+            if (countEl) {
+                countEl.textContent = currentlyOnline.length;
+            }
+
+            if (listEl) {
+                if (finalUserList.length === 0) {
+                    listEl.innerHTML = '<p class="text-center text-gray-400 p-4">Không có ai đang online.</p>';
+                    return;
+                }
+
+                listEl.innerHTML = finalUserList.map(user => {
+                    const avatar = user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name || 'User')}&background=random&color=fff`;
+                    const isActuallyOnline = (now - new Date(user.online_at)) / 1000 < 300;
+                    
+                    const statusDotHTML = isActuallyOnline 
+                        ? `<span class="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-white"></span>` 
+                        : '';
+
+                    return `
+                        <div class="flex items-center space-x-3">
+                            <div class="relative flex-shrink-0">
+                                <img class="h-9 w-9 rounded-full object-cover" src="${avatar}" alt="${user.full_name}">
+                                ${statusDotHTML}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-800 truncate">${user.full_name || 'Anonymous'}</p>
+                                <p class="text-xs text-gray-500 truncate">${timeAgo(user.online_at)}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+        
+        async function loadRecentActivities() {
+            try {
+                const fetchLimit = 25; 
+                const profilesRes = await supabase.from('profiles').select('id, full_name, created_at').order('created_at', { ascending: false }).limit(fetchLimit);
+
+                const historicalActivities = [];
+
+                if (profilesRes.data) {
+                    profilesRes.data.forEach(item => historicalActivities.push({ type: 'user_registered', timestamp: item.created_at, data: item }));
+                }
+                
+                recentActivities = historicalActivities
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                    .slice(0, 50);
+
+                renderRecentActivities(recentActivities);
+
+            } catch (error) {
+                const activityList = document.getElementById('recent-activity-list');
+                if(activityList) {
+                     activityList.innerHTML = `<p class="text-red-500">Không thể tải hoạt động.</p>`;
+                }
+                console.error("Error loading recent activities:", error);
+            }
+        }
+
+        function renderRecentActivities(activities) {
+            const activityList = document.getElementById('recent-activity-list');
+            if (!activityList) return;
+
+            if (activities.length === 0) {
+                activityList.innerHTML = '<p class="text-gray-500">Chưa có hoạt động nào.</p>';
+                return;
+            }
+
+            const activityIcons = {
+                user_registered: { icon: 'fa-user-plus', color: 'text-green-500', bg: 'bg-green-100' },
+            };
+
+            activityList.innerHTML = activities.map(activity => {
+                const config = activityIcons[activity.type];
+                if (!config) return ''; 
+                
+                let text = '';
+                switch (activity.type) {
+                    case 'user_registered':
+                        text = `<strong>${activity.data.full_name || 'Người dùng mới'}</strong> vừa đăng ký.`;
+                        break;
+                }
+
+                return `
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0 ${config.bg} ${config.color} rounded-full h-8 w-8 flex items-center justify-center">
+                            <i class="fa-solid ${config.icon} text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm text-gray-700 truncate">${text}</p>
+                            <p class="text-xs text-gray-400 mt-0.5">${timeAgo(activity.timestamp)}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function addActivity(activity) {
+            if (currentSection !== 'dashboard') return;
+            recentActivities.unshift(activity);
+            recentActivities = recentActivities.slice(0, 50);
+            renderRecentActivities(recentActivities);
+        }
+
+        function formatCurrency(number) {
+            if (number === null || typeof number === 'undefined') return '';
+            return new Intl.NumberFormat('de-DE').format(number) + 'đ';
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            try {
+                const date = new Date(dateString.includes('T') ? dateString : dateString + 'T00:00:00');
+                if (isNaN(date.getTime())) { return dateString; }
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+            } catch (error) { return dateString; }
+        }
+
+        function createPageLink(page, currentPage) {
+             const baseClasses = "relative inline-flex items-center px-4 py-2 border text-sm font-medium";
+             if (page === currentPage) {
+                 return `<a href="#" aria-current="page" class="z-10 bg-primary-50 border-primary-500 text-primary-600 ${baseClasses} rounded-md"> ${page} </a>`;
+             }
+             return `<a href="#" onclick="window.handleChangePage(${page})" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 ${baseClasses} rounded-md"> ${page} </a>`;
+        }
+
+        function createEllipsis() {
+             return `<span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 rounded-md"> ... </span>`;
+        }
+        
+        function generatePageLinks(totalPages, currentPage) {
+            let links = '';
+            const pageNeighbours = 1; 
+            if (totalPages <= 5) {
+                for (let i = 1; i <= totalPages; i++) { links += createPageLink(i, currentPage); }
+                return links;
+            }
+            links += createPageLink(1, currentPage);
+            if (currentPage > pageNeighbours + 2) { links += createEllipsis(); }
+            let startPage = Math.max(2, currentPage - pageNeighbours);
+            let endPage = Math.min(totalPages - 1, currentPage + pageNeighbours);
+            for (let i = startPage; i <= endPage; i++) { links += createPageLink(i, currentPage); }
+            if (currentPage < totalPages - (pageNeighbours + 1)) { links += createEllipsis(); }
+            links += createPageLink(totalPages, currentPage);
+            return links;
+        }
+
+        function renderPagination(totalItems, currentPage) {
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+            if (totalPages <= 1) return '';
+
+            const fromItem = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+            const toItem = Math.min(currentPage * ITEMS_PER_PAGE, totalItems);
+            const prevDisabled = currentPage === 1;
+            const nextDisabled = currentPage === totalPages;
+            const prevClass = prevDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50';
+            const nextClass = nextDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50';
+
+            return `
+                <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-[-1px] rounded-b-lg">
+                    <div class="flex-1 flex justify-between sm:hidden">
+                        <a href="#" onclick="window.handleChangePage(${prevDisabled ? '' : currentPage - 1})" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white ${prevClass}">Trước</a>
+                        <a href="#" onclick="window.handleChangePage(${nextDisabled ? '' : currentPage + 1})" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white ${nextClass}">Sau</a>
+                    </div>
+                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                Hiển thị từ <span class="font-medium">${fromItem}</span> đến <span class="font-medium">${toItem}</span> của <span class="font-medium">${totalItems}</span> kết quả
+                            </p>
+                        </div>
+                        <div>
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm space-x-2" aria-label="Pagination">
+                                <a href="#" onclick="window.handleChangePage(${prevDisabled ? '' : currentPage - 1})" class="relative inline-flex items-center px-2 py-2 rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-500 ${prevClass}">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                                </a>
+                                ${generatePageLinks(totalPages, currentPage)}
+                                <a href="#" onclick="window.handleChangePage(${nextDisabled ? '' : currentPage + 1})" class="relative inline-flex items-center px-2 py-2 rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-500 ${nextClass}">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>`;
+        }
+        
+        function renderTable(items) {
+            const visibleColumns = getVisibleColumns(currentSection);
+            if (!items || items.length === 0) { 
+                const message = (currentSection === 'profiles' && profileSearchTerm) 
+                    ? `Không tìm thấy hồ sơ nào với từ khóa "${profileSearchTerm}".` 
+                    : 'Không có dữ liệu.';
+                return `<div class="bg-white p-6 rounded-lg shadow-md"><p class="text-gray-500">${message}</p></div>`; 
+            }
+            if (visibleColumns.length === 0) { return '<div class="bg-white p-6 rounded-lg shadow-md"><p class="text-gray-500">Không có cột nào được chọn để hiển thị. Vui lòng chọn trong menu "Cột".</p></div>'; }
+            const headers = visibleColumns.map(colName => {
+                if ((currentSection === 'practice_quizzes' || currentSection === 'competition_quizzes') && colName === 'topic_title') {
+                    return 'Chủ đề';
+                }
+                if (currentSection === 'articles' && (colName === 'category_name' || colName === 'topic_name' || colName === 'author_name')) {
+                    if(colName === 'category_name') return 'Danh mục';
+                    if(colName === 'topic_name') return 'Chủ đề';
+                    if(colName === 'author_name') return 'Tác giả';
+                }
+                const field = sections[currentSection].fields.find(f => f.name === colName);
+                return field ? field.label : colName.replace(/_/g, ' ');
+            });
+            const rows = items.map(item => {
+                const itemId = item.id !== undefined ? item.id : item.card_id;
+                const deleteClickArg = typeof itemId === 'string' ? `'${itemId.replace(/'/g, "\\'")}'` : itemId;
+
+                const cells = visibleColumns.map((colName, index) => {
+                    let value = item[colName];
+                    const isImageUrl = colName.endsWith('_url') && typeof value === 'string' && (value.includes('supabase.co') || value.startsWith('http'));
+                    const headerLabel = headers[index];
+                    let tdClass = 'py-4 px-6';
+                    
+                    if (colName === 'last_seen') {
+                        const isOnline = value && (new Date() - new Date(value)) / 1000 < 300;
+                        const statusColor = isOnline ? 'bg-green-400' : 'bg-gray-300';
+                        const statusTitle = isOnline ? 'Đang online' : `Online lần cuối: ${value ? new Date(value).toLocaleString('vi-VN') : 'chưa có'}`;
+                        return `<td data-label="${headerLabel}" class="${tdClass}">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="relative flex h-2.5 w-2.5" title="${statusTitle}">
+                                            <span class="absolute inline-flex h-full w-full rounded-full ${statusColor} ${isOnline ? 'animate-ping' : ''} opacity-75"></span>
+                                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 ${statusColor}"></span>
+                                        </span>
+                                        <span class="text-sm text-gray-700">${timeAgo(value)}</span>
+                                    </div>
+                                </td>`;
+                    }
+                     if (colName === 'total_quiz_score') {
+                        return `<td data-label="${headerLabel}" class="${tdClass}"><span class="text-sm font-bold text-primary-600">${value} điểm</span></td>`;
+                    }
+                    if (typeof value === 'boolean') {
+                        const isPublished = colName === 'is_published';
+                        const statusClass = value ? 'bg-green-100 text-green-800' : (isPublished ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800');
+                        const statusText = value ? (isPublished ? 'Đã xuất bản' : 'Hiển thị') : (isPublished ? 'Bản nháp' : 'Ẩn');
+                        return `<td data-label="${headerLabel}" class="${tdClass}"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${statusText}</span></td>`;
+                    }
+
+                    if (colName.includes('price_')) { value = formatCurrency(value); }
+                    if (colName.endsWith('_at') || colName === 'published_at' || colName.endsWith('_date')) { value = formatDate(value); }
+                    if (['id', 'card_id', 'display_order', 'card_number', 'views'].includes(colName)) { tdClass += ' text-center'; }
+
+                    if (isImageUrl) {
+                        return `<td data-label="${headerLabel}" class="image-cell ${tdClass}"><img src="${value || 'https://placehold.co/100x100/e2e8f0/a0aec0?text=No+Image'}" alt="${colName}" class="w-16 h-16 object-cover rounded-md shadow-sm"></td>`;
+                    }
+                    if (typeof value === 'string' && value.includes('<')) {
+                         const tempDiv = document.createElement('div');
+                         tempDiv.innerHTML = value;
+                         value = tempDiv.textContent || tempDiv.innerText || '';
+                         if (value.length > 100) value = value.substring(0, 100) + '...';
+                    }
+                    return `<td data-label="${headerLabel}" class="${tdClass}"><div class="td-content text-sm text-gray-700">${value !== null ? value : ''}</div></td>`;
+                }).join('');
+                
+                let quizActionButtons = '';
+                if (currentSection === 'practice_quizzes' || currentSection === 'competition_quizzes') {
+                    const quizTitle = (item.title || '').replace(/'/g, "\\'");
+                    quizActionButtons = `
+                        <button onclick="window.manageQuestions(${item.id}, '${quizTitle}')" class="btn-quiz-action btn-questions" title="Quản lý câu hỏi">
+                            <i class="fa-solid fa-list-check"></i> <span class="hidden lg:inline">Câu hỏi</span>
+                        </button>
+                        <button onclick="window.viewResults(${item.id}, '${quizTitle}')" class="btn-quiz-action btn-results" title="Xem kết quả">
+                            <i class="fa-solid fa-chart-simple"></i> <span class="hidden lg:inline">Kết quả</span>
+                        </button>
+                    `;
+                }
+
+                const standardActionButtons = `
+                    <button onclick="window.handleEditClick(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="group relative p-2 rounded-full hover:bg-blue-100 text-blue-600 transition-colors" title="Sửa thông tin">
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    ${(currentSection !== 'profiles') ? `
+                    <button onclick="window.handleDeleteClick(${deleteClickArg})" class="group relative p-2 rounded-full hover:bg-red-100 text-red-600 transition-colors" title="Xoá">
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                    </button>
+                    ` : ''}
+                `;
+
+                return `<tr class="table-row-hover">${cells}
+                            <td data-label="Hành động" class="action-cell py-4 px-6">
+                                <div class="hidden md:flex items-center justify-end space-x-2">
+                                    ${quizActionButtons}
+                                    ${standardActionButtons}
+                                </div>
+                                <div class="md:hidden quiz-action-buttons-mobile">
+                                    <div class="flex items-center justify-end space-x-2 w-full">${standardActionButtons}</div>
+                                    ${quizActionButtons}
+                                </div>
+                            </td>
+                        </tr>`;
+
+            }).join('');
+            const tableHeaders = headers.map(h => `<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${h}</th>`).join('');
+            return `
+                <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+                    <table class="min-w-full divide-y divide-gray-200 responsive-table">
+                        <thead class="bg-gray-50"><tr>${tableHeaders}<th class="relative px-6 py-3 text-right">Hành động</th></tr></thead>
+                        <tbody class="bg-white divide-y divide-gray-200">${rows}</tbody>
+                    </table>
+                </div>`;
+        }
+
+        function renderTarotCardsPage(items) {
+            const controlsHTML = `
+                <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                    <div class="flex">
+                        <div class="relative flex-grow">
+                            <input type="text" id="tarot-card-search-input" placeholder="Tìm kiếm theo tên lá bài..." value="${tarotCardSearchTerm}"
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <button id="tarot-card-search-button" class="ml-2 px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition duration-300">Tìm</button>
+                    </div>
+                </div>
+            `;
+            const tableHTML = renderTable(items);
+            return controlsHTML + tableHTML;
+        }
+
+        function renderArticlesPage(items) {
+            const controlsHTML = `
+                <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                    <div class="flex">
+                        <div class="relative flex-grow">
+                            <input type="text" id="article-search-input" placeholder="Tìm kiếm theo tiêu đề..." value="${articleSearchTerm}"
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <button id="article-search-button" class="ml-2 px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition duration-300">Tìm</button>
+                    </div>
+                </div>
+            `;
+            const tableHTML = renderTable(items);
+            return controlsHTML + tableHTML;
+        }
+
+        function renderLenormandCardsPage(items) {
+            const controlsHTML = `
+                <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                    <div class="flex">
+                        <div class="relative flex-grow">
+                            <input type="text" id="lenormand-card-search-input" placeholder="Tìm kiếm theo tên lá bài..." value="${lenormandCardSearchTerm}"
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <button id="lenormand-card-search-button" class="ml-2 px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition duration-300">Tìm</button>
+                    </div>
+                </div>
+            `;
+            const tableHTML = renderTable(items);
+            return controlsHTML + tableHTML;
+        }
+
+        function renderDocumentsPage(items) {
+            const controlsHTML = `
+                <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div class="flex-grow flex gap-2">
+                            <div class="relative flex-grow">
+                                <input type="text" id="document-search-input" placeholder="Tìm kiếm theo tên..." value="${documentSearchTerm}"
+                                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                </div>
+                            </div>
+                            <button id="document-search-button" class="px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition duration-300">Tìm</button>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <select id="document-filter-select" class="w-full sm:w-auto border border-gray-300 rounded-lg py-2 pl-3 pr-8 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                ${Object.entries(documentFilterOptions).map(([key, value]) => `
+                                    <option value="${key}" ${key === currentDocumentFilter ? 'selected' : ''}>${value}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const tableHTML = renderTable(items);
+            return controlsHTML + tableHTML;
+        }
+
+        function renderProfilesPage(items) {
+            const controlsHTML = `
+                <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div class="flex-grow flex gap-2">
+                            <div class="relative flex-grow">
+                                <input type="text" id="profile-search-input" placeholder="Tìm kiếm theo tên hoặc email..." value="${profileSearchTerm}"
+                                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                </div>
+                            </div>
+                            <button id="profile-search-button" class="px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition duration-300">Tìm</button>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <select id="profile-sort-select" class="w-full sm:w-auto border border-gray-300 rounded-lg py-2 pl-3 pr-8 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                ${Object.entries(profileSortOptions).map(([key, value]) => `
+                                    <option value="${key}" ${key === currentProfileSort ? 'selected' : ''}>Sắp xếp: ${value}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const tableHTML = renderTable(items);
+            return controlsHTML + tableHTML;
+        }
+
+        function createFormFields(fields) {
+            let html = '<div class="grid grid-cols-12 gap-x-6 gap-y-4">';
+            fields.forEach(field => {
+                const requiredAttr = field.required ? 'required' : '';
+                const readonlyAttr = field.readonly ? 'readonly class="bg-gray-100 cursor-not-allowed"' : '';
+                const commonClasses = "mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm";
+                
+                if (field.group) {
+                    html += `<div class="${field.grid || 'col-span-12'} mt-4 mb-2 border-b pb-2">
+                                <h4 class="text-lg font-semibold text-gray-700">${field.group}</h4>
+                             </div>`;
+                    return;
+                }
+                
+                if (field.type === 'hidden') {
+                    html += `<input type="hidden" id="${field.name}" name="${field.name}">`;
+                    return;
+                }
+
+                html += `<div class="${field.grid || 'col-span-12'}">`;
+                html += `<label for="${field.name}" class="block text-sm font-medium text-gray-700">${field.label}${field.required ? '<span class="text-red-500 ml-1">*</span>' : ''}</label>`;
+
+                switch (field.type) {
+                    case 'author-select':
+                        html += `
+                            <div id="${field.name}-selector" class="author-selector-container mt-1">
+                                <div class="author-selector-input-wrapper">
+                                    <img id="${field.name}-avatar" src="https://ui-avatars.com/api/?name=?&background=e5e7eb&color=6b7280" alt="Avatar" class="author-selector-avatar">
+                                    <input type="text" id="${field.name}-search" class="author-selector-input" placeholder="Tìm kiếm tác giả..." autocomplete="off">
+                                </div>
+                                <input type="hidden" id="${field.name}" name="${field.name}" ${requiredAttr}>
+                                <div id="${field.name}-dropdown" class="author-selector-dropdown">
+                                </div>
+                            </div>`;
+                        break;
+                    case 'file':
+                        html += `
+                            <div class="mt-2 flex items-center space-x-4">
+                                <img id="${field.name}-preview" src="https://placehold.co/100x100/e2e8f0/a0aec0?text=Preview" alt="Xem trước" class="w-24 h-24 object-cover rounded-md bg-gray-100 border">
+                                <div class="flex-1">
+                                    <input type="file" id="${field.name}" name="${field.name}" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100" accept="image/*" onchange="window.previewFile('${field.name}')">
+                                    <input type="hidden" id="${field.name}-hidden" name="${field.name}-hidden">
+                                    <p class="text-xs text-gray-500 mt-1">Chọn file mới để thay đổi ảnh. Để trống nếu không muốn thay đổi.</p>
+                                </div>
+                            </div>`;
+                        break;
+                    case 'textarea':
+                    case 'richtext':
+                        html += `<textarea id="${field.name}" name="${field.name}" rows="${field.rows || 4}" class="${commonClasses}" ${requiredAttr}></textarea>`;
+                        break;
+                    case 'select':
+                        const optionsHtml = field.options.map(opt => {
+                            if (typeof opt === 'object') {
+                                return `<option value="${opt.value}">${opt.text}</option>`;
+                            }
+                            return `<option value="${opt}">${opt.charAt(0).toUpperCase() + opt.slice(1).replace(/_/g, ' ')}</option>`;
+                        }).join('');
+                        html += `<select id="${field.name}" name="${field.name}" class="${commonClasses}" ${requiredAttr}>${optionsHtml}</select>`;
+                        break;
+                    default:
+                        html += `<input type="${field.type}" id="${field.name}" name="${field.name}" class="${commonClasses}" ${requiredAttr} ${readonlyAttr}>`;
+                        break;
+                }
+                html += `</div>`;
+            });
+            html += '</div>';
+            return html;
+        }
+
+        function populateForm(item) {
+            const config = sections[currentSection];
+            config.fields.forEach(field => {
+                if(field.group) return;
+                const input = document.getElementById(field.name);
+                if (!input && field.type !== 'richtext') return;
+
+                let value = item[field.name] != null ? item[field.name] : '';
+                
+                 if (field.name === 'last_seen' && value) {
+                    value = new Date(value).toLocaleString('vi-VN');
+                }
+
+                if (field.type === 'richtext') {
+                    const textarea = document.getElementById(field.name);
+                    if (textarea) textarea.value = value;
+                } else if (field.type === 'file') {
+                    const preview = document.getElementById(`${field.name}-preview`);
+                    const hiddenInput = document.getElementById(`${field.name}-hidden`);
+                    if (value) {
+                        preview.src = value;
+                        hiddenInput.value = value;
+                    } else {
+                        preview.src = "https://placehold.co/100x100/e2e8f0/a0aec0?text=Preview";
+                        hiddenInput.value = '';
+                    }
+                } else if (field.type === 'author-select') {
+                    if (authorDataCache) {
+                        const author = authorDataCache.find(a => a.id === value);
+                        if (author) {
+                            document.getElementById('author_id-search').value = author.full_name;
+                            document.getElementById('author_id-avatar').src = author.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(author.full_name)}&background=e5e7eb&color=6b7280`;
+                        }
+                    }
+                    if(input) input.value = value;
+                } else if (field.type === 'date' && value) {
+                    input.value = new Date(value).toISOString().split('T')[0];
+                } else if (field.type === 'datetime-local' && value) {
+                     const date = new Date(value);
+                     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+                     input.value = date.toISOString().slice(0, 16);
+                } else {
+                    if(input) input.value = value;
+                }
+            });
+            if (currentSection === 'tarot_cards') {
+                toggleSuitField();
+            }
+        }
+
+        // --- DATA FETCHING & MANIPULATION ---
+        
+        function renderContent() {
+             loadingIndicator.style.display = 'block';
+             contentDiv.innerHTML = '';
+            
+            switch(currentView) {
+                case 'questions':
+                    renderQuestionManager();
+                    loadingIndicator.style.display = 'none';
+                    return;
+                case 'results':
+                    renderResultsViewer();
+                    loadingIndicator.style.display = 'none';
+                    return;
+                case 'list':
+                default:
+                    loadData();
+                    break;
+            }
+        }
+
+        async function loadData() {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
+            loadingIndicator.style.display = 'block';
+            contentDiv.innerHTML = '';
+            const config = sections[currentSection];
+            
+            if (currentView !== 'list') {
+                renderContent();
+                return;
+            }
+            
+            try {
+                if (currentSection === 'dashboard') {
+                    loadingIndicator.style.display = 'none';
+                    config.render({ loading: true }); 
+                    loadRecentActivities(); 
+
+                    const [ { count: profilesCount, error: pErr }, { count: documentsCount, error: dErr } ] = await Promise.all([
+                        supabase.from('profiles').select('*', { count: 'exact', head: true }),
+                        supabase.from('documents').select('*', { count: 'exact', head: true }),
+                    ]);
+                    const errorMessages = [pErr, dErr].filter(Boolean).map(e => e.message).join(', ');
+                    if(errorMessages) throw new Error(`Lỗi khi lấy dữ liệu thống kê: ${errorMessages}`);
+                    
+                    updateDashboardStats({ profiles: profilesCount, documents: documentsCount });
+
+                } else {
+                    if (currentSection === 'test') {
+                        contentDiv.innerHTML = config.render();
+                        document.querySelectorAll('.test-selection-card').forEach(card => {
+                            card.addEventListener('click', () => {
+                                const sectionId = card.dataset.sectionId;
+                                if (sectionId) {
+                                    switchSection(sectionId);
+                                }
+                            });
+                        });
+                        loadingIndicator.style.display = 'none';
+                        return;
+                    }
+                    
+                    let query = supabase.from(config.table).select('*', { count: 'exact' });
+
+                    if (config.quiz_mode) {
+                        query = query.eq('quiz_mode', config.quiz_mode);
+                    }
+                    
+                    const from = (currentPage - 1) * ITEMS_PER_PAGE;
+                    const to = from + ITEMS_PER_PAGE - 1;
+                                        if (currentSection === 'documents') {
+                                            if (documentSearchTerm) {
+                                                query = query.ilike('title', `%${documentSearchTerm}%`);
+                                            }
+                                            if (currentDocumentFilter !== 'all') {
+                                                query = query.eq('access_level', currentDocumentFilter);
+                                            }
+                                                            } else if (currentSection === 'articles') {
+                                                                if (articleSearchTerm) {
+                                                                    query = query.ilike('title', `%${articleSearchTerm}%`);
+                                                                }
+                                                            } else if (currentSection === 'tarot_cards') {
+                                                                if (tarotCardSearchTerm) {
+                                                                    query = query.ilike('name', `%${tarotCardSearchTerm}%`);
+                                                                }                                        } else if (currentSection === 'lenormand_cards') {
+                                            if (lenormandCardSearchTerm) {
+                                                query = query.ilike('name_vi', `%${lenormandCardSearchTerm}%`);
+                                            }
+                                        } else if (currentSection === 'profiles') {
+                         if (profileSearchTerm) {
+                            query = query.or(`full_name.ilike.%${profileSearchTerm}%,email.ilike.%${profileSearchTerm}%`);
+                        }
+                        const [sortBy, sortOrder] = currentProfileSort.split('-');
+                        query = query.order(sortBy, { ascending: sortOrder === 'asc', nullsFirst: false });
+                    } else {
+                        let orderByField;
+                        let orderOpts = { ascending: false };
+                        if (currentSection === 'tarot_cards') {
+                            orderByField = 'rank_order';
+                            orderOpts = { ascending: true, nullsFirst: false };
+                        } else if (currentSection === 'sliders' || currentSection === 'quiz_topics') {
+                            orderByField = 'display_order';
+                            orderOpts = { ascending: true };
+                        } else if (currentSection === 'lenormand_cards') {
+                            orderByField = 'card_number';
+                            orderOpts = { ascending: true };
+                        } else if (currentSection === 'practice_quizzes' || currentSection === 'competition_quizzes') {
+                            orderByField = 'created_at';
+                            orderOpts = { ascending: false };
+                        } else if (currentSection === 'articles') {
+                             orderByField = 'published_at';
+                             orderOpts = { ascending: false, nullsFirst: false };
+                        } else {
+                             orderByField = 'created_at';
+                             orderOpts = { ascending: false };
+                        }
+                        query = query.order(orderByField, orderOpts);
+                    }
+                    
+                                        let { data, error, count } = await query;
+                    
+                                        if (error) throw error;
+                    
+                    
+                    
+                                        if ((currentSection === 'practice_quizzes' || currentSection === 'competition_quizzes') && data) {
+                    
+                                            const { data: topics, error: topicsError } = await supabase.from('quiz_topics').select('id, title');
+                    
+                                            if (topicsError) {
+                    
+                                                showToast('Lỗi tải danh sách chủ đề.', 'error');
+                    
+                                            } else {
+                    
+                                                const topicMap = new Map(topics.map(t => [t.id, t.title]));
+                    
+                                                data.forEach(quiz => {
+                    
+                                                    quiz.topic_title = topicMap.get(quiz.topic_id) || `ID: ${quiz.topic_id}`;
+                    
+                                                });
+                    
+                                            }
+                    
+                                        }
+                    
+                                        
+                    
+                                        if (currentSection === 'articles' && data) {
+                    
+                                            const [
+                    
+                                                { data: categories, error: catErr },
+                    
+                                                { data: topics, error: topErr },
+                    
+                                                { data: authors, error: authErr }
+                    
+                                            ] = await Promise.all([
+                    
+                                                supabase.from('article_categories').select('id, name'),
+                    
+                                                supabase.from('article_topics').select('id, name'),
+                    
+                                                supabase.from('profiles').select('id, full_name')
+                    
+                                            ]);
+                    
+                    
+                    
+                                            if (catErr || topErr || authErr) {
+                    
+                                                showToast('Lỗi khi tải dữ liệu liên quan (chủ đề, tác giả...).', 'error');
+                    
+                                            } else {
+                    
+                                                const categoryMap = new Map(categories.map(c => [c.id, c.name]));
+                    
+                                                const topicMap = new Map(topics.map(t => [t.id, t.name]));
+                    
+                                                const authorMap = new Map(authors.map(a => [a.id, a.full_name]));
+                    
+                                                data.forEach(article => {
+                    
+                                                    article.category_name = categoryMap.get(article.category_id) || `ID: ${article.category_id}`;
+                    
+                                                    article.topic_name = topicMap.get(article.topic_id) || `ID: ${article.topic_id}`;
+                    
+                                                    article.author_name = authorMap.get(article.author_id) || `ID: ${article.author_id}`;
+                    
+                                                });
+                    
+                                            }
+                    
+                                        }
+                    
+                    
+                    
+                                                                                contentDiv.innerHTML = config.render(data);
+                    
+                    
+                    
+                                        if (currentSection === 'documents') {
+                    
+                    
+                    
+                                            const searchInput = document.getElementById('document-search-input');
+                    
+                    
+                    
+                                            const filterSelect = document.getElementById('document-filter-select');
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                    const searchButton = document.getElementById('document-search-button');
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                    const triggerSearch = () => {
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                        documentSearchTerm = searchInput.value;
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                        currentPage = 1;
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                        loadData();
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                    };
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                    searchInput.addEventListener('keydown', (e) => {
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                        if (e.key === 'Enter') {
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                            triggerSearch();
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                        }
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                    });
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                                                    searchButton.addEventListener('click', triggerSearch);
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                                            filterSelect.addEventListener('change', (e) => {
+                    
+                    
+                    
+                                                currentDocumentFilter = e.target.value;
+                    
+                    
+                    
+                                                currentPage = 1;
+                    
+                    
+                    
+                                                loadData();
+                    
+                    
+                    
+                                            });
+                    
+                    
+                    
+                                                            } else if (currentSection === 'articles') {
+                    
+                    
+                    
+                                                                const searchInput = document.getElementById('article-search-input');
+                    
+                    
+                    
+                                                                const searchButton = document.getElementById('article-search-button');
+                    
+                    
+                    
+                                                                const triggerSearch = () => {
+                    
+                    
+                    
+                                                                    articleSearchTerm = searchInput.value;
+                    
+                    
+                    
+                                                                    currentPage = 1;
+                    
+                    
+                    
+                                                                    loadData();
+                    
+                    
+                    
+                                                                };
+                    
+                    
+                    
+                                                                searchInput.addEventListener('keydown', (e) => {
+                    
+                    
+                    
+                                                                    if (e.key === 'Enter') {
+                    
+                    
+                    
+                                                                        triggerSearch();
+                    
+                    
+                    
+                                                                    }
+                    
+                    
+                    
+                                                                });
+                    
+                    
+                    
+                                                                searchButton.addEventListener('click', triggerSearch);
+                    
+                    
+                    
+                                                            } else if (currentSection === 'tarot_cards') {
+                    
+                    
+                    
+                                                                const searchInput = document.getElementById('tarot-card-search-input');
+                    
+                    
+                    
+                                                                const searchButton = document.getElementById('tarot-card-search-button');
+                    
+                    
+                    
+                                                                const triggerSearch = () => {
+                    
+                    
+                    
+                                                                    tarotCardSearchTerm = searchInput.value;
+                    
+                    
+                    
+                                                                    currentPage = 1;
+                    
+                    
+                    
+                                                                    loadData();
+                    
+                    
+                    
+                                                                };
+                    
+                    
+                    
+                                                                searchInput.addEventListener('keydown', (e) => {
+                    
+                    
+                    
+                                                                    if (e.key === 'Enter') {
+                    
+                    
+                    
+                                                                        triggerSearch();
+                    
+                    
+                    
+                                                                    }
+                    
+                    
+                    
+                                                                });
+                    
+                    
+                    
+                                                                searchButton.addEventListener('click', triggerSearch);
+                    
+                    
+                    
+                                                            } else if (currentSection === 'lenormand_cards') {
+                    
+                    
+                    
+                                                                const searchInput = document.getElementById('lenormand-card-search-input');
+                    
+                    
+                    
+                                                                const searchButton = document.getElementById('lenormand-card-search-button');
+                    
+                    
+                    
+                                                                const triggerSearch = () => {
+                    
+                    
+                    
+                                                                    lenormandCardSearchTerm = searchInput.value;
+                    
+                    
+                    
+                                                                    currentPage = 1;
+                    
+                    
+                    
+                                                                    loadData();
+                    
+                    
+                    
+                                                                };
+                    
+                    
+                    
+                                                                searchInput.addEventListener('keydown', (e) => {
+                    
+                    
+                    
+                                                                    if (e.key === 'Enter') {
+                    
+                    
+                    
+                                                                        triggerSearch();
+                    
+                    
+                    
+                                                                    }
+                    
+                    
+                    
+                                                                });
+                    
+                    
+                    
+                                                                searchButton.addEventListener('click', triggerSearch);
+                    
+                    
+                    
+                                                            }
+                    
+                    
+                    
+                                        if (currentSection === 'profiles') {
+                        const searchInput = document.getElementById('profile-search-input');
+                        const sortSelect = document.getElementById('profile-sort-select');
+
+                        const searchButton = document.getElementById('profile-search-button');
+                        const triggerSearch = () => {
+                            profileSearchTerm = searchInput.value;
+                            currentPage = 1;
+                            loadData();
+                        };
+                        searchInput.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter') {
+                                triggerSearch();
+                            }
+                        });
+                        searchButton.addEventListener('click', triggerSearch);
+
+                        sortSelect.addEventListener('change', (e) => {
+                            currentProfileSort = e.target.value;
+                            currentPage = 1;
+                            loadData();
+                        });
+                    }
+                    
+                    if (count > ITEMS_PER_PAGE) {
+                       const paginationHTML = renderPagination(count, currentPage);
+                       const tableContainer = contentDiv.querySelector('.overflow-x-auto, .bg-white.p-6.rounded-lg.shadow-md');
+                       if (tableContainer) {
+                           tableContainer.insertAdjacentHTML('afterend', paginationHTML);
+                       } else {
+                           contentDiv.insertAdjacentHTML('beforeend', paginationHTML);
+                       }
+                    }
+                }
+            } catch (error) {
+                showToast(`Lỗi tải dữ liệu: ${error.message}`, 'error');
+                contentDiv.innerHTML = `<p class="text-red-500">Lỗi: ${error.message}</p>`;
+            } finally {
+                loadingIndicator.style.display = 'none';
+            }
+        }
+
+        async function handleFormSubmit() {
+            saveButton.disabled = true;
+            saveButton.textContent = 'Đang lưu...';
+            const config = sections[currentSection];
+            const formData = new FormData(dataForm);
+            const record = {};
+            const primaryKey = currentSection === 'lenormand_cards' ? 'card_id' : 'id';
+
+            try {
+                for (const fieldName in editorInstances) {
+                    if (formModal.contains(editorInstances[fieldName].sourceElement)) {
+                        record[fieldName] = editorInstances[fieldName].getData();
+                    }
+                }
+
+                for (const field of config.fields.filter(f => f.type === 'file')) {
+                    const fileInput = document.getElementById(field.name);
+                    const file = fileInput ? fileInput.files[0] : null;
+
+                    if (file) {
+                        const filePath = `${config.table}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
+                        const { data, error: uploadError } = await supabase.storage.from(BUCKET_NAME).upload(filePath, file);
+                        if (uploadError) throw new Error(`Lỗi tải ảnh: ${uploadError.message}`);
+                        
+                        const { data: urlData } = supabase.storage.from(BUCKET_NAME).getPublicUrl(data.path);
+                        record[field.name] = urlData.publicUrl;
+                    } else {
+                        record[field.name] = formData.get(`${field.name}-hidden`);
+                    }
+                }
+
+                for (const field of config.fields) {
+                    if (field.group || field.type === 'richtext' || field.type === 'file' || field.name === 'last_seen') continue;
+
+                    if (!field.readonly) {
+                        let value = formData.get(field.name);
+                        
+                        if ((field.name === 'is_active' || field.name === 'is_published') && typeof value === 'string') {
+                            value = (value === 'true');
+                        }
+
+                        if ((field.type === 'number' || field.type === 'datetime-local' || field.type === 'date') && value === '') {
+                             value = null; 
+                        }
+
+                        if (field.name === 'suit' && value === '') {
+                            value = null;
+                        }
+                        
+                        record[field.name] = value;
+                    }
+                }
+                
+                let error;
+                if (currentItemId) {
+                    const { error: updateError } = await supabase.from(config.table).update(record).eq(primaryKey, currentItemId);
+                    error = updateError;
+                } else {
+                    const { error: insertError } = await supabase.from(config.table).insert([record]);
+                    error = insertError;
+                }
+                if (error) throw error;
+                showToast(`Đã ${currentItemId ? 'cập nhật' : 'tạo mới'} thành công!`);
+                closeModal();
+                loadData();
+            } catch (err) {
+                showToast(`Lỗi: ${err.message}`, 'error');
+            } finally {
+                saveButton.disabled = false;
+                saveButton.textContent = 'Lưu';
+            }
+        }
+        
+        async function performDelete() {
+            if (!deleteHandler) return;
+            confirmDeleteButton.disabled = true;
+            confirmDeleteButton.textContent = 'Đang xóa...';
+            const { error } = await deleteHandler();
+            if (error) {
+                showToast(`Lỗi xóa: ${error.message}`, 'error');
+            } else {
+                showToast('Đã xóa thành công!');
+                if (currentView === 'list') {
+                    loadData();
+                } else {
+                    renderContent();
+                }
+            }
+            confirmDeleteButton.disabled = false;
+            confirmDeleteButton.textContent = 'Xóa';
+            closeDeleteModal();
+        }
+
+        // --- EXCEL IMPORT FUNCTIONS ---
+        function handleImportFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    if (jsonData.length < 2) {
+                        showToast('File Excel trống hoặc không có dữ liệu.', 'error');
+                        return;
+                    }
+                    const headers = jsonData[0];
+                    excelData = jsonData.slice(1).map(row => {
+                        let rowData = {};
+                        headers.forEach((header, index) => { rowData[header] = row[index]; });
+                        return rowData;
+                    });
+                    openImportModal(headers);
+                } catch (error) {
+                    showToast(`Lỗi đọc file Excel: ${error.message}`, 'error');
+                }
+            };
+            reader.onerror = () => { showToast('Không thể đọc file đã chọn.', 'error'); };
+            reader.readAsArrayBuffer(file);
+            event.target.value = '';
+        }
+
+        function openImportModal(excelHeaders) {
+            const config = sections[currentSection];
+            const importableFields = config.fields.filter(f => f.import !== false && !f.readonly);
+            columnMappingDiv.innerHTML = importableFields.map(field => `
+                <div class="flex flex-col">
+                    <label for="map-${field.name}" class="block text-sm font-medium text-gray-700 mb-1">${field.label}</label>
+                    <select id="map-${field.name}" data-field-name="${field.name}" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md">
+                        <option value="">-- Bỏ qua --</option>
+                        ${excelHeaders.map(header => `<option value="${header}">${header}</option>`).join('')}
+                    </select>
+                </div>
+            `).join('');
+            importPreviewHead.innerHTML = `<tr>${excelHeaders.map(h => `<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${h}</th>`).join('')}</tr>`;
+            importPreviewBody.innerHTML = excelData.slice(0, 5).map(row => 
+                `<tr>${excelHeaders.map(h => `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${row[h] || ''}</td>`).join('')}</tr>`
+            ).join('');
+            importModal.classList.remove('hidden');
+            importModal.classList.add('flex');
+        }
+
+        function closeImportModal() {
+            importModal.classList.add('hidden');
+            importModal.classList.remove('flex');
+            excelData = [];
+            columnMappingDiv.innerHTML = '';
+            importPreviewHead.innerHTML = '';
+            importPreviewBody.innerHTML = '';
+        }
+
+        async function handleStartImport() {
+            startImportButton.disabled = true;
+            startImportButton.textContent = 'Đang xử lý...';
+            const config = sections[currentSection];
+            const mapping = {};
+            document.querySelectorAll('#column-mapping select').forEach(select => {
+                if (select.value) { mapping[select.dataset.fieldName] = select.value; }
+            });
+            if (Object.keys(mapping).length === 0) {
+                showToast('Vui lòng ánh xạ ít nhất một cột.', 'error');
+                startImportButton.disabled = false;
+                startImportButton.textContent = 'Bắt đầu Import';
+                return;
+            }
+            const recordsToInsert = excelData.map(row => {
+                const newRecord = {};
+                for (const fieldName in mapping) {
+                    const excelColumn = mapping[fieldName];
+                    newRecord[fieldName] = row[excelColumn] || null;
+                }
+                return newRecord;
+            }).filter(record => Object.values(record).some(val => val !== null));
+            if (recordsToInsert.length === 0) {
+                showToast('Không có dữ liệu hợp lệ để import.', 'error');
+            } else {
+                try {
+                    const { error } = await supabase.from(config.table).insert(recordsToInsert);
+                    if (error) throw error;
+                    showToast(`Đã import thành công ${recordsToInsert.length} mục!`);
+                    closeImportModal();
+                    loadData();
+                } catch (err) {
+                    showToast(`Lỗi khi import: ${err.message}`, 'error');
+                }
+            }
+            startImportButton.disabled = false;
+            startImportButton.textContent = 'Bắt đầu Import';
+        }
+
+        // --- COLUMN CUSTOMIZATION FUNCTIONS ---
+        function loadColumnPreferences() {
+            const prefs = localStorage.getItem('adminColumnPreferences');
+            columnPreferences = prefs ? JSON.parse(prefs) : {};
+        }
+
+        function saveColumnPreferences() {
+            localStorage.setItem('adminColumnPreferences', JSON.stringify(columnPreferences));
+        }
+
+        function getVisibleColumns(sectionId) {
+            const config = sections[sectionId];
+            if (!config || !config.fields) return [];
+            const savedPrefs = columnPreferences[sectionId];
+            if (savedPrefs && Array.isArray(savedPrefs)) { return savedPrefs; }
+            return config.defaultColumns || [];
+        }
+
+        function populateColumnSelector() {
+            const config = sections[currentSection];
+            if (!config || !config.fields) { columnCheckboxes.innerHTML = ''; return; }
+            const visibleColumns = getVisibleColumns(currentSection);
+            
+            let fieldsForSelector = [...config.fields];
+            if (currentSection === 'practice_quizzes' || currentSection === 'competition_quizzes') {
+                if (!fieldsForSelector.find(f => f.name === 'topic_title')) {
+                    fieldsForSelector.push({ name: 'topic_title', label: 'Chủ đề' });
+                }
+                fieldsForSelector = fieldsForSelector.filter(f => f.name !== 'topic_id');
+            }
+            if (currentSection === 'articles') {
+                if (!fieldsForSelector.find(f => f.name === 'category_name')) {
+                    fieldsForSelector.push({ name: 'category_name', label: 'Danh mục' });
+                }
+                if (!fieldsForSelector.find(f => f.name === 'topic_name')) {
+                    fieldsForSelector.push({ name: 'topic_name', label: 'Chủ đề' });
+                }
+                 if (!fieldsForSelector.find(f => f.name === 'author_name')) {
+                    fieldsForSelector.push({ name: 'author_name', label: 'Tác giả' });
+                }
+                fieldsForSelector = fieldsForSelector.filter(f => !['category_id', 'topic_id', 'author_id'].includes(f.name));
+            }
+
+            columnCheckboxes.innerHTML = fieldsForSelector
+                .filter(field => !field.group && field.type !== 'hidden')
+                .map(field => `
+                <div>
+                    <label class="inline-flex items-center w-full cursor-pointer">
+                        <input type="checkbox" class="form-checkbox h-4 w-4 text-primary-600 rounded border-gray-300 focus:ring-primary-500" data-column-name="${field.name}" ${visibleColumns.includes(field.name) ? 'checked' : ''}>
+                        <span class="ml-2 text-sm text-gray-700">${field.label}</span>
+                    </label>
+                </div>
+            `).join('');
+            document.querySelectorAll('#column-checkboxes input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', handleColumnSelectionChange);
+            });
+        }
+
+        function handleColumnSelectionChange() {
+            const selectedColumns = Array.from(document.querySelectorAll('#column-checkboxes input:checked'))
+                                       .map(cb => cb.dataset.columnName);
+            columnPreferences[currentSection] = selectedColumns;
+            saveColumnPreferences();
+            loadData();
+        }
+
+
+        // --- MODAL & NAVIGATION LOGIC ---
+        function switchSection(sectionId) {
+            currentSection = sectionId;
+            currentPage = 1;
+            currentView = 'list';
+            currentQuizContext = { id: null, title: '', returnSection: '' };
+            backToListButton.classList.add('hidden');
+            
+            if (sectionId !== 'profiles') {
+                profileSearchTerm = '';
+                currentProfileSort = 'created_at-desc';
+            }
+            const config = sections[sectionId];
+            pageTitle.textContent = config.title;
+            
+            const noAddNewSections = ['dashboard', 'profiles', 'test'];
+            addNewButton.style.display = noAddNewSections.includes(sectionId) ? 'none' : 'flex';
+            
+            if (['documents'].includes(sectionId)) {
+                importExcelButton.classList.remove('hidden');
+            } else {
+                importExcelButton.classList.add('hidden');
+            }
+            if (config && config.table && !['dashboard', 'test'].includes(sectionId)) {
+                columnToggleButton.classList.remove('hidden');
+                populateColumnSelector();
+            } else {
+                columnToggleButton.classList.add('hidden');
+                columnSelector.classList.add('hidden');
+            }
+
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            const navItem = document.getElementById(`nav-${sectionId}`);
+            if (navItem) {
+                navItem.classList.add('active');
+            } else if (['quiz_topics', 'practice_quizzes', 'competition_quizzes'].includes(sectionId)) {
+                document.getElementById('nav-test').classList.add('active');
+            }
+            loadData();
+        }
+
+        function toggleSuitField() {
+            const subTypeSelect = document.getElementById('sub_type');
+            const suitInput = document.getElementById('suit');
+            if (subTypeSelect && suitInput) {
+                const suitWrapper = suitInput.parentElement;
+                if (subTypeSelect.value === 'major_arcana') {
+                    suitWrapper.style.display = 'none';
+                    suitInput.value = '';
+                } else {
+                    suitWrapper.style.display = 'block';
+                }
+            }
+        }
+
+        class SupabaseUploadAdapter {
+            constructor(loader) {
+                this.loader = loader;
+            }
+
+            async upload() {
+                try {
+                    const file = await this.loader.file;
+                    const filePath = `articles-content/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
+                    
+                    const { data, error } = await supabase.storage
+                        .from(BUCKET_NAME)
+                        .upload(filePath, file, {
+                            cacheControl: '3600',
+                            upsert: false,
+                        });
+
+                    if (error) {
+                        throw new Error(`Supabase upload failed: ${error.message}`);
+                    }
+
+                    const { data: urlData } = supabase.storage.from(BUCKET_NAME).getPublicUrl(data.path);
+                    
+                    return {
+                        default: urlData.publicUrl
+                    };
+                } catch (error) {
+                    console.error('Upload adapter error:', error);
+                    showToast(`Lỗi tải ảnh: ${error.message}`, 'error');
+                    return Promise.reject(error);
+                }
+            }
+
+            abort() { }
+        }
+
+        function SupabaseUploadAdapterPlugin(editor) {
+            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                return new SupabaseUploadAdapter(loader);
+            };
+        }
+
+        async function initializeEditors(scope = document) {
+            let fieldsToInit = [];
+            if (scope === questionModal) {
+                fieldsToInit = [
+                    { name: 'question_text', type: 'richtext' },
+                    { name: 'explanation', type: 'richtext' }
+                ];
+            } else {
+                const config = sections[currentSection];
+                if (config && config.fields) {
+                    fieldsToInit = config.fields.filter(f => f.type === 'richtext');
+                }
+            }
+            
+            const creationPromises = fieldsToInit.map(field => {
+                const element = scope.querySelector('#' + field.name);
+                 if (element && !element.hasAttribute('data-ck-editor-initialized')) {
+                    element.setAttribute('data-ck-editor-initialized', 'true');
+                    return CKEDITOR.ClassicEditor.create(element, {
+                        toolbar: {
+                            items: [ 'heading', '|', 'bold', 'italic', 'underline', 'link', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'imageUpload', 'blockQuote', 'insertTable', 'mediaEmbed', '|', 'undo', 'redo' ]
+                        },
+                        language: 'vi',
+                        extraPlugins: [SupabaseUploadAdapterPlugin]
+                    })
+                    .then(editor => {
+                        editorInstances[field.name] = editor;
+                    })
+                    .catch(error => {
+                        console.error(`Lỗi khởi tạo CKEditor cho #${field.name}:`, error);
+                        element.removeAttribute('data-ck-editor-initialized');
+                    });
+                }
+                return Promise.resolve();
+            });
+            
+            await Promise.all(creationPromises);
+        }
+
+        async function destroyEditors() {
+            for (const fieldName in editorInstances) {
+                const editor = editorInstances[fieldName];
+                if (editor && typeof editor.destroy === 'function') {
+                    try {
+                        await editor.destroy();
+                        const element = document.getElementById(fieldName);
+                        if (element) element.removeAttribute('data-ck-editor-initialized');
+                    } catch(e) { console.error("Error destroying editor:", e); }
+                }
+            }
+            editorInstances = {};
+        }
+        
+        async function populateTopicDropdown(elementId) {
+            const selectElement = document.getElementById(elementId);
+            if (!selectElement) return;
+            selectElement.innerHTML = '<option>Đang tải chủ đề...</option>';
+            const { data: topics, error } = await supabase
+                .from('quiz_topics')
+                .select('id, title')
+                .order('display_order', { ascending: true });
+            
+            if (error) {
+                showToast('Lỗi tải danh mục bài kiểm tra.', 'error');
+                selectElement.innerHTML = '<option>Lỗi tải dữ liệu</option>';
+                return;
+            }
+            
+            if (topics && topics.length > 0) {
+                 selectElement.innerHTML = `<option value="">-- Chọn chủ đề --</option>` + topics.map(topic => `<option value="${topic.id}">${topic.title}</option>`).join('');
+            } else {
+                selectElement.innerHTML = '<option>Chưa có chủ đề nào</option>';
+            }
+        }
+        
+        async function populateArticleDropdowns() {
+            const categorySelect = document.getElementById('category_id');
+            const topicSelect = document.getElementById('topic_id');
+            
+            if(categorySelect) categorySelect.innerHTML = `<option>Đang tải danh mục...</option>`;
+            if(topicSelect) topicSelect.innerHTML = `<option>Đang tải chủ đề...</option>`;
+            
+            const [
+                { data: categories, error: catErr },
+                { data: topics, error: topErr }
+            ] = await Promise.all([
+                supabase.from('article_categories').select('id, name').order('name'),
+                supabase.from('article_topics').select('id, name').order('display_order')
+            ]);
+            
+            if (categorySelect) {
+                 if (catErr) {
+                    categorySelect.innerHTML = `<option>Lỗi tải danh mục</option>`;
+                } else if (categories && categories.length > 0) {
+                    categorySelect.innerHTML = `<option value="">-- Chọn danh mục --</option>` + categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                } else {
+                    categorySelect.innerHTML = `<option>Chưa có danh mục</option>`;
+                }
+            }
+
+            if (topicSelect) {
+                 if (topErr) {
+                    topicSelect.innerHTML = `<option>Lỗi tải chủ đề</option>`;
+                } else if (topics && topics.length > 0) {
+                    topicSelect.innerHTML = `<option value="">-- Chọn chủ đề --</option>` + topics.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+                } else {
+                    topicSelect.innerHTML = `<option>Chưa có chủ đề</option>`;
+                }
+            }
+        }
+
+        async function initializeAuthorSelector() {
+            const container = document.getElementById('author_id-selector');
+            if (!container) return;
+
+            const searchInput = document.getElementById('author_id-search');
+            const hiddenInput = document.getElementById('author_id');
+            const dropdown = document.getElementById('author_id-dropdown');
+            const avatarPreview = document.getElementById('author_id-avatar');
+            
+            if (!authorDataCache) {
+                const { data, error } = await supabase.from('profiles').select('id, full_name, avatar_url').order('full_name');
+                if (error) {
+                    showToast('Lỗi tải danh sách tác giả.', 'error');
+                    return;
+                }
+                authorDataCache = data;
+            }
+            
+            dropdown.innerHTML = authorDataCache.map(author => {
+                const avatar = author.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(author.full_name)}&background=e5e7eb&color=6b7280`;
+                return `
+                    <div class="author-selector-item" data-id="${author.id}" data-name="${author.full_name}" data-avatar="${avatar}">
+                        <img src="${avatar}" alt="${author.full_name}" class="author-selector-avatar">
+                        <span class="author-selector-item-name">${author.full_name}</span>
+                    </div>
+                `;
+            }).join('');
+
+            searchInput.addEventListener('focus', () => { dropdown.style.display = 'block'; });
+            document.addEventListener('click', (e) => {
+                if (!container.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const items = dropdown.querySelectorAll('.author-selector-item');
+                items.forEach(item => {
+                    const name = item.dataset.name.toLowerCase();
+                    item.classList.toggle('hidden', !name.includes(searchTerm));
+                });
+            });
+
+            dropdown.addEventListener('click', (e) => {
+                const item = e.target.closest('.author-selector-item');
+                if (item) {
+                    hiddenInput.value = item.dataset.id;
+                    searchInput.value = item.dataset.name;
+                    avatarPreview.src = item.dataset.avatar;
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+
+        async function openModal(isEdit = false, item = null) {
+            await destroyEditors();
+            const config = sections[currentSection];
+            const primaryKey = currentSection === 'lenormand_cards' ? 'card_id' : 'id';
+            dataForm.innerHTML = createFormFields(config.fields);
+
+            const dropdownPromises = [];
+            if (currentSection === 'practice_quizzes' || currentSection === 'competition_quizzes') {
+                dropdownPromises.push(populateTopicDropdown('topic_id'));
+            }
+            if (currentSection === 'articles') {
+                dropdownPromises.push(populateArticleDropdowns());
+                dropdownPromises.push(initializeAuthorSelector());
+            }
+            await Promise.all(dropdownPromises);
+
+            if (isEdit) {
+                modalTitle.textContent = `Chỉnh sửa: ${config.title.replace('Quản lý ', '')}`;
+                currentItemId = item[primaryKey];
+                populateForm(item); 
+            } else {
+                modalTitle.textContent = `Thêm mới: ${config.title.replace('Quản lý ', '')}`;
+                currentItemId = null;
+                dataForm.reset();
+                
+                if (config.quiz_mode) {
+                    const modeInput = document.getElementById('quiz_mode');
+                    if (modeInput) modeInput.value = config.quiz_mode;
+                }
+
+                config.fields.filter(f => f.type === 'file').forEach(field => {
+                    if (document.getElementById(`${field.name}-preview`)) {
+                        document.getElementById(`${field.name}-preview`).src = "https://placehold.co/100x100/e2e8f0/a0aec0?text=Preview";
+                    }
+                });
+                config.fields.forEach(field => {
+                    if (field.defaultValue !== undefined) {
+                        const input = document.getElementById(field.name);
+                        if (input) input.value = field.defaultValue;
+                    }
+                });
+            }
+            
+            await initializeEditors(formModal); 
+            
+            if (currentSection === 'tarot_cards') {
+                const subTypeSelect = document.getElementById('sub_type');
+                if (subTypeSelect) {
+                    subTypeSelect.addEventListener('change', toggleSuitField);
+                    toggleSuitField();
+                }
+            }
+
+            formModal.classList.remove('hidden');
+            formModal.classList.add('flex');
+        }
+
+        async function closeModal() {
+            await destroyEditors();
+            formModal.classList.add('hidden');
+            formModal.classList.remove('flex');
+            dataForm.innerHTML = '';
+            currentItemId = null;
+        }
+        
+        function openDeleteModal(id, deleteFn) {
+            deleteHandler = deleteFn || (() => {
+                const config = sections[currentSection];
+                const primaryKey = ['lenormand_cards', 'quiz_topics', 'quiz_questions'].includes(currentSection) 
+                    ? (currentSection === 'lenormand_cards' ? 'card_id' : 'id') 
+                    : 'id';
+                let tableName;
+                if(currentView === 'questions') tableName = 'quiz_questions';
+                else tableName = config.table;
+                return supabase.from(tableName).delete().eq(primaryKey, id);
+            });
+            deleteModal.classList.remove('hidden');
+            deleteModal.classList.add('flex');
+        }
+
+        function closeDeleteModal() {
+            deleteModal.classList.add('hidden');
+            deleteModal.classList.remove('flex');
+            deleteHandler = null;
+        }
+
+        // --- NOTIFICATION FUNCTIONS ---
+        function toggleNotificationPanel() {
+            const isOpen = notificationPanel.classList.toggle('open');
+            notificationOverlay.classList.toggle('hidden', !isOpen);
+            if (isOpen) {
+                hasNewNotification = false;
+                notificationBadge.classList.remove('active');
+            }
+        }
+
+        function addNotificationEntry(text, email, time, iconClass, iconBg, iconColor) {
+            const placeholder = notificationList.querySelector('.text-center');
+            if (placeholder) { placeholder.remove(); }
+
+            const notificationHTML = `
+                <div class="p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200 border-b">
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0 ${iconBg} ${iconColor} rounded-full p-2">
+                            <i class="fa-solid ${iconClass} w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-800">${text}</p>
+                            ${email ? `<p class="text-xs text-gray-500">${email}</p>` : ''}
+                            <p class="text-xs text-gray-400 mt-1">${time}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            notificationList.insertAdjacentHTML('afterbegin', notificationHTML);
+
+            if (!notificationPanel.classList.contains('open')) {
+                hasNewNotification = true;
+                notificationBadge.classList.add('active');
+            }
+        }
+
+        function initializeRealtimeNotifications() {
+            const profilesChannel = supabase.channel('public:profiles');
+            profilesChannel
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'profiles' }, (payload) => {
+                    authorDataCache = null; 
+                    const profile = payload.new;
+                    const text = `<span class="font-semibold">${profile.full_name || 'Người dùng mới'}</span> vừa đăng ký.`;
+                    const time = new Date(profile.created_at).toLocaleTimeString('vi-VN');
+                    addNotificationEntry(text, profile.email, time, 'fa-user-plus', 'bg-green-100', 'text-green-600');
+                    addActivity({ type: 'user_registered', timestamp: profile.created_at, data: profile });
+                })
+                .subscribe((status, err) => {
+                    if (status === 'SUBSCRIBED') { console.log('Successfully subscribed to realtime profiles notifications!'); }
+                    if (status === 'CHANNEL_ERROR') {
+                        console.error('Profiles subscription error:', err);
+                        showToast('Lỗi kết nối thông báo người dùng.', 'error');
+                    }
+                }); 
+        }
+        
+        function initializePresenceListener() {
+            if (presenceChannel) {
+                supabase.removeChannel(presenceChannel);
+            }
+            presenceChannel = supabase.channel('online-users');
+
+            presenceChannel
+                .on('presence', { event: 'sync' }, () => {
+                    const newState = presenceChannel.presenceState();
+                    onlineUsers.clear();
+                    for (const id in newState) {
+                        const presences = newState[id];
+                        if (presences.length > 0) {
+                            onlineUsers.set(id, presences[0]);
+                        }
+                    }
+                    renderOnlineUsers();
+                })
+                .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+                    if (newPresences.length > 0) {
+                        onlineUsers.set(key, newPresences[0]);
+                        renderOnlineUsers();
+                    }
+                })
+                .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+                    onlineUsers.delete(key);
+                    renderOnlineUsers();
+                })
+                .subscribe(async (status, err) => {
+                    if (status === 'SUBSCRIBED') {
+                        console.log('Admin subscribed to presence channel!');
+                        const userProfile = await supabase.from('profiles').select('full_name, avatar_url').eq('id', adminUserId).single();
+                        
+                        const trackStatus = await presenceChannel.track({
+                            user_id: adminUserId,
+                            online_at: new Date().toISOString(),
+                            is_admin: true, 
+                            full_name: userProfile.data?.full_name || 'Admin',
+                            avatar_url: userProfile.data?.avatar_url
+                        });
+
+                        if (trackStatus !== 'ok') {
+                             console.error('Failed to track admin presence:', trackStatus);
+                        }
+                    }
+                     if (status === 'CHANNEL_ERROR') {
+                        console.error('Presence subscription error:', err);
+                        showToast('Lỗi kết nối theo dõi người dùng online.', 'error');
+                    }
+                });
+        }
+        
+        // --- AUTHENTICATION LOGIC ---
+        async function handleLogin(e) {
+            e.preventDefault();
+            loginButton.disabled = true;
+            loginButton.textContent = "Đang xử lý...";
+            loginError.classList.add('hidden');
+            const email = e.target.email.value;
+            const password = e.target.password.value;
+            const { data: loginData, error: loginErrorMsg } = await supabase.auth.signInWithPassword({ email, password });
+            if (loginErrorMsg) {
+                loginError.textContent = "Email hoặc mật khẩu không chính xác.";
+                loginError.classList.remove('hidden');
+                loginButton.disabled = false;
+                loginButton.textContent = "Đăng nhập";
+                return;
+            }
+            if (loginData.user) {
+                const { data: profile, error: profileError } = await supabase
+                    .from('profiles').select('role').eq('id', loginData.user.id).single();
+                if (profileError || !profile || profile.role !== 'admin') {
+                    loginError.textContent = "Tài khoản của bạn không có quyền truy cập.";
+                    loginError.classList.remove('hidden');
+                    await supabase.auth.signOut();
+                } else {
+                    loginForm.reset();
+                }
+            }
+            loginButton.disabled = false;
+            loginButton.textContent = "Đăng nhập";
+        }
+
+        async function handleLogout() {
+            if (presenceChannel) {
+                await supabase.removeChannel(presenceChannel);
+                presenceChannel = null;
+            }
+            await supabase.auth.signOut();
+            localStorage.clear();
+            window.location.reload();
+        }
+
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session?.user) {
+                loginScreen.style.display = 'none';
+                adminPanel.style.display = 'flex';
+                if (isInitialLoad) {
+                    adminUserId = session.user.id; 
+                    loadColumnPreferences();
+                    switchSection('dashboard');
+                    initializeRealtimeNotifications();
+                    initializePresenceListener();
+                    isInitialLoad = false;
+                }
+            } else {
+                loginScreen.style.display = 'flex';
+                adminPanel.style.display = 'none';
+                isInitialLoad = true;
+                adminUserId = null;
+                onlineUsers.clear();
+            }
+        });
+
+        // --- QUIZ MANAGEMENT FUNCTIONS ---
+        function manageQuestions(quizId, quizTitle) {
+            currentView = 'questions';
+            currentQuizContext = { id: quizId, title: quizTitle, returnSection: currentSection };
+            renderContent();
+        }
+
+        function viewResults(quizId, quizTitle) {
+            currentView = 'results';
+            currentQuizContext = { id: quizId, title: quizTitle, returnSection: currentSection };
+            renderContent();
+        }
+
+        async function renderQuestionManager() {
+            pageTitle.textContent = `Câu hỏi cho: ${currentQuizContext.title}`;
+            backToListButton.classList.remove('hidden');
+            addNewButton.style.display = 'flex';
+            columnToggleButton.classList.add('hidden');
+
+            const { data: questions, error } = await supabase
+                .from('quiz_questions')
+                .select('id, question_text')
+                .eq('quiz_id', currentQuizContext.id)
+                .order('id', { ascending: true });
+
+            if (error) {
+                contentDiv.innerHTML = `<p class="text-red-500">Lỗi tải câu hỏi: ${error.message}</p>`;
+                return;
+            }
+
+            const questionsHtml = questions.map(q => {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = q.question_text;
+                const plainText = tempDiv.textContent || tempDiv.innerText || "";
+
+                return `
+                <div class="question-item flex items-center justify-between p-4 border-b">
+                    <p class="text-gray-800 flex-1 truncate" title="${plainText}">${plainText}</p>
+                    <div class="flex items-center space-x-2 ml-4 flex-shrink-0">
+                        <button onclick="window.editQuestion(${q.id})" class="p-2 rounded-full hover:bg-blue-100 text-blue-600 transition-colors" title="Sửa câu hỏi">
+                           <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                         <button onclick="window.handleDeleteClick(${q.id}, () => supabase.from('quiz_questions').delete().eq('id', ${q.id}))" class="p-2 rounded-full hover:bg-red-100 text-red-600 transition-colors" title="Xoá câu hỏi">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            `}).join('');
+
+            contentDiv.innerHTML = `
+                <div class="bg-white rounded-lg shadow-md">
+                    ${questions.length > 0 ? questionsHtml : '<p class="p-6 text-gray-500">Chưa có câu hỏi nào cho bài test này.</p>'}
+                </div>
+            `;
+        }
+        
+        async function renderResultsViewer() {
+            pageTitle.textContent = `Kết quả cho: ${currentQuizContext.title}`;
+            backToListButton.classList.remove('hidden');
+            addNewButton.style.display = 'none';
+            columnToggleButton.classList.add('hidden');
+
+            const { data, error } = await supabase
+                .from('quiz_attempts')
+                .select('*, profiles(full_name, email)')
+                .eq('quiz_id', currentQuizContext.id)
+                .order('completed_at', { ascending: false });
+
+            if (error) {
+                contentDiv.innerHTML = `<p class="text-red-500">Lỗi tải kết quả: ${error.message}</p>`;
+                return;
+            }
+
+            const tableHtml = `
+                <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+                    <table class="min-w-full divide-y divide-gray-200 responsive-table">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Người làm bài</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Điểm số</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ngày hoàn thành</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            ${data.map(attempt => `
+                                <tr class="table-row-hover">
+                                    <td data-label="Người làm bài" class="py-4 px-6 text-sm text-gray-700">${attempt.profiles?.full_name || 'N/A'}</td>
+                                    <td data-label="Email" class="py-4 px-6 text-sm text-gray-700">${attempt.profiles?.email || 'N/A'}</td>
+                                    <td data-label="Điểm số" class="py-4 px-6 text-center text-sm font-bold text-primary-600">${attempt.score} / ${attempt.total_possible_score}</td>
+                                    <td data-label="Ngày hoàn thành" class="py-4 px-6 text-sm text-gray-700">${new Date(attempt.completed_at).toLocaleString('vi-VN')}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            contentDiv.innerHTML = data.length > 0 ? tableHtml : '<div class="bg-white p-6 rounded-lg shadow-md"><p class="text-gray-500">Chưa có ai làm bài test này.</p></div>';
+        }
+
+        async function openQuestionModal(isEdit = false, question = null) {
+            await destroyEditors();
+            currentQuestionId = isEdit ? question.id : null;
+            questionModalTitle.textContent = isEdit ? 'Chỉnh sửa câu hỏi' : 'Thêm câu hỏi mới';
+
+            const answers = isEdit && question.quiz_answers.length > 0 ? question.quiz_answers : [{ answer_text: '', is_correct: true }, { answer_text: '', is_correct: false }];
+            const answersHtml = answers.map((ans, index) => `
+                <div class="answer-input-group">
+                    <input type="radio" name="correct_answer" value="${index}" class="form-radio h-5 w-5 text-primary-600" ${ans.is_correct ? 'checked' : ''}>
+                    <input type="text" name="answer_text" value="${ans.answer_text || ''}" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" placeholder="Nội dung câu trả lời ${index + 1}">
+                    <input type="hidden" name="answer_id" value="${ans.id || ''}">
+                    <button type="button" onclick="this.parentElement.remove()" class="p-2 rounded-full hover:bg-red-100 text-red-500 transition-colors" title="Xóa câu trả lời">&times;</button>
+                </div>
+            `).join('');
+
+            questionForm.innerHTML = `
+                <div>
+                    <label for="question_text" class="block text-sm font-medium text-gray-700">Nội dung câu hỏi</label>
+                    <textarea id="question_text" name="question_text" class="mt-1">${isEdit ? question.question_text : ''}</textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Các câu trả lời (chọn 1 đáp án đúng)</label>
+                    <div id="answers-container" class="mt-2 space-y-2">${answersHtml}</div>
+                    <button type="button" id="add-answer-btn" class="mt-2 text-sm text-primary-600 hover:text-primary-800 font-medium">+ Thêm câu trả lời</button>
+                </div>
+                <div>
+                    <label for="explanation" class="block text-sm font-medium text-gray-700">Giải thích (không bắt buộc)</label>
+                    <textarea id="explanation" name="explanation" class="mt-1">${isEdit ? (question.explanation || '') : ''}</textarea>
+                </div>
+            `;
+
+            await initializeEditors(questionModal);
+            
+            document.getElementById('add-answer-btn').addEventListener('click', () => {
+                const container = document.getElementById('answers-container');
+                const index = container.children.length;
+                const newAnswer = document.createElement('div');
+                newAnswer.className = 'answer-input-group';
+                newAnswer.innerHTML = `
+                    <input type="radio" name="correct_answer" value="${index}" class="form-radio h-5 w-5 text-primary-600">
+                    <input type="text" name="answer_text" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" placeholder="Nội dung câu trả lời ${index + 1}">
+                    <input type="hidden" name="answer_id" value="">
+                    <button type="button" onclick="this.parentElement.remove()" class="p-2 rounded-full hover:bg-red-100 text-red-500 transition-colors" title="Xóa câu trả lời">&times;</button>
+                `;
+                container.appendChild(newAnswer);
+            });
+
+            questionModal.classList.remove('hidden');
+            questionModal.classList.add('flex');
+        }
+
+        async function closeQuestionModal() {
+            await destroyEditors();
+            questionModal.classList.add('hidden');
+            questionModal.classList.remove('flex');
+            questionForm.innerHTML = '';
+            currentQuestionId = null;
+        }
+
+        // START: SỬA LỖI TRIỆT ĐỂ
+        async function handleQuestionFormSubmit() {
+            saveQuestionButton.disabled = true;
+            saveQuestionButton.textContent = 'Đang lưu...';
+            
+            const questionText = editorInstances['question_text'] ? editorInstances['question_text'].getData() : document.getElementById('question_text').value;
+            const explanation = editorInstances['explanation'] ? editorInstances['explanation'].getData() : document.getElementById('explanation').value;
+
+            if (!questionText.trim()) {
+                showToast('Nội dung câu hỏi không được để trống.', 'error');
+                saveQuestionButton.disabled = false;
+                saveQuestionButton.textContent = 'Lưu Câu Hỏi';
+                return;
+            }
+
+            const questionData = {
+                quiz_id: currentQuizContext.id,
+                question_text: questionText,
+                explanation: explanation,
+                question_type: 'multiple_choice' 
+            };
+
+            try {
+                let questionId;
+                // Step 1: Insert or Update the question
+                if (currentQuestionId) {
+                    const { data, error } = await supabase.from('quiz_questions').update(questionData).eq('id', currentQuestionId).select('id').single();
+                    if (error) throw error;
+                    questionId = data.id;
+                } else {
+                    const { data, error } = await supabase.from('quiz_questions').insert(questionData).select('id').single();
+                    if (error) throw error;
+                    questionId = data.id;
+                }
+
+                // Step 2 (For Edit Only): Delete all old answers associated with this question
+                if (currentQuestionId) {
+                    const { error: deleteError } = await supabase.from('quiz_answers').delete().eq('question_id', currentQuestionId);
+                    if (deleteError) throw deleteError;
+                }
+
+                // Step 3: Prepare the new answers for insertion
+                const answerInputs = questionForm.querySelectorAll('.answer-input-group');
+                const correctRadio = questionForm.querySelector('input[name="correct_answer"]:checked');
+                
+                if (!correctRadio) {
+                    throw new Error("Bạn phải chọn một đáp án đúng.");
+                }
+
+                const correctIndex = correctRadio.value;
+                const answersToInsert = [];
+                
+                answerInputs.forEach((group, index) => {
+                    const text = group.querySelector('input[name="answer_text"]').value.trim();
+                    if (text) {
+                        // Create a clean answer object WITHOUT any 'id' field
+                        answersToInsert.push({
+                            question_id: questionId,
+                            answer_text: text,
+                            is_correct: index == correctIndex
+                        });
+                    }
+                });
+
+                if (answersToInsert.length < 2) {
+                    throw new Error("Phải có ít nhất 2 câu trả lời có nội dung.");
+                }
+
+                // Step 4: Insert the new set of answers
+                const { error: insertError } = await supabase.from('quiz_answers').insert(answersToInsert);
+                if (insertError) throw insertError;
+                
+                showToast(`Đã ${currentQuestionId ? 'cập nhật' : 'thêm mới'} câu hỏi thành công!`);
+                closeQuestionModal();
+                renderContent();
+
+            } catch (err) {
+                showToast(`Lỗi: ${err.message}`, 'error');
+            } finally {
+                saveQuestionButton.disabled = false;
+                saveQuestionButton.textContent = 'Lưu Câu Hỏi';
+            }
+        }
+        // END: SỬA LỖI TRIỆT ĐỂ
+        
+        async function editQuestion(questionId) {
+            const { data: question, error } = await supabase
+                .from('quiz_questions')
+                .select('*, quiz_answers(*)')
+                .eq('id', questionId)
+                .order('id', { foreignTable: 'quiz_answers', ascending: true })
+                .single();
+            if (error) {
+                showToast(`Lỗi tải dữ liệu câu hỏi: ${error.message}`, 'error');
+                return;
+            }
+            openQuestionModal(true, question);
+        }
+
+        // --- EVENT LISTENERS & GLOBAL FUNCTIONS ---
+        function setupEventListeners() {
+            document.querySelectorAll('.sidebar-item').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const sectionId = e.currentTarget.id.replace('nav-', '');
+                    switchSection(sectionId);
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.add('-translate-x-full');
+                        sidebarOverlay.classList.add('hidden');
+                    }
+                });
+            });
+            menuButton.addEventListener('click', () => {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+            });
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            });
+            loginForm.addEventListener('submit', handleLogin);
+            logoutButton.addEventListener('click', handleLogout);
+            addNewButton.addEventListener('click', () => {
+                if (currentView === 'questions') {
+                    openQuestionModal();
+                } else {
+                    openModal(false);
+                }
+            });
+            closeModalButton.addEventListener('click', closeModal);
+            cancelButton.addEventListener('click', closeModal);
+            saveButton.addEventListener('click', handleFormSubmit);
+            cancelDeleteButton.addEventListener('click', closeDeleteModal);
+            confirmDeleteButton.addEventListener('click', performDelete);
+            importExcelButton.addEventListener('click', () => excelFileInput.click());
+            excelFileInput.addEventListener('change', handleImportFileSelect);
+            closeImportModalButton.addEventListener('click', closeImportModal);
+            cancelImportButton.addEventListener('click', closeImportModal);
+            startImportButton.addEventListener('click', handleStartImport);
+            columnToggleButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                columnSelector.classList.toggle('hidden');
+            });
+            window.addEventListener('click', (e) => {
+                if (!columnSelector.contains(e.target) && !columnToggleButton.contains(e.target)) {
+                    columnSelector.classList.add('hidden');
+                }
+            });
+            notificationButton.addEventListener('click', toggleNotificationPanel);
+            closeNotificationButton.addEventListener('click', toggleNotificationPanel);
+            notificationOverlay.addEventListener('click', toggleNotificationPanel);
+            backToListButton.addEventListener('click', () => {
+                switchSection(currentQuizContext.returnSection);
+            });
+            closeQuestionModalButton.addEventListener('click', closeQuestionModal);
+            cancelQuestionButton.addEventListener('click', closeQuestionModal);
+            saveQuestionButton.addEventListener('click', handleQuestionFormSubmit);
+        }
+
+        // --- INITIALIZATION ---
+        setupEventListeners();
+
+        window.handleEditClick = (item) => openModal(true, item);
+        window.handleDeleteClick = (id, deleteFn) => openDeleteModal(id, deleteFn);
+        window.handleChangePage = (page) => {
+            currentPage = page;
+            renderContent();
+        };
+        window.previewFile = (fieldName) => {
+            const preview = document.getElementById(`${fieldName}-preview`);
+            const file = document.getElementById(fieldName).files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => { preview.src = reader.result; }
+            if (file) { reader.readAsDataURL(file); }
+        };
+        
+        window.switchSection = switchSection;
+        window.manageQuestions = manageQuestions;
+        window.viewResults = viewResults;
+        window.editQuestion = editQuestion;
+    </script>
+</body> 
+</html>
