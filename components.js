@@ -22,6 +22,9 @@ class ViettarotComponents {
         // START: Biến cho chức năng ẩn/hiện header
         this.lastScrollTop = 0;
         // END: Biến cho chức năng ẩn/hiện header
+
+        // Biến cho thanh toán realtime
+        this.paymentSubscription = null;
     }
 
     // Phương thức trả về CSS cho tất cả các component
@@ -545,8 +548,10 @@ class ViettarotComponents {
         }
 
         @media (max-width: 767.98px) {
-            #paymentQRModal .modal-body { padding: 1rem; }
-            .qr-code-wrapper { margin-bottom: 1rem; }
+            #paymentQRModal .modal-body { padding: 1.25rem; }
+            .qr-code-wrapper { margin-bottom: 1rem; padding: 1.25rem; }
+            .payment-info-wrapper { padding: 1.25rem; }
+            #qr-code-image { max-width: 200px; }
         }
 
         /* Forms in Modals */
@@ -1172,7 +1177,7 @@ class ViettarotComponents {
             <div class="success-notification">
                 <div class="success-icon"><i class="fas fa-check-circle"></i></div>
                 <h4 class="success-title">Thành Công!</h4>
-                <p class="success-message">Bạn đã tạo tài khoản thành công.</p>
+                <p class="success-message" id="success-message-text">Bạn đã tạo tài khoản thành công.</p>
             </div>
         </div>
 
@@ -1401,7 +1406,9 @@ class ViettarotComponents {
                                         <img id="qr-code-image" src="" alt="Mã QR thanh toán VietQR" class="img-fluid" style="display: none;">
                                     </div>
                                     <div class="mt-auto pt-3 d-grid gap-2">
-                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="fas fa-check-circle me-2"></i>Đã thanh toán</button>
+                                        <button type="button" class="btn btn-primary" id="confirm-payment-btn">
+                                            <span id="confirm-payment-text">Xác nhận đã chuyển khoản</span>
+                                        </button>
                                         <button type="button" class="btn btn-outline-secondary" data-bs-target="#upgradeModal" data-bs-toggle="modal"><i class="fas fa-arrow-left me-2"></i>Quay lại</button>
                                     </div>
                                 </div>
@@ -1450,7 +1457,7 @@ class ViettarotComponents {
                                         </li>
                                         <li>
                                             <span class="step-icon"><i class="fas fa-hourglass-half"></i></span>
-                                            <div>Khi giao dịch thành công Hệ thống sẽ tự động nâng cấp tài khoản sau <strong>2-5 phút</strong>.</div>
+                                            <div>Sau khi quét mã, hệ thống sẽ tự động kích hoạt tài khoản trong vòng <strong>2-5 phút</strong> khi nhận được thanh toán.</div>
                                         </li>
                                          <li>
                                             <span class="step-icon"><i class="fas fa-headset"></i></span>
@@ -1995,8 +2002,11 @@ class ViettarotComponents {
 
     async setupPaymentLogic() {
         const upgradeModalEl = document.getElementById('upgradeModal');
-        if (!upgradeModalEl) return;
+        const qrModalEl = document.getElementById('paymentQRModal');
+        
+        if (!upgradeModalEl || !qrModalEl) return;
 
+        // Xử lý khi nhấn nút Nâng cấp để mở Modal QR
         upgradeModalEl.addEventListener('click', async (event) => {
             const button = event.target.closest('.pricing-card .btn');
             if (!button || button.disabled || button.id === 'view-courses-btn' || button.id === 'back-to-plans-btn') {
@@ -2014,15 +2024,20 @@ class ViettarotComponents {
             const role = card.dataset.role;
             let price = 0;
             let planName = '';
+            // Xác định Role mục tiêu để lắng nghe sự kiện thành công
+            let targetRole = 'membership'; 
 
             if (role === 'membership') {
                 price = 199000;
                 planName = 'Membership';
+                targetRole = 'membership';
             } else if (role === 'student-1-1') {
                 price = 4890000;
                 planName = 'Lop 1:1';
+                targetRole = 'student';
             } else if (role === 'student-group') {
                 planName = 'Lop Nhom';
+                targetRole = 'student';
                 const discountCheckbox = document.getElementById('student-discount-checkbox');
                 if (discountCheckbox && discountCheckbox.checked) {
                     price = parseInt(card.dataset.discountPrice, 10);
@@ -2034,7 +2049,6 @@ class ViettarotComponents {
                 return;
             }
             
-            const qrModalEl = document.getElementById('paymentQRModal');
             const qrLoadingEl = document.getElementById('qr-loading-indicator');
             const qrImageEl = document.getElementById('qr-code-image');
 
@@ -2044,6 +2058,21 @@ class ViettarotComponents {
             qrLoadingEl.style.display = 'block';
             qrImageEl.style.display = 'none';
             
+            // --- CẬP NHẬT UI: Nút xác nhận chuyển sang trạng thái chờ ---
+            const confirmBtn = document.getElementById('confirm-payment-btn');
+            
+            // Xóa các event listener cũ bằng cách clone
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+
+            // Thiết lập trạng thái "Đang chờ" ngay lập tức
+            newConfirmBtn.disabled = true; // Không cho bấm
+            newConfirmBtn.classList.remove('btn-primary', 'btn-success');
+            newConfirmBtn.classList.add('btn-warning'); // Màu vàng cảnh báo/chờ
+            newConfirmBtn.style.color = '#1A1229'; // Màu chữ cho dễ đọc trên nền vàng
+            newConfirmBtn.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i>Đang chờ hệ thống xác nhận...`;
+            // ---------------------------------------------------------
+
             bootstrap.Modal.getInstance(document.getElementById('upgradeModal'))?.hide();
             const paymentModal = new bootstrap.Modal(qrModalEl);
             paymentModal.show();
@@ -2073,6 +2102,111 @@ class ViettarotComponents {
             tempImage.onerror = () => {
                 qrLoadingEl.innerHTML = '<p class="text-danger">Không thể tạo mã QR. Vui lòng thử lại.</p>';
             };
+
+            // START: Logic Realtime (Lắng nghe sự thay đổi Database của user này)
+            // Hủy subscription cũ nếu có để tránh duplicate listener
+            if (this.paymentSubscription) {
+                await this.supabase.removeChannel(this.paymentSubscription);
+                this.paymentSubscription = null;
+            }
+
+            const handlePaymentSuccess = () => {
+                console.log('Thanh toán được xác nhận thành công!');
+                // Đổi nút sang trạng thái thành công
+                newConfirmBtn.classList.remove('btn-warning');
+                newConfirmBtn.classList.add('btn-success');
+                newConfirmBtn.innerHTML = `<i class="fas fa-check-circle me-2"></i>Thanh toán thành công!`;
+                newConfirmBtn.style.color = 'white';
+
+                // Thêm thông báo toast rõ ràng
+                this.showToast('Giao dịch thành công! Tài khoản của bạn đã được nâng cấp.', 'success', 5000);
+
+                const paymentModalInstance = bootstrap.Modal.getInstance(qrModalEl);
+                if(paymentModalInstance) {
+                    setTimeout(() => paymentModalInstance.hide(), 1000);
+                }
+                
+                const successOverlay = document.getElementById('fullscreen-success-overlay');
+                const successMsg = document.getElementById('success-message-text');
+                if (successMsg) successMsg.textContent = 'Thanh toán thành công! Gói cước đã được kích hoạt.';
+                
+                if (successOverlay) successOverlay.classList.add('show');
+                
+                // Reload trang sau 2 giây để cập nhật quyền lợi
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            };
+
+            // Thiết lập lắng nghe Realtime - Chỉ lắng nghe row có ID của user hiện tại
+            // Tối ưu cho gói Free (chỉ listen 1 row thay vì cả bảng)
+            console.log(`Bắt đầu theo dõi thanh toán cho user: ${user.id} với targetRole: ${targetRole}`);
+            
+            this.paymentSubscription = this.supabase
+                .channel('payment_tracking_' + user.id) // Tên kênh unique cho mỗi user
+                .on(
+                    'postgres_changes',
+                    {
+                        event: 'UPDATE',
+                        schema: 'public',
+                        table: 'profiles',
+                        filter: `id=eq.${user.id}`, // Filter server-side: Chỉ nhận sự kiện của user này
+                    },
+                    (payload) => {
+                        console.log('Nhận tín hiệu Realtime từ DB:', payload);
+                        
+                        // Kiểm tra payload.new tồn tại
+                        if (payload.new && payload.new.role) {
+                            const newRole = payload.new.role;
+                            console.log(`Role mới nhận được: ${newRole}`);
+                            
+                            // Logic kiểm tra:
+                            // 1. Nếu mua Membership: Role mới phải là 'membership' hoặc 'student' (cao hơn cũng được)
+                            // 2. Nếu mua Student: Role mới phải là 'student'
+                            let isSuccess = false;
+                            
+                            // Chấp nhận nâng cấp nếu role mới khớp hoặc cao hơn role mục tiêu
+                            if (targetRole === 'membership' && (newRole === 'membership' || newRole === 'student')) {
+                                isSuccess = true;
+                            } else if (targetRole === 'student' && newRole === 'student') {
+                                isSuccess = true;
+                            }
+                            
+                            // Mẹo để Test: Nếu Admin đổi sang bất cứ role nào khác 'user', ta coi như test thành công
+                            // (Bạn có thể bỏ logic này khi chạy thật nếu muốn chặt chẽ hơn)
+                            if (newRole !== 'user' && !isSuccess) {
+                                console.warn('Role đã thay đổi nhưng không khớp chính xác targetRole. Vẫn chấp nhận cho test.');
+                                isSuccess = true; 
+                            }
+
+                            if (isSuccess) {
+                                // START: THÊM ĐỘ TRỄ 5 GIÂY TRƯỚC KHI HIỂN THỊ THÀNH CÔNG
+                                console.log('Thanh toán OK, đợi 5s trước khi xác nhận...');
+                                setTimeout(() => {
+                                    handlePaymentSuccess();
+                                }, 5000);
+                                // END: THÊM ĐỘ TRỄ
+                            }
+                        }
+                    }
+                )
+                .subscribe((status) => {
+                    if (status === 'SUBSCRIBED') {
+                         console.log(`Đang lắng nghe thanh toán (Realtime status: ${status})... Hãy đổi role trong Admin để test.`);
+                    } else {
+                        console.log(`Trạng thái Realtime: ${status}`);
+                    }
+                });
+            // END: Logic Realtime
+        });
+
+        // Dọn dẹp khi đóng modal để tiết kiệm kết nối DB
+        qrModalEl.addEventListener('hidden.bs.modal', async () => {
+            if (this.paymentSubscription) {
+                await this.supabase.removeChannel(this.paymentSubscription);
+                this.paymentSubscription = null;
+                console.log('Đã dừng theo dõi thanh toán (Modal closed).');
+            }
         });
     }
     
